@@ -1,114 +1,150 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
+import * as React from 'react';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {AuthContext} from './auth';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
-import React from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
-} from 'react-native';
+import RemindersScreen from './screens/index';
+import MindScreen from './screens/mental/index';
+import MedicationScreen from './screens/medication/index';
+import AccountScreen from './screens/account';
+import AddMedicationScreen from './screens/medication/addMedication';
+import AddDoctorScreen from './screens/medication/addDoctor';
+import AddGuardianScreen from './screens/medication/addGuardian';
+import SignInScreen from './screens/auth/signin';
+import SignUpScreen from './screens/auth/signup';
+import DoctorSignUpScreen from './screens/auth/doctor_signup';
 
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+function MedicationStack() {
+  const MedicationStack = createStackNavigator();
+  const options = {
+    headerShown: false,
+  };
 
-const App: () => React$Node = () => {
   return (
-    <>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <Header />
-          {global.HermesInternal == null ? null : (
-            <View style={styles.engine}>
-              <Text style={styles.footer}>Engine: Hermes</Text>
-            </View>
-          )}
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.js</Text> to change this
-                screen and then come back to see your edits.
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </>
+    <MedicationStack.Navigator>
+      <MedicationStack.Screen
+        name="Index"
+        component={MedicationScreen}
+        options={options}
+      />
+      <MedicationStack.Screen
+        name="AddMedication"
+        component={AddMedicationScreen}
+        options={options}
+      />
+      <MedicationStack.Screen
+        name="AddDoctor"
+        component={AddDoctorScreen}
+        options={options}
+      />
+      <MedicationStack.Screen
+        name="AddGuardian"
+        component={AddGuardianScreen}
+        options={options}
+      />
+    </MedicationStack.Navigator>
   );
-};
+}
 
-const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
-  },
-  engine: {
-    position: 'absolute',
-    right: 0,
-  },
-  body: {
-    backgroundColor: Colors.white,
-  },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
-  },
-});
+function AppTabStack() {
+  const AppTabStack = createBottomTabNavigator();
+  return (
+    <AppTabStack.Navigator initialRouteName="Reminders">
+      {/* Tab for calendar with upcoming reminders */}
+      <AppTabStack.Screen name="Reminders" component={RemindersScreen}  options={{
+          tabBarLabel: 'Reminders',
+          tabBarIcon: ({ color, size }) => (
+            <Icon name="today" color={color} size={size} />
+          ),
+        }}/>
 
-export default App;
+      {/* Tab for mental health reminder */}
+      <AppTabStack.Screen name="Tasks" component={MindScreen} 
+      options={{
+        tabBarLabel: 'Tasks',
+        tabBarIcon: ({ color, size }) => (
+          <Icon name="leaderboard" color={color} size={size} />
+        ),
+      }}/>
+
+      {/* Tab for list of medications, and doctors */}
+      <AppTabStack.Screen name="Medication" component={MedicationStack} options={{
+        tabBarLabel: 'Medication',
+        tabBarIcon: ({ color, size }) => (
+          <Icon name="healing" color={color} size={size} />
+        ),
+      }}/>
+
+      {/* Tab for user account and preferences */}
+      <AppTabStack.Screen name="Account" component={AccountScreen} options={{
+        tabBarLabel: 'Profile',
+        tabBarIcon: ({ color, size }) => (
+          <Icon name="face" color={color} size={size} />
+        ),
+      }}/>
+    </AppTabStack.Navigator>
+  );
+}
+
+function AuthStack() {
+  const AuthStack = createStackNavigator();
+  const options = {
+    headerShown: false,
+  };
+
+  return (
+    <AuthStack.Navigator>
+      <AuthStack.Screen
+        name="SignIn"
+        component={SignInScreen}
+        options={options}
+      />
+      <AuthStack.Screen
+        name="SignUp"
+        component={SignUpScreen}
+        options={options}
+      />
+      <AuthStack.Screen
+        name="DoctorSignUp"
+        component={DoctorSignUpScreen}
+        options={options}
+      />
+    </AuthStack.Navigator>
+  );
+}
+
+export default function App() {
+  const [accessToken, setAccessToken] = React.useState(false);
+  const [refreshToken, setRefreshToken] = React.useState(null);
+  const [isLoading, setIsLoading] = React.useState(true);
+
+  const authContext = React.useMemo(() => {
+    return {
+      signIn: () => {
+        setIsLoading(false);
+        setAccessToken(true);
+        setRefreshToken('gert');
+      },
+      signUp: () => {
+        setIsLoading(false);
+        setAccessToken('gert');
+        setRefreshToken('gert');
+      },
+      signOut: () => {
+        setIsLoading(false);
+        setAccessToken(false);
+        setRefreshToken(null);
+      },
+    };
+  }, []);
+
+  return (
+    <AuthContext.Provider value={authContext}>
+      <NavigationContainer>
+        {accessToken ? <AppTabStack /> : <AuthStack />}
+      </NavigationContainer>
+    </AuthContext.Provider>
+  );
+}
