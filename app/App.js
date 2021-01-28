@@ -15,6 +15,7 @@ import AddGuardianScreen from './screens/medication/addGuardian';
 import SignInScreen from './screens/auth/signin';
 import SignUpScreen from './screens/auth/signup';
 import DoctorSignUpScreen from './screens/auth/doctor_signup';
+import AddHabitScreen from './screens/mental/addHabit';
 
 function MedicationStack() {
   const MedicationStack = createStackNavigator();
@@ -48,6 +49,33 @@ function MedicationStack() {
   );
 }
 
+ 
+function MentalStack() {
+  const MentalStack = createStackNavigator();
+  const options = {
+    headerShown: false,
+  };
+ 
+  return (
+    <MentalStack.Navigator>
+      <MentalStack.Screen
+        name="Index"
+        component={MindScreen}
+        options={options}
+      />
+ 
+      <MentalStack.Screen
+        name="AddHabit"
+        component={AddHabitScreen}
+        options={options}
+      />
+      
+      
+    </MentalStack.Navigator>
+  );
+}
+
+
 function AppTabStack() {
   const AppTabStack = createBottomTabNavigator();
   return (
@@ -61,7 +89,7 @@ function AppTabStack() {
         }}/>
 
       {/* Tab for mental health reminder */}
-      <AppTabStack.Screen name="Tasks" component={MindScreen} 
+      <AppTabStack.Screen name="Tasks" component={MentalStack} 
       options={{
         tabBarLabel: 'Tasks',
         tabBarIcon: ({ color, size }) => (
