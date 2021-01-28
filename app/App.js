@@ -7,7 +7,6 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import RemindersScreen from './screens/index';
 import MindScreen from './screens/mental/index';
-import AddHabitScreen from './screens/mental/addHabit';
 import MedicationScreen from './screens/medication/index';
 import AccountScreen from './screens/account';
 import AddMedicationScreen from './screens/medication/addMedication';
@@ -49,32 +48,6 @@ function MedicationStack() {
   );
 }
 
-function MentalStack() {
-  const MentalStack = createStackNavigator();
-  const options = {
-    headerShown: false,
-  };
- 
-  return (
-    <MentalStack.Navigator>
-      <MentalStack.Screen
-        name="Index"
-        component={MindScreen}
-        options={options}
-      />
- 
-      <MentalStack.Screen
-        name="AddHabit"
-        component={AddHabitScreen}
-        options={options}
-      />
-      
-      
-    </MentalStack.Navigator>
-  );
-}
-
-
 function AppTabStack() {
   const AppTabStack = createBottomTabNavigator();
   return (
@@ -88,7 +61,7 @@ function AppTabStack() {
         }}/>
 
       {/* Tab for mental health reminder */}
-      <AppTabStack.Screen name="Tasks" component={MentalStack} 
+      <AppTabStack.Screen name="Tasks" component={MindScreen} 
       options={{
         tabBarLabel: 'Tasks',
         tabBarIcon: ({ color, size }) => (
