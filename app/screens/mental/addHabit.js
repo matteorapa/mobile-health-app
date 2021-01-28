@@ -45,7 +45,8 @@ export default function AddHabitScreen( {navigation} ) {
  
       <Button title="Start Date" onPress={showDatepicker}></Button>
         
-      {show && (
+      
+        {show && (
         <DateTimePicker
           testID="dateTimePicker"
           value={date}
@@ -57,9 +58,11 @@ export default function AddHabitScreen( {navigation} ) {
       )}
 
 
- 
+
+        
+
       <TextInput
-        placeholder="Title"
+        placeholder="Category"
       />
         <Button title="Go back" onPress={() => navigation.goBack()} /> 
 
