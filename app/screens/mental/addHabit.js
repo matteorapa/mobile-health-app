@@ -1,10 +1,21 @@
-import { Text, View, Button, TextInput } from 'react-native';
+import { Text, View, Button, TextInput, Alert } from 'react-native';
 import React, { useState } from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
  
  
- 
+
+
+
+
 export default function AddHabitScreen( {navigation} ) {
+
+    const [title, setTitle] = useState(''); 
+    const [description, setDesc] = useState(''); 
+    const [numPerW, setNPW] = useState(''); 
+    const [numPerD, setNPD] = useState(''); 
+    const [category, setCat] = useState(''); 
+    
  
     const [date, setDate] = useState(new Date());
     const [mode, setMode] = useState('date');
@@ -36,15 +47,19 @@ export default function AddHabitScreen( {navigation} ) {
  
  
         <TextInput
-        placeholder="Title" /> 
+        placeholder="Title" 
+        onChangeText={title => setTitle(title)}
+        defaultValue={title}/> 
  
         <TextInput
-        placeholder="Description" /> 
+        placeholder="Description" 
+        onChangeText={description => setDesc(description)}
+        defaultValue={description}/> 
  
       
- 
+      <Text>{date.toDateString()}</Text>
       <Button title="Start Date" onPress={showDatepicker}></Button>
-
+      <Text>{date.toTimeString()}</Text>
       <Button title="Time" onPress={showTimepicker}></Button>
         
       
@@ -60,18 +75,35 @@ export default function AddHabitScreen( {navigation} ) {
       )}
  
         <TextInput
-        placeholder="Number per Week" /> 
+        placeholder="Number per Week" 
+        onChangeText={numPerW => setNPW(numPerW)}
+        defaultValue={numPerW}/> 
 
         <TextInput
-        placeholder="Number per day" />  
+        placeholder="Number per day" 
+        onChangeText={numPerD => setNPD(numPerD)}
+        defaultValue={numPerD}/>  
         
  
       <TextInput
         placeholder="Category"
+        onChangeText={category => setCat(category)}
+        defaultValue={category}
       />
+
+      <Button title="Submit" onPress={() => {
+        //saveHabit(title,description,date.toDateString(),date.toTimeString(),numPerW,numPerD,category);
+        navigation.navigate('Tasks', {
+          screen: 'Index'
+        });
+        
+        }} />  
+
         <Button title="Go back" onPress={() => navigation.goBack()} /> 
+
  
  
       </View>
     );
   }
+
