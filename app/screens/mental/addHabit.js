@@ -1,14 +1,27 @@
 import { Text, View, Button, TextInput, Alert } from 'react-native';
 import React, { useState } from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import AsyncStorage from '@react-native-async-storage/async-storage';
- 
+import firebase from '@react-native-firebase/app';
+import firestore from '@react-native-firebase/firestore';
+
  
 
 
 
 
 export default function AddHabitScreen( {navigation} ) {
+  // firebase.initializeApp({
+  //   clientId: '569751018067-9coa1aj6lehue711mstgnfo689d0jni4.apps.googleusercontent.com',
+  //   appId: '1:569751018067:android:ffabc1450547b6b26dc4a6',
+  //   apiKey: 'AIzaSyDjsEikDKMSuBZmSGKBkd3YmpjgV9NumFI',
+  //   databaseURL: 'https://Health-app.firebaseio.com',
+  //   storageBucket: 'health-app-caec8.appspot.com',
+  //   messagingSenderId: '569751018067',
+  //   projectId: 'health-app-caec8',
+  // });
+
+  
+
 
     const [title, setTitle] = useState(''); 
     const [description, setDesc] = useState(''); 
@@ -91,11 +104,23 @@ export default function AddHabitScreen( {navigation} ) {
         defaultValue={category}
       />
 
-      <Button title="Submit" onPress={() => {
+      <Button title="Submit" onPress={async () => {
         //saveHabit(title,description,date.toDateString(),date.toTimeString(),numPerW,numPerD,category);
-        navigation.navigate('Tasks', {
-          screen: 'Index'
-        });
+        console.log("button pressed");
+        // await firestore()
+        // .collection('Habits')
+        // .doc('test')
+        // .set({
+        // name: 'Ada Lovelace',
+        // age: 30,
+        // })
+        // .then(() => {
+        // console.log('User added!');
+        // });
+        console.log(await firestore().collection('Habits').doc('test').get());
+        // navigation.navigate('Tasks', {
+        //   screen: 'Index'
+        // });
         
         }} />  
 
