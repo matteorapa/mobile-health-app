@@ -9,6 +9,7 @@ import RemindersScreen from './screens/index';
 import MindScreen from './screens/mental/index';
 import MedicationScreen from './screens/medication/index';
 import AccountScreen from './screens/account';
+//import AddNewMedicationScreen from './screens/medication/addNewMedication';
 import AddMedicationScreen from './screens/medication/addMedication';
 import AddDoctorScreen from './screens/medication/addDoctor';
 import AddGuardianScreen from './screens/medication/addGuardian';
@@ -29,6 +30,11 @@ function MedicationStack() {
         component={MedicationScreen}
         options={options}
       />
+      {/* <MedicationStack.Screen
+        name="AddNewMedication"
+        component={AddNewMedicationScreen}
+        options={options}
+      /> */}
       <MedicationStack.Screen
         name="AddMedication"
         component={AddMedicationScreen}
