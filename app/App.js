@@ -4,8 +4,6 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {AuthContext} from './auth';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import firebase from '@react-native-firebase/app';
-
 
 import RemindersScreen from './screens/index';
 import MindScreen from './screens/mental/index';
@@ -18,9 +16,6 @@ import SignInScreen from './screens/auth/signin';
 import SignUpScreen from './screens/auth/signup';
 import DoctorSignUpScreen from './screens/auth/doctor_signup';
 import AddHabitScreen from './screens/mental/addHabit';
-
-
-
 
 function MedicationStack() {
   const MedicationStack = createStackNavigator();
@@ -149,8 +144,6 @@ function AuthStack() {
 }
 
 export default function App() {
- 
-
   const [accessToken, setAccessToken] = React.useState(false);
   const [refreshToken, setRefreshToken] = React.useState(null);
   const [isLoading, setIsLoading] = React.useState(true);
