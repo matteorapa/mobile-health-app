@@ -2,7 +2,9 @@ import React from 'react'
 import { TouchableOpacity, View, Text, StyleSheet } from 'react-native'
 import { COLORS } from '../styles/theme'
 
-export default function ThemeButton( { type, text, onPressEvent } ){
+import Icon from 'react-native-vector-icons/MaterialIcons';
+
+export default function ThemeButton( { type, text, onPressEvent, icon } ){
 
     switch(type){
         case "primary": {
@@ -18,7 +20,7 @@ export default function ThemeButton( { type, text, onPressEvent } ){
             return(
                 <TouchableOpacity onPress={onPressEvent}>
                     <View style={styleSecondary.button}>
-                        <Text style={styleSecondary.text}>{ text }</Text>
+                        <Text style={styleSecondary.text}>{ icon ? <Icon name={icon} size={16} color={COLORS.primaryLight}/>: <></>}{ text }</Text>
                     </View>
                 </TouchableOpacity>
             )
@@ -27,7 +29,11 @@ export default function ThemeButton( { type, text, onPressEvent } ){
             return(
                 <TouchableOpacity onPress={onPressEvent}>
                     <View style={styleMuted.button}>
-                        <Text style={styleMuted.text}>{ text }</Text>
+                    
+                        <Text style={styleMuted.text}>
+                            { icon ? <Icon name={icon} size={16} color={COLORS.primaryLight}/>: <></>}
+                        
+                            {text}</Text>
                     </View>
                 </TouchableOpacity>
             )
@@ -36,7 +42,7 @@ export default function ThemeButton( { type, text, onPressEvent } ){
             return(
                 <TouchableOpacity onPress={onPressEvent}>
                     <View style={stylePrimary.button}>
-                        <Text style={stylePrimary.text}>{ text }</Text>
+                        <Text style={stylePrimary.text}>{ icon ? <Icon name={icon} size={16} color={COLORS.primaryLight}/>: <></>}{ text }</Text>
                     </View>
                 </TouchableOpacity>
             )
