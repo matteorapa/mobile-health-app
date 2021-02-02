@@ -1,6 +1,8 @@
-import { Text, TextInput, TextField, View , Button, TextInputComponent, FlatList, SafeAreaView, ScrollView, TouchableOpacity, Group} from 'react-native';
+import { Text, TextInput, TextField, View , Button, TextInputComponent, FlatList, SafeAreaView, ScrollView, TouchableOpacity, Group } from 'react-native';
 import React, { Component, useState } from 'react';
 import {styles} from '../../styles/globals';
+
+import AddMedicationForm from './AddMedicationForm';
 
 import DropDownPicker from 'react-native-dropdown-picker'
 
@@ -62,176 +64,342 @@ export default function AddMedicationScreen ({navigation}) {
     }
 
     return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.box}>
-          <Text style={styles.heading}>New Medication</Text>
-        <ScrollView style={styles.ScrollView}>
+          <AddMedicationForm>
 
-          {/* <DropDownPicker
-              items={[
-                  {label: 'Yes', value: 'yes', hidden: true},
-                  {label: 'No', value: 'no'},
-              ]}
-              defaultValue={this.state.country}
-              containerStyle={{height: 40}}
-              style={{backgroundColor: '#fafafa'}}
-              itemStyle={{
-                  justifyContent: 'flex-start'
-              }}
-              dropDownStyle={{backgroundColor: '#fafafa'}}
-              onChangeItem={item => this.setState({
-                  country: item.value
-              })}
-          /> */}
+            <AddMedicationForm.Step>
+              <View>
+                <Text>Medication Name</Text>
+                <TextInput
+                  style={styles.textInput}
+                  placeholder={'Medication Name'}
+                  onChangeText={(text) => onChangeMedicationName(text)}
+                  //value={text}
+                />
 
-          <Text>Medication Name</Text>
-          <TextInput
-            style={styles.textInput}
-            placeholder={'Medication Name'}
-            onChangeText={(text) => onChangeMedicationName(text)}
-            //value={text}
-          />
+                <Text>Medication Type</Text>
+                <TextInput
+                  style={styles.textInput}
+                  placeholder={'Medication Type'}
+                  onChangeText={(text) => onChangeMedicationType(text)}
+                  //value={text}
+                />
+              </View>
+            </AddMedicationForm.Step>
+            
+            <AddMedicationForm.Step>
+              <View>
+                <Text>Medication Dosage</Text>
+                <TextInput
+                  style={styles.textInput}
+                  placeholder={'Medication Dosage'}
+                  onChangeText={(text) => onChangeMedicationDosage(text)}
+                  //value={text}
+                  keyboardType={'numeric'}
+                />
+              </View>
 
-          <Text>Medication Type</Text>
-          <TextInput
-            style={styles.textInput}
-            placeholder={'Medication Type'}
-            onChangeText={(text) => onChangeMedicationType(text)}
-            //value={text}
-          />
+            </AddMedicationForm.Step>
 
-          <Text>Medication Dosage</Text>
-          <TextInput
-            style={styles.textInput}
-            placeholder={'Medication Dosage'}
-            onChangeText={(text) => onChangeMedicationDosage(text)}
-            //value={text}
-            keyboardType={'numeric'}
-          />
+            <AddMedicationForm.Step>
+              <View>
+                <Text>Medication Reason</Text>
+                <TextInput
+                  style={styles.textInput}
+                  placeholder={'Medication Reason'}
+                  onChangeText={(text) => onChangeMedicationReason(text)}
+                  //value={text}
+                />
+              </View>
+            </AddMedicationForm.Step>
 
-          <Text>Medication Reason</Text>
-          <TextInput
-            style={styles.textInput}
-            placeholder={'Medication Reason'}
-            onChangeText={(text) => onChangeMedicationReason(text)}
-            //value={text}
-          />
+            <AddMedicationForm.Step>
+              <View>
+                <Text>Daily Medication?</Text>
+                <TextInput
+                  style={styles.textInput}
+                  placeholder={'Daily Medication'}
+                  onChangeText={(text) => onChangeMedicationDaily(text)}
+                  //yes, no, other
+                  //value={text}
+                />
+                
+                <Text>Number of Doses to Take Each Day</Text>
+                <TextInput
+                  style={styles.textInput}
+                  placeholder={'Number of Doses Each Day'}
+                  onChangeText={(text) => onChangeMedicationDailyDosesNumber(text)}
+                  onConfirm={(text) => timersIncluded(text)}
+                  //value={text}
+                  keyboardType={'numeric'}
+                />
+              </View>
+            </AddMedicationForm.Step>
+
+            <AddMedicationForm.Step>
+              <View>
+                {/* Repeat according to Number of Daily Medications */}
+                {timersToInclude.map((timerNumber) => {
+                  return (
+                    // <Text>Something to Print {timerNumber}</Text>
+                    <View key={timerNumber}>
+                      <Text>Dose Number {timerNumber}</Text>
+                      <TouchableOpacity style={styles.button} onPress={function(){
+                        onChangeTimeVisible(true);
+                      } }>
+                        <Text>TimerIcon</Text>
+                      </TouchableOpacity>
+                      <DateTimePicker
+                        mode={'time'}
+                        is24Hour={true}
+                        isVisible={timeVisible}
+                        onConfirm={ function(data){{onChangeMedicationTime1(data)}; {onChangeTimeVisible(false)}} }
+                        onCancel={function(){onChangeTimeVisible(false)}}
+                      />
+                      <TextInput
+                        style={styles.textInput}
+                        placeholder={'Time - hh:mm'}
+                        value={Moment(medicationTime1.toString()).format("HH:mm")}
+                      />
+                    </View>
+                  );
+                })}
+
+                {/* {timers(medicationDailyDosesNumber)} */}
+              </View>
+            </AddMedicationForm.Step>
+
+            <AddMedicationForm.Step>
+              <View>
+                <Text>Medication Starting Date</Text>
+                <TouchableOpacity style={styles.button} onPress={function(){
+                  onChangeCalendarStart(true);
+                } }>
+                <Text>CalendarIcon</Text>
+                </TouchableOpacity>
+                <DateTimePicker
+                  value={Date}
+                  mode={'date'}
+                  isVisible={calendarStartVisible}
+                  onConfirm={ function(data){{onChangeMedicationStartDate(data)}; {onChangeCalendarStart(false)}} }
+                  onCancel={function(){onChangeCalendarStart(false)}}
+                />
+                <TextInput
+                  style={styles.textInput}
+                  placeholder={'Start Date - dd/mm/yyyy'}
+                  //value={medicationStartDate.toDateString()}
+                  value={Moment(medicationStartDate.toString()).format("DD/MM/yyyy")}
+                />
+
+                <Text>Medication End Date</Text>
+                <TouchableOpacity style={styles.button} onPress={function(){
+                  onChangeCalendarEnd(true);
+                } }>
+                <Text>CalendarIcon</Text>
+                </TouchableOpacity>
+                <DateTimePicker
+                  value={Date}
+                  mode={'date'}
+                  isVisible={calendarEndVisible}
+                  onConfirm={ function(data){{onChangeMedicationEndDate(data)}; {onChangeCalendarEnd(false)}} }
+                  onCancel={function(){onChangeCalendarEnd(false)}}
+                />
+                <TextInput
+                  style={styles.textInput}
+                  placeholder={'End Date - dd/mm/yyyy'}
+                  //value={medicationEndDate.toDateString()}
+                  value={Moment(medicationEndDate.toString()).format("DD/MM/yyyy")}
+                />
+              </View>
+            </AddMedicationForm.Step>
+
+            <AddMedicationForm.Step>
+              <View>
+              <Text>Medication Instructions</Text>
+                <TextInput
+                  style={styles.textInput}
+                  placeholder={'Medication Instructions'}
+                  onChangeText={(text) => onChangeMedicationInstructions(text)}
+                  //value={text}
+                />
+              </View>
+            </AddMedicationForm.Step>
+
+          </AddMedicationForm>
+      
+      
+      
+      
+//       <SafeAreaView style={styles.container}>
+//         <View style={styles.box}>
+//           <Text style={styles.heading}>New Medication</Text>
+//         <ScrollView style={styles.ScrollView}>
+
+//           {/* <DropDownPicker
+//               items={[
+//                   {label: 'Yes', value: 'yes', hidden: true},
+//                   {label: 'No', value: 'no'},
+//               ]}
+//               defaultValue={this.state.country}
+//               containerStyle={{height: 40}}
+//               style={{backgroundColor: '#fafafa'}}
+//               itemStyle={{
+//                   justifyContent: 'flex-start'
+//               }}
+//               dropDownStyle={{backgroundColor: '#fafafa'}}
+//               onChangeItem={item => this.setState({
+//                   country: item.value
+//               })}
+//           /> */}
+
+//           <Text>Medication Name</Text>
+//           <TextInput
+//             style={styles.textInput}
+//             placeholder={'Medication Name'}
+//             onChangeText={(text) => onChangeMedicationName(text)}
+//             //value={text}
+//           />
+
+//           <Text>Medication Type</Text>
+//           <TextInput
+//             style={styles.textInput}
+//             placeholder={'Medication Type'}
+//             onChangeText={(text) => onChangeMedicationType(text)}
+//             //value={text}
+//           />
+
+//           <Text>Medication Dosage</Text>
+//           <TextInput
+//             style={styles.textInput}
+//             placeholder={'Medication Dosage'}
+//             onChangeText={(text) => onChangeMedicationDosage(text)}
+//             //value={text}
+//             keyboardType={'numeric'}
+//           />
+
+//           <Text>Medication Reason</Text>
+//           <TextInput
+//             style={styles.textInput}
+//             placeholder={'Medication Reason'}
+//             onChangeText={(text) => onChangeMedicationReason(text)}
+//             //value={text}
+//           />
           
-          <Text>Daily Medication?</Text>
-          <TextInput
-            style={styles.textInput}
-            placeholder={'Daily Medication'}
-            onChangeText={(text) => onChangeMedicationDaily(text)}
-//yes, no, other
-            //value={text}
-          />
+//           <Text>Daily Medication?</Text>
+//           <TextInput
+//             style={styles.textInput}
+//             placeholder={'Daily Medication'}
+//             onChangeText={(text) => onChangeMedicationDaily(text)}
+// //yes, no, other
+//             //value={text}
+//           />
           
-          <Text>Number of Doses to Take Each Day</Text>
-          <TextInput
-            style={styles.textInput}
-            placeholder={'Number of Doses Each Day'}
-            onChangeText={(text) => onChangeMedicationDailyDosesNumber(text)}
-            onConfirm={(text) => timersIncluded(text)}
-            //value={text}
-            keyboardType={'numeric'}
-          />
+//           <Text>Number of Doses to Take Each Day</Text>
+//           <TextInput
+//             style={styles.textInput}
+//             placeholder={'Number of Doses Each Day'}
+//             onChangeText={(text) => onChangeMedicationDailyDosesNumber(text)}
+//             onConfirm={(text) => timersIncluded(text)}
+//             //value={text}
+//             keyboardType={'numeric'}
+//           />
 
-{/* Repeat according to Number of Daily Medications */}
-            {timersToInclude.map((timerNumber) => {
-              return (
-                // <Text>Something to Print {timerNumber}</Text>
-                <View key={timerNumber}>
-                  <Text>Dose Number {timerNumber}</Text>
-                  <TouchableOpacity style={styles.button} onPress={function(){
-                    onChangeTimeVisible(true);
-                  } }>
-                    <Text>TimerIcon</Text>
-                  </TouchableOpacity>
-                  <DateTimePicker
-                    mode={'time'}
-                    is24Hour={true}
-                    isVisible={timeVisible}
-                    onConfirm={ function(data){{onChangeMedicationTime1(data)}; {onChangeTimeVisible(false)}} }
-                    onCancel={function(){onChangeTimeVisible(false)}}
-                  />
-                  <TextInput
-                    style={styles.textInput}
-                    placeholder={'Time - hh:mm'}
-                    value={Moment(medicationTime1.toString()).format("HH:mm")}
-                  />
-                </View>
-              );
-            })}
+// {/* Repeat according to Number of Daily Medications */}
+//             {timersToInclude.map((timerNumber) => {
+//               return (
+//                 // <Text>Something to Print {timerNumber}</Text>
+//                 <View key={timerNumber}>
+//                   <Text>Dose Number {timerNumber}</Text>
+//                   <TouchableOpacity style={styles.button} onPress={function(){
+//                     onChangeTimeVisible(true);
+//                   } }>
+//                     <Text>TimerIcon</Text>
+//                   </TouchableOpacity>
+//                   <DateTimePicker
+//                     mode={'time'}
+//                     is24Hour={true}
+//                     isVisible={timeVisible}
+//                     onConfirm={ function(data){{onChangeMedicationTime1(data)}; {onChangeTimeVisible(false)}} }
+//                     onCancel={function(){onChangeTimeVisible(false)}}
+//                   />
+//                   <TextInput
+//                     style={styles.textInput}
+//                     placeholder={'Time - hh:mm'}
+//                     value={Moment(medicationTime1.toString()).format("HH:mm")}
+//                   />
+//                 </View>
+//               );
+//             })}
 
-          {/* {timers(medicationDailyDosesNumber)} */}
+//           {/* {timers(medicationDailyDosesNumber)} */}
 
-          <Text>Medication Starting Date</Text>
-          <TouchableOpacity style={styles.button} onPress={function(){
-            onChangeCalendarStart(true);
-          } }>
-            <Text>CalendarIcon</Text>
-          </TouchableOpacity>
-          <DateTimePicker
-            value={Date}
-            mode={'date'}
-            isVisible={calendarStartVisible}
-            onConfirm={ function(data){{onChangeMedicationStartDate(data)}; {onChangeCalendarStart(false)}} }
-            onCancel={function(){onChangeCalendarStart(false)}}
-          />
-          <TextInput
-            style={styles.textInput}
-            placeholder={'Start Date - dd/mm/yyyy'}
-            //value={medicationStartDate.toDateString()}
-            value={Moment(medicationStartDate.toString()).format("DD/MM/yyyy")}
-          />
+//           <Text>Medication Starting Date</Text>
+//           <TouchableOpacity style={styles.button} onPress={function(){
+//             onChangeCalendarStart(true);
+//           } }>
+//             <Text>CalendarIcon</Text>
+//           </TouchableOpacity>
+//           <DateTimePicker
+//             value={Date}
+//             mode={'date'}
+//             isVisible={calendarStartVisible}
+//             onConfirm={ function(data){{onChangeMedicationStartDate(data)}; {onChangeCalendarStart(false)}} }
+//             onCancel={function(){onChangeCalendarStart(false)}}
+//           />
+//           <TextInput
+//             style={styles.textInput}
+//             placeholder={'Start Date - dd/mm/yyyy'}
+//             //value={medicationStartDate.toDateString()}
+//             value={Moment(medicationStartDate.toString()).format("DD/MM/yyyy")}
+//           />
 
-          <Text>Medication End Date</Text>
-          <TouchableOpacity style={styles.button} onPress={function(){
-            onChangeCalendarEnd(true);
-          } }>
-            <Text>CalendarIcon</Text>
-          </TouchableOpacity>
-          <DateTimePicker
-            value={Date}
-            mode={'date'}
-            isVisible={calendarEndVisible}
-            onConfirm={ function(data){{onChangeMedicationEndDate(data)}; {onChangeCalendarEnd(false)}} }
-            onCancel={function(){onChangeCalendarEnd(false)}}
-          />
-          <TextInput
-            style={styles.textInput}
-            placeholder={'End Date - dd/mm/yyyy'}
-            //value={medicationEndDate.toDateString()}
-            value={Moment(medicationEndDate.toString()).format("DD/MM/yyyy")}
-          />
+//           <Text>Medication End Date</Text>
+//           <TouchableOpacity style={styles.button} onPress={function(){
+//             onChangeCalendarEnd(true);
+//           } }>
+//             <Text>CalendarIcon</Text>
+//           </TouchableOpacity>
+//           <DateTimePicker
+//             value={Date}
+//             mode={'date'}
+//             isVisible={calendarEndVisible}
+//             onConfirm={ function(data){{onChangeMedicationEndDate(data)}; {onChangeCalendarEnd(false)}} }
+//             onCancel={function(){onChangeCalendarEnd(false)}}
+//           />
+//           <TextInput
+//             style={styles.textInput}
+//             placeholder={'End Date - dd/mm/yyyy'}
+//             //value={medicationEndDate.toDateString()}
+//             value={Moment(medicationEndDate.toString()).format("DD/MM/yyyy")}
+//           />
           
-          <Text>Medication Instructions</Text>
-          <TextInput
-            style={styles.textInput}
-            placeholder={'Medication Instructions'}
-            onChangeText={(text) => onChangeMedicationInstructions(text)}
-            //value={text}
-          />
+//           <Text>Medication Instructions</Text>
+//           <TextInput
+//             style={styles.textInput}
+//             placeholder={'Medication Instructions'}
+//             onChangeText={(text) => onChangeMedicationInstructions(text)}
+//             //value={text}
+//           />
 
-          <Button
-            title="Add New Medication"
-            color="#000000"
-            accessibilityLabel="Add medication to list"
-            onPress={() => {
-              submitForm(medicationName, medicationType, medicationDosage, medicationReason,
-                          medicationDaily, medicationDailyDosesNumber, medicationTime1, medicationStartDate, medicationEndDate,
-                          medicationInstructions, () => {
-                navigation.navigate('Medication', {
-                  screen: 'Index'
-                });
-              });
-            }}
-          />
+//           <Button
+//             title="Add New Medication"
+//             color="#000000"
+//             accessibilityLabel="Add medication to list"
+//             onPress={() => {
+//               submitForm(medicationName, medicationType, medicationDosage, medicationReason,
+//                           medicationDaily, medicationDailyDosesNumber, medicationTime1, medicationStartDate, medicationEndDate,
+//                           medicationInstructions, () => {
+//                 navigation.navigate('Medication', {
+//                   screen: 'Index'
+//                 });
+//               });
+//             }}
+//           />
           
 
-        </ScrollView>
-        </View>
-      </SafeAreaView>
+//         </ScrollView>
+//         </View>
+//       </SafeAreaView>
+
     );
   //}
 
