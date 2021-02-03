@@ -45,6 +45,11 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     padding: 16,
   },
+
+  navButtonsForm: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
 });
 
 export {styles};

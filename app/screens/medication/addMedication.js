@@ -50,97 +50,131 @@ export default function AddMedicationScreen ({navigation}) {
 
     const [timeVisible, onChangeTimeVisible] = useState(false);
 
-    //const [timersToInclude, onChangeTimersToInclude] = useState(void 0);
-
-    timersToInclude = [1];
+    const [timersToInclude, onChangeTimersToInclude] = useState([1]);
 
     function range(start, end) {
-      return Array(end - start + 1).fill().map((_, idx) => start + idx)
+      return Array(end - start + 1).fill().map((_, idx) => start + idx);
     }
 
     function timersIncluded(dailyDosesNumber){
-      timersToInclude = range(1, dailyDosesNumber)
-      console.log(timersToInclude);
+      onChangeTimersToInclude(range(1, dailyDosesNumber));
     }
 
     return (
-          <AddMedicationForm>
+          <AddMedicationForm initialValues={{
+            medicName: '',
+            medicType: '',
+            medicDosage: '',
+            medicReason: '',
+            medicDaily: '',
+            medicDailyDosesNumber: '',
+            medicTime1: '',
+            medicTime2: '',
+            medicStartDate: '',
+            medicEndDate: '',
+            medicInstructions: ''
+          }}>
 
             <AddMedicationForm.Step>
+              {({ onChangeValue, values }) => (
               <View>
                 <Text>Medication Name</Text>
                 <TextInput
                   style={styles.textInput}
                   placeholder={'Medication Name'}
-                  onChangeText={(text) => onChangeMedicationName(text)}
-                  //value={text}
+                  onChangeText={text => onChangeValue('medicName', text)}
+                  value={values.medicName}
+                  autoFocus={true}
                 />
+              </View>
+              )}
+            </AddMedicationForm.Step>
 
+            <AddMedicationForm.Step>
+              {({ onChangeValue, values }) => (
+              <View>
                 <Text>Medication Type</Text>
                 <TextInput
                   style={styles.textInput}
                   placeholder={'Medication Type'}
-                  onChangeText={(text) => onChangeMedicationType(text)}
-                  //value={text}
+                  onChangeText={(text) => onChangeValue('medicType', text)}
+                  value={values.medicType}
+                  autoFocus={true}
                 />
               </View>
+              )}
             </AddMedicationForm.Step>
             
             <AddMedicationForm.Step>
+              {({ onChangeValue, values }) => (
               <View>
                 <Text>Medication Dosage</Text>
                 <TextInput
                   style={styles.textInput}
                   placeholder={'Medication Dosage'}
-                  onChangeText={(text) => onChangeMedicationDosage(text)}
-                  //value={text}
+                  onChangeText={(text) => onChangeValue('medicDosage', text)}
+                  value={values.medicDosage}
                   keyboardType={'numeric'}
+                  autoFocus={true}
+          //add drop-down with metric
                 />
               </View>
-
+              )}
             </AddMedicationForm.Step>
 
             <AddMedicationForm.Step>
+              {({ onChangeValue, values }) => (
               <View>
                 <Text>Medication Reason</Text>
                 <TextInput
                   style={styles.textInput}
                   placeholder={'Medication Reason'}
-                  onChangeText={(text) => onChangeMedicationReason(text)}
-                  //value={text}
+                  onChangeText={(text) => onChangeValue('medicReason', text)}
+                  value={values.medicReason}
+                  autoFocus={true}
                 />
               </View>
+              )}
             </AddMedicationForm.Step>
 
             <AddMedicationForm.Step>
+              {({ onChangeValue, values }) => (
               <View>
                 <Text>Daily Medication?</Text>
                 <TextInput
                   style={styles.textInput}
                   placeholder={'Daily Medication'}
-                  onChangeText={(text) => onChangeMedicationDaily(text)}
-                  //yes, no, other
-                  //value={text}
+                  onChangeText={(text) => onChangeValue('medicDaily', text)}
+                  //yes, no, other drop-down
+                  value={values.medicDaily}
+                  autoFocus={true}
                 />
-                
+              </View>
+              )}
+            </AddMedicationForm.Step>
+
+            <AddMedicationForm.Step>
+              {({ onChangeValue, values }) => (
+              <View>
                 <Text>Number of Doses to Take Each Day</Text>
                 <TextInput
                   style={styles.textInput}
                   placeholder={'Number of Doses Each Day'}
-                  onChangeText={(text) => onChangeMedicationDailyDosesNumber(text)}
-                  onConfirm={(text) => timersIncluded(text)}
-                  //value={text}
+                  onChangeText={ function(text) {{onChangeValue('medicDailyDosesNumber', text)}; {onChangeMedicationDailyDosesNumber(text)}; {timersIncluded(text)} }}
+                  value={values.medicDailyDosesNumber}
                   keyboardType={'numeric'}
+                  autoFocus={true}
                 />
               </View>
+              )}
             </AddMedicationForm.Step>
-
-            <AddMedicationForm.Step>
-              <View>
-                {/* Repeat according to Number of Daily Medications */}
-                {timersToInclude.map((timerNumber) => {
-                  return (
-                    // <Text>Something to Print {timerNumber}</Text>
+            
+            {/* Repeat according to Number of Daily Medications */}
+            {timersToInclude.map((timerNumber) => {
+              // console.log(timersToInclude);
+              return (
+                <AddMedicationForm.Step>
+                  {({ onChangeValue, values }) => (
                     <View key={timerNumber}>
                       <Text>Dose Number {timerNumber}</Text>
                       <TouchableOpacity style={styles.button} onPress={function(){
@@ -161,14 +195,13 @@ export default function AddMedicationScreen ({navigation}) {
                         value={Moment(medicationTime1.toString()).format("HH:mm")}
                       />
                     </View>
-                  );
-                })}
-
-                {/* {timers(medicationDailyDosesNumber)} */}
-              </View>
-            </AddMedicationForm.Step>
+                  )}
+                </AddMedicationForm.Step>
+              );
+            })}
 
             <AddMedicationForm.Step>
+              {({ onChangeValue, values }) => (
               <View>
                 <Text>Medication Starting Date</Text>
                 <TouchableOpacity style={styles.button} onPress={function(){
@@ -189,7 +222,13 @@ export default function AddMedicationScreen ({navigation}) {
                   //value={medicationStartDate.toDateString()}
                   value={Moment(medicationStartDate.toString()).format("DD/MM/yyyy")}
                 />
+              </View>
+              )}
+            </AddMedicationForm.Step>
 
+            <AddMedicationForm.Step>
+              {({ onChangeValue, values }) => (
+              <View>
                 <Text>Medication End Date</Text>
                 <TouchableOpacity style={styles.button} onPress={function(){
                   onChangeCalendarEnd(true);
@@ -210,18 +249,22 @@ export default function AddMedicationScreen ({navigation}) {
                   value={Moment(medicationEndDate.toString()).format("DD/MM/yyyy")}
                 />
               </View>
+              )}
             </AddMedicationForm.Step>
 
             <AddMedicationForm.Step>
+              {({ onChangeValue, values }) => (
               <View>
               <Text>Medication Instructions</Text>
                 <TextInput
                   style={styles.textInput}
                   placeholder={'Medication Instructions'}
-                  onChangeText={(text) => onChangeMedicationInstructions(text)}
-                  //value={text}
+                  onChangeText={(text) => onChangeValue('medicInstructions', text)}
+                  value={values.medicInstructions}
+                  autoFocus={true}
                 />
               </View>
+              )}
             </AddMedicationForm.Step>
 
           </AddMedicationForm>
