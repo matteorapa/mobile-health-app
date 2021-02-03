@@ -16,6 +16,8 @@ import SignInScreen from './screens/auth/signin';
 import SignUpScreen from './screens/auth/signup';
 import DoctorSignUpScreen from './screens/auth/doctor_signup';
 import AddHabitScreen from './screens/mental/addHabit';
+import EditHabitScreen from './screens/mental/editHabit';
+import AddReminderScreen from './screens/mental/addReminder';
 
 function MedicationStack() {
   const MedicationStack = createStackNavigator();
@@ -69,6 +71,18 @@ function MentalStack() {
         component={AddHabitScreen}
         options={options}
       />
+
+      <MentalStack.Screen
+        name="EditHabit"
+        component={EditHabitScreen}
+        options={options}
+      />      
+
+      <MentalStack.Screen
+        name="AddReminder"
+        component={AddReminderScreen}
+        options={options}
+      />     
       
       
     </MentalStack.Navigator>

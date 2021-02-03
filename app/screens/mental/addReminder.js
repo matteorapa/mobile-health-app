@@ -8,13 +8,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
-export default function AddHabitScreen( {navigation} ) {
+export default function AddReminderScreen( {navigation} ) {
 
+    //array with the list of habits saved to choose a habit
+
+    
     const [title, setTitle] = useState(''); 
-    const [description, setDesc] = useState(''); 
-    const [numPerW, setNPW] = useState(''); 
-    const [numPerD, setNPD] = useState(''); 
-    const [category, setCat] = useState(''); 
+
     
  
     const [date, setDate] = useState(new Date());
@@ -43,23 +43,12 @@ export default function AddHabitScreen( {navigation} ) {
  
     return (
       <View>
-        <Text>Add Habit Screen</Text>
+        <Text>Add Reminder Screen</Text>
+
+        {/* check if you add one reminder at a time or multiple reminders */}
  
  
-        <TextInput
-        placeholder="Title" 
-        onChangeText={title => setTitle(title)}
-        defaultValue={title}/> 
- 
-        <TextInput
-        placeholder="Description" 
-        onChangeText={description => setDesc(description)}
-        defaultValue={description}/> 
- 
-      
-      <Text>{date.toDateString()}</Text>
-      <Button title="Start Date" onPress={showDatepicker}></Button>
-      <Text>{date.toTimeString()}</Text>
+        <Text>{date.toTimeString()}</Text>
       <Button title="Time" onPress={showTimepicker}></Button>
         
       
@@ -74,24 +63,9 @@ export default function AddHabitScreen( {navigation} ) {
         />
       )}
  
-        <TextInput
-        placeholder="Number per Week" 
-        onChangeText={numPerW => setNPW(numPerW)}
-        defaultValue={numPerW}/> 
 
-        <TextInput
-        placeholder="Number per day" 
-        onChangeText={numPerD => setNPD(numPerD)}
-        defaultValue={numPerD}/>  
-        
- 
-      <TextInput
-        placeholder="Category"
-        onChangeText={category => setCat(category)}
-        defaultValue={category}
-      />
 
-      {/* Add variable to store points */}
+
 
       <Button title="Submit" onPress={() => {
         //saveHabit(title,description,date.toDateString(),date.toTimeString(),numPerW,numPerD,category);

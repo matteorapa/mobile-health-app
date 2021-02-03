@@ -1,14 +1,13 @@
 import { Text, View, Button, TextInput, Alert } from 'react-native';
 import React, { useState } from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+
  
- 
+//to do
+//placeholders, date and time set as current values 
 
 
-
-
-export default function AddHabitScreen( {navigation} ) {
+export default function EditHabitScreen( {navigation} ) {
 
     const [title, setTitle] = useState(''); 
     const [description, setDesc] = useState(''); 
@@ -43,7 +42,7 @@ export default function AddHabitScreen( {navigation} ) {
  
     return (
       <View>
-        <Text>Add Habit Screen</Text>
+        <Text>Edit Habit Screen</Text>
  
  
         <TextInput
