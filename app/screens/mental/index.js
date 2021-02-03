@@ -1,19 +1,14 @@
 import { Text, View, ScrollView, Alert, Dimensions, StyleSheet } from 'react-native';
 import React, {useState} from 'react';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import { Avatar, Button, Card, Title, Paragraph } from 'react-native-paper';
+import { Avatar, Button, Card, Title, Paragraph, ProgressBar, Colors } from 'react-native-paper';
 import {TabView, SceneMap} from 'react-native-tab-view';
-import { exp } from 'react-native-reanimated';
 import DateTimePicker from '@react-native-community/datetimepicker';
- 
 
- 
-const HabitRoute = () => {
-  let points = 0;
+
+const HabitRoute = (props) => {
+  
   const navigation = useNavigation();
-  
-  
   return(
 
   <ScrollView>
@@ -29,8 +24,8 @@ const HabitRoute = () => {
           </Paragraph>
           <Card.Actions>
             <Button onPress={() => {
-              points = points + 10;
-              reward(points);
+              props.setPoints( props.points + 10);
+              reward(props.points);
               }}>Done</Button>
             <Button>Fail</Button>
             <Button onPress={() => {
@@ -55,8 +50,26 @@ const HabitRoute = () => {
       </ScrollView>
   );
 }
+
+const ProgressRoute = (props) => {
+  const [percentage, setPerc] = useState(0);
+  React.useEffect(() => {
+    if(props.points <= 50){
+      setPerc(props.points / 50);
+    }
+  })
+  
+
+  return(
+    <View>
+      <Text>Progress screen</Text>
+      <ProgressBar progress={percentage} color={Colors.blue800} style={{height:30}}/>
+    </View>
+  );
+
+}
  
-const ReminderRoute = () => {
+const ReminderRoute = (props) => {
   const navigation = useNavigation();
   const [date, setDate] = useState(new Date());
     const [mode, setMode] = useState('date');
@@ -131,17 +144,33 @@ const initialLayout = { width: Dimensions.get('window').width };
 
  
 export default function MindScreen() {
+
+  const [points, setPoints] = useState(0);
       
       const [index, setIndex] = React.useState(0);
+
       const [routes] = React.useState([
         { key: 'habits', title: 'Habits' },
+        { key: 'progress', title: 'Progress' },
         { key: 'reminders', title: 'Reminders' },
       ]);
+
+
     
-      const renderScene = SceneMap({
-        habits: HabitRoute,
-        reminders: ReminderRoute,
-      });
+
+      const renderScene = ({ route }) => {
+        switch (route.key) {
+          case 'habits':
+            return <HabitRoute points={points} setPoints ={setPoints} />;
+          case 'progress':
+            return <ProgressRoute points={points} setPoints ={setPoints}/>;
+          case 'reminders':
+            return <ReminderRoute points={points} setPoints ={setPoints}/>;
+          default:
+            return <HabitRoute points={points} setPoints ={setPoints} />;
+        }
+      };
+      
 
  //add step counter
 
