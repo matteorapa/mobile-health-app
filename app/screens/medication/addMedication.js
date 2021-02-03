@@ -2,7 +2,7 @@ import { Text, TextInput, TextField, View , Button, TextInputComponent, FlatList
 import React, { Component, useState } from 'react';
 import {styles} from '../../styles/globals';
 
-import AddMedicationForm from './AddMedicationForm';
+import AddMedDocForm from './AddMedDocForm';
 
 import DropDownPicker from 'react-native-dropdown-picker'
 
@@ -50,7 +50,9 @@ export default function AddMedicationScreen ({navigation}) {
 
     const [timeVisible, onChangeTimeVisible] = useState(false);
 
-    const [timersToInclude, onChangeTimersToInclude] = useState([1]);
+    const [timersToInclude, onChangeTimersToInclude] = useState([]);
+
+    const timerArray = [];
 
     function range(start, end) {
       return Array(end - start + 1).fill().map((_, idx) => start + idx);
@@ -61,7 +63,7 @@ export default function AddMedicationScreen ({navigation}) {
     }
 
     return (
-          <AddMedicationForm initialValues={{
+          <AddMedDocForm initialValues={{
             medicName: '',
             medicType: '',
             medicDosage: '',
@@ -70,12 +72,13 @@ export default function AddMedicationScreen ({navigation}) {
             medicDailyDosesNumber: '',
             medicTime1: '',
             medicTime2: '',
+            medicTimerArray: [],
             medicStartDate: '',
             medicEndDate: '',
             medicInstructions: ''
           }}>
 
-            <AddMedicationForm.Step>
+            <AddMedDocForm.Step>
               {({ onChangeValue, values }) => (
               <View>
                 <Text>Medication Name</Text>
@@ -88,9 +91,9 @@ export default function AddMedicationScreen ({navigation}) {
                 />
               </View>
               )}
-            </AddMedicationForm.Step>
+            </AddMedDocForm.Step>
 
-            <AddMedicationForm.Step>
+            <AddMedDocForm.Step>
               {({ onChangeValue, values }) => (
               <View>
                 <Text>Medication Type</Text>
@@ -103,9 +106,9 @@ export default function AddMedicationScreen ({navigation}) {
                 />
               </View>
               )}
-            </AddMedicationForm.Step>
+            </AddMedDocForm.Step>
             
-            <AddMedicationForm.Step>
+            <AddMedDocForm.Step>
               {({ onChangeValue, values }) => (
               <View>
                 <Text>Medication Dosage</Text>
@@ -120,9 +123,9 @@ export default function AddMedicationScreen ({navigation}) {
                 />
               </View>
               )}
-            </AddMedicationForm.Step>
+            </AddMedDocForm.Step>
 
-            <AddMedicationForm.Step>
+            <AddMedDocForm.Step>
               {({ onChangeValue, values }) => (
               <View>
                 <Text>Medication Reason</Text>
@@ -135,9 +138,9 @@ export default function AddMedicationScreen ({navigation}) {
                 />
               </View>
               )}
-            </AddMedicationForm.Step>
+            </AddMedDocForm.Step>
 
-            <AddMedicationForm.Step>
+            <AddMedDocForm.Step>
               {({ onChangeValue, values }) => (
               <View>
                 <Text>Daily Medication?</Text>
@@ -151,30 +154,30 @@ export default function AddMedicationScreen ({navigation}) {
                 />
               </View>
               )}
-            </AddMedicationForm.Step>
+            </AddMedDocForm.Step>
 
-            <AddMedicationForm.Step>
-              {({ onChangeValue, values }) => (
+            <AddMedDocForm.Step>
+              {({ onChangeValue, onChangeTimersNumber, values }) => (
               <View>
                 <Text>Number of Doses to Take Each Day</Text>
                 <TextInput
                   style={styles.textInput}
                   placeholder={'Number of Doses Each Day'}
-                  onChangeText={ function(text) {{onChangeValue('medicDailyDosesNumber', text)}; {onChangeMedicationDailyDosesNumber(text)}; {timersIncluded(text)} }}
+                  onChangeText={ function(text) {{onChangeValue('medicDailyDosesNumber', text)}; {onChangeMedicationDailyDosesNumber(text)}; {timersIncluded(text)}; {onChangeTimersNumber(text)} }}
                   value={values.medicDailyDosesNumber}
                   keyboardType={'numeric'}
                   autoFocus={true}
                 />
               </View>
               )}
-            </AddMedicationForm.Step>
+            </AddMedDocForm.Step>
             
             {/* Repeat according to Number of Daily Medications */}
             {timersToInclude.map((timerNumber) => {
               // console.log(timersToInclude);
               return (
-                <AddMedicationForm.Step>
-                  {({ onChangeValue, values }) => (
+                <AddMedDocForm.Step>
+                  {({ onChangeValue, onChangeTimersNumber, values }) => (
                     <View key={timerNumber}>
                       <Text>Dose Number {timerNumber}</Text>
                       <TouchableOpacity style={styles.button} onPress={function(){
@@ -186,21 +189,23 @@ export default function AddMedicationScreen ({navigation}) {
                         mode={'time'}
                         is24Hour={true}
                         isVisible={timeVisible}
-                        onConfirm={ function(data){{onChangeMedicationTime1(data)}; {onChangeTimeVisible(false)}} }
+                        onConfirm={ function(data){{onChangeMedicationTime1(data)}; {onChangeTimeVisible(false)}; {onChangeValue('medicTimerArray', data)} }}
                         onCancel={function(){onChangeTimeVisible(false)}}
                       />
                       <TextInput
                         style={styles.textInput}
                         placeholder={'Time - hh:mm'}
                         value={Moment(medicationTime1.toString()).format("HH:mm")}
+                        //value={values.medicTimerArray[timerNumber]}
+                        onChangeTimersNumber
                       />
                     </View>
                   )}
-                </AddMedicationForm.Step>
+                </AddMedDocForm.Step>
               );
             })}
 
-            <AddMedicationForm.Step>
+            <AddMedDocForm.Step>
               {({ onChangeValue, values }) => (
               <View>
                 <Text>Medication Starting Date</Text>
@@ -224,9 +229,9 @@ export default function AddMedicationScreen ({navigation}) {
                 />
               </View>
               )}
-            </AddMedicationForm.Step>
+            </AddMedDocForm.Step>
 
-            <AddMedicationForm.Step>
+            <AddMedDocForm.Step>
               {({ onChangeValue, values }) => (
               <View>
                 <Text>Medication End Date</Text>
@@ -250,9 +255,9 @@ export default function AddMedicationScreen ({navigation}) {
                 />
               </View>
               )}
-            </AddMedicationForm.Step>
+            </AddMedDocForm.Step>
 
-            <AddMedicationForm.Step>
+            <AddMedDocForm.Step>
               {({ onChangeValue, values }) => (
               <View>
               <Text>Medication Instructions</Text>
@@ -265,9 +270,9 @@ export default function AddMedicationScreen ({navigation}) {
                 />
               </View>
               )}
-            </AddMedicationForm.Step>
+            </AddMedDocForm.Step>
 
-          </AddMedicationForm>
+          </AddMedDocForm>
       
       
       

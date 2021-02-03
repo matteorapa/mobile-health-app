@@ -31,7 +31,7 @@ class Step extends Component {
 }
 
 
-class AddMedicationForm extends Component {
+class AddMedDocForm extends Component {
     static Step = Step;
 
     state = {
@@ -67,9 +67,14 @@ class AddMedicationForm extends Component {
     };
 
     _onSubmit = () => {
-        console.log(JSON.stringify(this.state.values));
+        //console.log(JSON.stringify(this.state.values));
         console.log(this.state.values);
+    };
 
+    _onChangeTimersNumber = (value) => {
+        this.setState(prevState => ({
+            index: prevState.index + (value - 1),
+        }));
     };
 
     render() {
@@ -85,6 +90,7 @@ class AddMedicationForm extends Component {
                             onChangeValue: this._onChangeValue,
                             values: this.state.values,
                             onSubmit: this._onSubmit,
+                            onChangeTimersNumber: this._onChangeTimersNumber,
                         })
                     }
                     return null;
@@ -94,4 +100,4 @@ class AddMedicationForm extends Component {
     }
 }
 
-export default AddMedicationForm;
+export default AddMedDocForm;
