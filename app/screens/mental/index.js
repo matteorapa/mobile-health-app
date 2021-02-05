@@ -1,4 +1,4 @@
-import { Text, View, ScrollView, Alert, Dimensions, StyleSheet } from 'react-native';
+import { Text, View, ScrollView, Alert, Dimensions, StyleSheet} from 'react-native';
 import React, {useState} from 'react';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { Avatar, Button, Card, Title, Paragraph, ProgressBar, Colors } from 'react-native-paper';
@@ -6,9 +6,23 @@ import {TabView, SceneMap} from 'react-native-tab-view';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 
+// const getTimeDiff = (differenceIn = 'milliseconds', floating= false) => {
+//   var hours = new Date().getHours();
+//   var minutes = new Date().getMinutes();
+//   var seconds = new Date().getSeconds();
+//   var milliseconds = new Date().getMilliseconds();
+//   var then = moment("04-09-2013 14:59:40", "DD-MM-YYYY HH:mm:ss");
+//   //this return the difference between now and then in milliseconds as default
+//   var timeDifference = now.diff(then, differenceIn, floating);
+//   console.log("Time difference - " + timeDifference + ' ' + differenceIn);
+// }
+
+
 const HabitRoute = (props) => {
   
   const navigation = useNavigation();
+  const [boolean, setBool] = useState(false);
+  const [timeDiff, setTD] = useState(0);
   return(
 
   <ScrollView>
@@ -24,10 +38,19 @@ const HabitRoute = (props) => {
           </Paragraph>
           <Card.Actions>
             <Button onPress={() => {
-              props.setPoints( props.points + 10);
-              reward(props.points);
-              }}>Done</Button>
-            <Button>Fail</Button>
+              props.setPoints(props.points + 10);
+              props.setCPts(props.consPts + 10);
+              reward(props.consPts);
+              setBool(true);
+              //setTD((new Date("2021-02-05 00:00:00").getTime()) - (new Date().getTime())); 
+              //setTD(timeDiff/ (1000 * 60 * 60));
+              //console.log(timeDiff);
+              }}
+              disabled={boolean}>Done</Button>
+            <Button onPress={() => {
+              props.setCPts(0);
+              setBool(false);
+            }}>Fail</Button>
             <Button onPress={() => {
           navigation.navigate('Tasks', {
             screen: 'EditHabit'
@@ -53,9 +76,19 @@ const HabitRoute = (props) => {
 
 const ProgressRoute = (props) => {
   const [percentage, setPerc] = useState(0);
+  const [title, setTitle] = useState('Beginner Achievement');
   React.useEffect(() => {
-    if(props.points <= 50){
-      setPerc(props.points / 50);
+    if(props.consPts <= 50){
+      setTitle('Beginner Achievement');
+      setPerc(props.consPts / 50);
+    }
+    if (props.consPts > 50 && props.consPts <= 100) {
+      setTitle('Amateur Achievement');
+      setPerc((props.consPts - 50) / 50);
+    }
+    if (props.consPts > 100 && props.consPts <= 200) {
+      setTitle('Pro Achievement');
+      setPerc((props.consPts - 100) / 100);
     }
   })
   
@@ -63,6 +96,7 @@ const ProgressRoute = (props) => {
   return(
     <View>
       <Text>Progress screen</Text>
+      <Title>{title}</Title>
       <ProgressBar progress={percentage} color={Colors.blue800} style={{height:30}}/>
     </View>
   );
@@ -146,6 +180,7 @@ const initialLayout = { width: Dimensions.get('window').width };
 export default function MindScreen() {
 
   const [points, setPoints] = useState(0);
+  const [consPts, setCPts] = useState(0);
       
       const [index, setIndex] = React.useState(0);
 
@@ -161,13 +196,17 @@ export default function MindScreen() {
       const renderScene = ({ route }) => {
         switch (route.key) {
           case 'habits':
-            return <HabitRoute points={points} setPoints ={setPoints} />;
+            return <HabitRoute points={points} setPoints ={setPoints} 
+            consPts={consPts} setCPts={setCPts}/>;
           case 'progress':
-            return <ProgressRoute points={points} setPoints ={setPoints}/>;
+            return <ProgressRoute points={points} setPoints ={setPoints}
+            consPts={consPts} setCPts={setCPts}/>;
           case 'reminders':
-            return <ReminderRoute points={points} setPoints ={setPoints}/>;
+            return <ReminderRoute points={points} setPoints ={setPoints}
+            consPts={consPts} setCPts={setCPts}/>;
           default:
-            return <HabitRoute points={points} setPoints ={setPoints} />;
+            return <HabitRoute points={points} setPoints ={setPoints} 
+            consPts={consPts} setCPts={setCPts}/>;
         }
       };
       
@@ -187,12 +226,12 @@ export default function MindScreen() {
   }
 
 
-  export function reward(points){
+  export function reward(consPoints){
     
 
-    if(points == 50 ){Alert.alert("Reward", "beginner achievement");}
-    if(points == 100 ){Alert.alert("Reward", "amateur achievement");}
-    if(points == 200 ){Alert.alert("Reward", "pro achievement");}
+    if(consPoints == 50 ){Alert.alert("Reward", "beginner achievement");}
+    if(consPoints == 100 ){Alert.alert("Reward", "amateur achievement");}
+    if(consPoints == 200 ){Alert.alert("Reward", "pro achievement");}
   }
 
   export function editTime(){
