@@ -1,5 +1,6 @@
 import { Text, TextInput, TextField, View , Button, TextInputComponent, FlatList, SafeAreaView, ScrollView, TouchableOpacity, Group } from 'react-native';
 import React, { Component, useState } from 'react';
+import { Picker } from '@react-native-community/picker';
 import {styles} from '../../styles/globals';
 
 import AddMedDocForm from './AddMedDocForm';
@@ -54,6 +55,9 @@ export default function AddMedicationScreen ({navigation}) {
 
     const timerArray = [];
 
+    const metricsOfDosage = ['ml', 'mg', 'g', 'Pills'];
+    const dailyDosageOptions = ['Yes', 'No'];
+
     function range(start, end) {
       return Array(end - start + 1).fill().map((_, idx) => start + idx);
     }
@@ -61,12 +65,13 @@ export default function AddMedicationScreen ({navigation}) {
     function timersIncluded(dailyDosesNumber){
       onChangeTimersToInclude(range(1, dailyDosesNumber));
     }
-
+    
     return (
           <AddMedDocForm initialValues={{
             medicName: '',
             medicType: '',
             medicDosage: '',
+            medicDosageMetric: '',
             medicReason: '',
             medicDaily: '',
             medicDailyDosesNumber: '',
@@ -112,15 +117,25 @@ export default function AddMedicationScreen ({navigation}) {
               {({ onChangeValue, values }) => (
               <View>
                 <Text>Medication Dosage</Text>
-                <TextInput
-                  style={styles.textInput}
-                  placeholder={'Medication Dosage'}
-                  onChangeText={(text) => onChangeValue('medicDosage', text)}
-                  value={values.medicDosage}
-                  keyboardType={'numeric'}
-                  autoFocus={true}
-          //add drop-down with metric
-                />
+                <View style={styles.navButtonsForm}>
+                  <TextInput
+                    style={styles.textInput, {width: '40%'}}
+                    placeholder={'Medication Dosage'}
+                    onChangeText={(text) => onChangeValue('medicDosage', text)}
+                    value={values.medicDosage}
+                    keyboardType={'numeric'}
+                    autoFocus={true}
+                  />
+                  <Picker
+                    style={{width:'30%'}}
+                    selectedValue={values.medicDosageMetric}
+                    onValueChange={(data) => onChangeValue('medicDosageMetric', data)}
+                    value={values.medicDosageMetric}>
+                    {metricsOfDosage.map((item, index) => {
+                      return (<Picker.Item label={item} value={index} key={index}/>)
+                    })}
+                  </Picker>
+                </View>
               </View>
               )}
             </AddMedDocForm.Step>
@@ -144,14 +159,15 @@ export default function AddMedicationScreen ({navigation}) {
               {({ onChangeValue, values }) => (
               <View>
                 <Text>Daily Medication?</Text>
-                <TextInput
-                  style={styles.textInput}
-                  placeholder={'Daily Medication'}
-                  onChangeText={(text) => onChangeValue('medicDaily', text)}
-                  //yes, no, other drop-down
-                  value={values.medicDaily}
-                  autoFocus={true}
-                />
+                <Picker
+                  style={{width:'30%'}}
+                  selectedValue={values.medicDaily}
+                  onValueChange={(data) => onChangeValue('medicDaily', data)}
+                  value={values.medicDaily}>
+                  {dailyDosageOptions.map((item, index) => {
+                    return (<Picker.Item label={item} value={index} key={index}/>)
+                  })}
+                </Picker>
               </View>
               )}
             </AddMedDocForm.Step>
@@ -190,7 +206,7 @@ export default function AddMedicationScreen ({navigation}) {
                         is24Hour={true}
                         isVisible={timeVisible}
                         onConfirm={ function(data){{onChangeMedicationTime1(data)}; {onChangeTimeVisible(false)}; {onChangeValue('medicTimerArray', data)} }}
-                        onCancel={function(){onChangeTimeVisible(false)}}
+                        onCancel={onChangeTimeVisible(false)}
                       />
                       <TextInput
                         style={styles.textInput}
@@ -273,182 +289,5 @@ export default function AddMedicationScreen ({navigation}) {
             </AddMedDocForm.Step>
 
           </AddMedDocForm>
-      
-      
-      
-      
-//       <SafeAreaView style={styles.container}>
-//         <View style={styles.box}>
-//           <Text style={styles.heading}>New Medication</Text>
-//         <ScrollView style={styles.ScrollView}>
-
-//           {/* <DropDownPicker
-//               items={[
-//                   {label: 'Yes', value: 'yes', hidden: true},
-//                   {label: 'No', value: 'no'},
-//               ]}
-//               defaultValue={this.state.country}
-//               containerStyle={{height: 40}}
-//               style={{backgroundColor: '#fafafa'}}
-//               itemStyle={{
-//                   justifyContent: 'flex-start'
-//               }}
-//               dropDownStyle={{backgroundColor: '#fafafa'}}
-//               onChangeItem={item => this.setState({
-//                   country: item.value
-//               })}
-//           /> */}
-
-//           <Text>Medication Name</Text>
-//           <TextInput
-//             style={styles.textInput}
-//             placeholder={'Medication Name'}
-//             onChangeText={(text) => onChangeMedicationName(text)}
-//             //value={text}
-//           />
-
-//           <Text>Medication Type</Text>
-//           <TextInput
-//             style={styles.textInput}
-//             placeholder={'Medication Type'}
-//             onChangeText={(text) => onChangeMedicationType(text)}
-//             //value={text}
-//           />
-
-//           <Text>Medication Dosage</Text>
-//           <TextInput
-//             style={styles.textInput}
-//             placeholder={'Medication Dosage'}
-//             onChangeText={(text) => onChangeMedicationDosage(text)}
-//             //value={text}
-//             keyboardType={'numeric'}
-//           />
-
-//           <Text>Medication Reason</Text>
-//           <TextInput
-//             style={styles.textInput}
-//             placeholder={'Medication Reason'}
-//             onChangeText={(text) => onChangeMedicationReason(text)}
-//             //value={text}
-//           />
-          
-//           <Text>Daily Medication?</Text>
-//           <TextInput
-//             style={styles.textInput}
-//             placeholder={'Daily Medication'}
-//             onChangeText={(text) => onChangeMedicationDaily(text)}
-// //yes, no, other
-//             //value={text}
-//           />
-          
-//           <Text>Number of Doses to Take Each Day</Text>
-//           <TextInput
-//             style={styles.textInput}
-//             placeholder={'Number of Doses Each Day'}
-//             onChangeText={(text) => onChangeMedicationDailyDosesNumber(text)}
-//             onConfirm={(text) => timersIncluded(text)}
-//             //value={text}
-//             keyboardType={'numeric'}
-//           />
-
-// {/* Repeat according to Number of Daily Medications */}
-//             {timersToInclude.map((timerNumber) => {
-//               return (
-//                 // <Text>Something to Print {timerNumber}</Text>
-//                 <View key={timerNumber}>
-//                   <Text>Dose Number {timerNumber}</Text>
-//                   <TouchableOpacity style={styles.button} onPress={function(){
-//                     onChangeTimeVisible(true);
-//                   } }>
-//                     <Text>TimerIcon</Text>
-//                   </TouchableOpacity>
-//                   <DateTimePicker
-//                     mode={'time'}
-//                     is24Hour={true}
-//                     isVisible={timeVisible}
-//                     onConfirm={ function(data){{onChangeMedicationTime1(data)}; {onChangeTimeVisible(false)}} }
-//                     onCancel={function(){onChangeTimeVisible(false)}}
-//                   />
-//                   <TextInput
-//                     style={styles.textInput}
-//                     placeholder={'Time - hh:mm'}
-//                     value={Moment(medicationTime1.toString()).format("HH:mm")}
-//                   />
-//                 </View>
-//               );
-//             })}
-
-//           {/* {timers(medicationDailyDosesNumber)} */}
-
-//           <Text>Medication Starting Date</Text>
-//           <TouchableOpacity style={styles.button} onPress={function(){
-//             onChangeCalendarStart(true);
-//           } }>
-//             <Text>CalendarIcon</Text>
-//           </TouchableOpacity>
-//           <DateTimePicker
-//             value={Date}
-//             mode={'date'}
-//             isVisible={calendarStartVisible}
-//             onConfirm={ function(data){{onChangeMedicationStartDate(data)}; {onChangeCalendarStart(false)}} }
-//             onCancel={function(){onChangeCalendarStart(false)}}
-//           />
-//           <TextInput
-//             style={styles.textInput}
-//             placeholder={'Start Date - dd/mm/yyyy'}
-//             //value={medicationStartDate.toDateString()}
-//             value={Moment(medicationStartDate.toString()).format("DD/MM/yyyy")}
-//           />
-
-//           <Text>Medication End Date</Text>
-//           <TouchableOpacity style={styles.button} onPress={function(){
-//             onChangeCalendarEnd(true);
-//           } }>
-//             <Text>CalendarIcon</Text>
-//           </TouchableOpacity>
-//           <DateTimePicker
-//             value={Date}
-//             mode={'date'}
-//             isVisible={calendarEndVisible}
-//             onConfirm={ function(data){{onChangeMedicationEndDate(data)}; {onChangeCalendarEnd(false)}} }
-//             onCancel={function(){onChangeCalendarEnd(false)}}
-//           />
-//           <TextInput
-//             style={styles.textInput}
-//             placeholder={'End Date - dd/mm/yyyy'}
-//             //value={medicationEndDate.toDateString()}
-//             value={Moment(medicationEndDate.toString()).format("DD/MM/yyyy")}
-//           />
-          
-//           <Text>Medication Instructions</Text>
-//           <TextInput
-//             style={styles.textInput}
-//             placeholder={'Medication Instructions'}
-//             onChangeText={(text) => onChangeMedicationInstructions(text)}
-//             //value={text}
-//           />
-
-//           <Button
-//             title="Add New Medication"
-//             color="#000000"
-//             accessibilityLabel="Add medication to list"
-//             onPress={() => {
-//               submitForm(medicationName, medicationType, medicationDosage, medicationReason,
-//                           medicationDaily, medicationDailyDosesNumber, medicationTime1, medicationStartDate, medicationEndDate,
-//                           medicationInstructions, () => {
-//                 navigation.navigate('Medication', {
-//                   screen: 'Index'
-//                 });
-//               });
-//             }}
-//           />
-          
-
-//         </ScrollView>
-//         </View>
-//       </SafeAreaView>
-
     );
-  //}
-
 }

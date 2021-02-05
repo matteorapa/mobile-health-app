@@ -1,7 +1,9 @@
 import { Text, TextInput, View, Button } from 'react-native';
 import React from 'react';
+import { Picker } from '@react-native-community/picker';
 import {styles} from '../../styles/globals';
 import AddMedDocForm from './AddMedDocForm';
+import PhonePrefix from './PhonePrefix';
 
 function submitForm (docName, docSpeciality, docPhone, docEmail, cb){
   //check auth of form
@@ -15,16 +17,26 @@ function submitForm (docName, docSpeciality, docPhone, docEmail, cb){
 export default function AddMedicationScreen( {navigation} ) {
   const [doctorName, onChangeDoctorName] = React.useState('');
   const [doctorSpeciality, onChangeDoctorSpeciality] = React.useState('');
+  const [doctorPhonePrefix, onChangeDoctorPhonePrefix] = React.useState('');
   const [doctorPhone, onChangeDoctorPhone] = React.useState('');
   const [doctorEmail, onChangeDoctorEmail] = React.useState('');
-  
+
+  const specialitiesOfDoctors = ['Allergy and Immunology', 'Anesthesiology', 'Dermatology', 'Diagnostic Radiology', 'Emergency Medicine', 'Family Medicine',
+                                  'Internal Medicine', 'Medical Genetics', 'Neurology', 'Nuclear Medicine', 'Obstetrics and Gynecology', 'Ophthalmology', 'Pathology',
+                                  'Pediatrics', 'Physical Medicine and Rehabilitation', 'Preventive Medicine', 'Psychiatry', 'Radiation Oncology', 'Surgery', 'Urology'];
+
   return (
     <AddMedDocForm initialValues={{
       doctName: '',
       doctSpeciality: '',
+      doctPhoneCountry: '',
+      doctPhoneCallingCode: '',
+      doctPhoneNumber: '',
+      doctPhonePrefix: '',
       doctPhone: '',
       doctEmail: '',
     }}>
+
 
       <AddMedDocForm.Step>
         {({ onChangeValue, values }) => (
@@ -45,14 +57,15 @@ export default function AddMedicationScreen( {navigation} ) {
         {({ onChangeValue, values }) => (
         <View>
           <Text>Doctor`s Speciality</Text>
-          <TextInput
-            style={styles.textInput}
-            placeholder={'Doctor`s Speciality'}
-            onChangeText={text => onChangeValue('doctSpeciality', text)}
-            value={values.doctSpeciality}
-            autoFocus={true}
-        //drop-down with choices
-          />
+          <Picker
+            style={{width:'80%'}}
+            selectedValue={values.doctSpeciality}
+            onValueChange={(data) => onChangeValue('doctSpeciality', data)}
+            value={values.doctSpeciality}>
+            {specialitiesOfDoctors.map((item, index) => {
+              return (<Picker.Item label={item} value={index} key={index}/>)
+            })}
+          </Picker>
         </View>
         )}
       </AddMedDocForm.Step>
@@ -61,6 +74,7 @@ export default function AddMedicationScreen( {navigation} ) {
         {({ onChangeValue, values }) => (
         <View>
           <Text>Doctor`s Phone Number</Text>
+          {/* <PhonePrefix /> */}
           <TextInput
             style={styles.textInput}
             placeholder={'Doctor`s Phone Number'}
@@ -72,7 +86,7 @@ export default function AddMedicationScreen( {navigation} ) {
         </View>
         )}
       </AddMedDocForm.Step>
-
+      
       <AddMedDocForm.Step>
         {({ onChangeValue, values }) => (
         <View>
@@ -91,61 +105,4 @@ export default function AddMedicationScreen( {navigation} ) {
 
     </AddMedDocForm>
   );
-
-
-
-    // return (
-    //   <View style={styles.container}>
-    //     <View style={styles.box}>
-    //       <Text style={styles.heading}>New Doctor</Text>
-
-    //       <Text>Doctor's Name</Text>
-    //       <TextInput
-    //         style={styles.textInput}
-    //         placeholder={'Doctor Name'}
-    //         onChangeText={(text) => onChangeDoctorName(text)}
-    //         //value={text}
-    //       />
-
-    //       <Text>Doctor`s Speciality</Text>
-    //       <TextInput
-    //         style={styles.textInput}
-    //         placeholder={'Doctor Speciality'}
-    //         onChangeText={(text) => onChangeDoctorSpeciality(text)}
-    //         //value={text}
-    //       />
-
-    //       <Text>Doctor`s Phone</Text>
-    //       <TextInput
-    //         style={styles.textInput}
-    //         placeholder={'Doctor Phone'}
-    //         onChangeText={(text) => onChangeDoctorPhone(text)}
-    //         //value={text}
-    //         keyboardType={'numeric'}
-    //       />
-
-    //       <Text>Doctor`s Email</Text>
-    //       <TextInput
-    //         style={styles.textInput}
-    //         placeholder={'Doctor Email'}
-    //         onChangeText={(text) => onChangeDoctorEmail(text)}
-    //         //value={email}
-    //       />
-
-    //       <Button
-    //         title="Add New Doctor"
-    //         color="#000000"
-    //         accessibilityLabel="Add doctor to list"
-    //         onPress={() => {
-    //           submitForm(doctorName, doctorSpeciality, doctorPhone, doctorEmail, () => {
-    //             navigation.navigate('Medication', {
-    //               screen: 'Index'
-    //             });
-    //           });
-    //         }}
-    //       />
-
-    //     </View>
-    //   </View>
-    // );
-  }
+}
