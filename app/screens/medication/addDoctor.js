@@ -3,12 +3,8 @@ import React, { useState } from 'react';
 import { Picker } from '@react-native-community/picker';
 import {styles} from '../../styles/globals';
 import AddMedDocForm from './AddMedDocForm';
-//import PhonePrefix from './PhonePrefix';
-// import CountryPicker from './ModalPickerImage';
-// import countries from '../../node_modules/react-native-phone-input/lib/resources/countries.json'
-// import CountryPicker from 'react-native-country-picker-modal'
-// import { CountryCode, Country } from './src/types'
 import {Countries} from './Countries';
+import { TextInputMask } from 'react-native-masked-text'
 
 function submitForm (docName, docSpeciality, docPhone, docEmail, cb){
   //check auth of form
@@ -35,7 +31,7 @@ export default function AddMedicationScreen( {navigation} ) {
   const [countryPickerVisible, setCountryPickerVisible] = useState(false);
   const [dataCountries, setDataCountries] = useState(Countries);
   const [countryCode, setCountryCode] = useState('+356');
-  const [countryPlaceholder, setCountryPlaceholder] = useState('1234 1234');
+  const [countryPlaceholder, setCountryPlaceholder] = useState('9999 9999');
 
   const onShowHideCountryPicker = () => {
     setCountryPickerVisible(!countryPickerVisible);
@@ -145,24 +141,7 @@ export default function AddMedicationScreen( {navigation} ) {
         {({ onChangeValue, values }) => (
         <View>
           <Text>Doctor`s Phone Number</Text>
-          {/* <Picker
-            style={{width:'50%'}}
-            selectedValue={values.doctPhonePrefix}
-            onValueChange={(data) => onChangeValue('doctPhonePrefix', data)}
-            value={values.doctPhonePrefix}>
-            {listOfCountries.map((item, index) => {
-              return (<Picker.Item label={item} value={index} key={index}/>)
-            })}
-          </Picker> */}
-
           <View style={styles.phoneNumberInputs}>
-            {/* <TextInput
-              style={styles.textInput, {width: '10%'}}
-              placeholder={'+356'}
-              onChangeText={text => onChangeValue('doctPhonePrefix', text)}
-              keyboardType={'phone-pad'}
-              value={values.doctPhonePrefix}
-            /> */}
             <TouchableOpacity onPress={onShowHideCountryPicker}>
               <View>
                 <Text>{countryCode + " "}</Text>
@@ -170,15 +149,22 @@ export default function AddMedicationScreen( {navigation} ) {
             </TouchableOpacity>
             {renderCountryPicker()}
 
-            {/* {console.log(dataCountries)} */}
-            <TextInput
+            <TextInputMask
+              type={'custom'}
+              options={{mask: countryPlaceholder}}
+              onChangeText={text => onChangeValue('doctPhone', text)}
+              keyboardType={'phone-pad'}
+              value={values.doctPhone}
+              autoFocus={true}
+            />
+            {/* <TextInput
               style={styles.textInput, {width: '40%'}}
               placeholder={countryPlaceholder}
               onChangeText={text => onChangeValue('doctPhone', text)}
               keyboardType={'phone-pad'}
               value={values.doctPhone}
               autoFocus={true}
-            />
+            /> */}
           </View>
         </View>
         )}
