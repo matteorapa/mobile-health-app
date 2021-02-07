@@ -50,6 +50,60 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
   },
+  phoneNumberInputs: {
+    flexDirection: 'row',
+    
+  },
+  countryPickerContainer: {
+    paddingTop: 15,
+    paddingLeft: 25,
+    paddingRight: 25,
+    flex: 1,
+    backgroundColor: 'white'
+  },
+  filterInputStyle: {
+    flex: 1,
+    paddingTop: 10,
+    paddingBottom: 10,
+    backgroundColor: '#fff',
+    color: '#424242'
+  },
+  countryPickerStyle: {
+    flex: 1,
+    borderColor: 'black',
+    borderTopWidth: 1,
+    padding: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
+  },
+  countryPickerItemContainer: {
+    flex: 1,
+    paddingLeft: 5,
+    flexDirection: 'row'
+  },
+  countryPickerItemName: {
+    flex: 1,
+    fontSize: 16
+  },
+  countryPickerItemDialCode: {
+    fontSize: 16
+  },
+  filterInputContainer: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  closeButtonStyle: {
+    padding: 12,
+    alignItems: 'center'
+  },
+  closeTextStyle: {
+    padding: 5,
+    fontSize: 20,
+    color: 'red'
+  }
 });
 
 export {styles};

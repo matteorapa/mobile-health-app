@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 
+import ModalPickerImage from './ModalPickerImage';
 import PhoneInput from "react-native-phone-input";
 
 class PhonePrefix extends Component {
@@ -14,7 +15,7 @@ class PhonePrefix extends Component {
     };
 
     this.updateInfo = this.updateInfo.bind(this);
-    this.renderInfo = this.renderInfo.bind(this);
+    // this.renderInfo = this.renderInfo.bind(this);
   }
 
   updateInfo() {
@@ -25,42 +26,63 @@ class PhonePrefix extends Component {
     });
   }
 
-  renderInfo() {
-    if (this.state.value) {
-      return (
-        <View style={styles.info}>
-          <Text>
-            Is Valid:{" "}
-            <Text style={{ fontWeight: "bold" }}>
-              {this.state.valid.toString()}
-            </Text>
-          </Text>
-          <Text>
-            Type: <Text style={{ fontWeight: "bold" }}>{this.state.type}</Text>
-          </Text>
-          <Text>
-            Value:{" "}
-            <Text style={{ fontWeight: "bold" }}>{this.state.value}</Text>
-          </Text>
-        </View>
-      );
-    }
+  componentDidMount(){
+    this.setState({
+        pickerData: this.phone.getPickerData()
+    })
   }
+
+  onPressFlag(){
+      this.myCountryPicker.open()
+  }
+
+  selectCountry(country){
+      this.phone.selectCountry(country.iso2)
+  }
+
+  // renderInfo() {
+  //   if (this.state.value) {
+  //     return (
+  //       <View style={styles.info}>
+  //         <Text>
+  //           Is Valid:{" "}
+  //           <Text style={{ fontWeight: "bold" }}>
+  //             {this.state.valid.toString()}
+  //           </Text>
+  //         </Text>
+  //         <Text>
+  //           Type: <Text style={{ fontWeight: "bold" }}>{this.state.type}</Text>
+  //         </Text>
+  //         <Text>
+  //           Value:{" "}
+  //           <Text style={{ fontWeight: "bold" }}>{this.state.value}</Text>
+  //         </Text>
+  //       </View>
+  //     );
+  //   }
+  // }
 
   render() {
     return (
-      <View style={styles.container}>
+      // <View style={styles.container}>
+      <View>
         <PhoneInput
-          ref={ref => {
-            this.phone = ref;
-          }}
+          ref={ ref => {this.phone = ref;} }
+          onPressFlag={this.onPressFlag}
         />
 
-        <TouchableOpacity onPress={this.updateInfo} style={styles.button}>
-          <Text>Get Info</Text>
-        </TouchableOpacity>
+        <ModalPickerImage
+          ref={(ref) => { this.myCountryPicker = ref; }}
+          data={this.state.pickerData}
+          onChange={(country)=>{ this.selectCountry(country) }}
+          cancelText='Cancel'
+        />
 
-        {this.renderInfo()}
+        {/* <TouchableOpacity onPress={this.updateInfo} style={styles.button}>
+          <Text>Get Info</Text>
+        </TouchableOpacity> */}
+
+        {/* {this.renderInfo()} */}
       </View>
     );
   }
