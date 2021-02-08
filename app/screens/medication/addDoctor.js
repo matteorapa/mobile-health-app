@@ -1,18 +1,19 @@
-import { Text, TextInput, View, Button, TouchableOpacity, Modal, SafeAreaView, FlatList, TouchableWithoutFeedback } from 'react-native';
+import { Text, TextInput, View, Button, Image, TouchableOpacity, Modal, SafeAreaView, FlatList, TouchableWithoutFeedback } from 'react-native';
 import React, { useState } from 'react';
 import { Picker } from '@react-native-community/picker';
 import {styles} from '../../styles/globals';
 import AddMedDocForm from './AddMedDocForm';
-import {Countries} from './Countries';
-import { TextInputMask } from 'react-native-masked-text'
+import { Countries } from './Countries';
+import { TextInputMask } from 'react-native-masked-text';
+import { countryFlags } from './countryFlags';
 
-function submitForm (docName, docSpeciality, docPhone, docEmail, cb){
+function submitForm (docName, docSpeciality, docPhonePrefix, docPhone, docEmail, cb){
   //check auth of form
 
   //submit to firebase table
-  console.log('submit', docName, docSpeciality, docPhone, docEmail);
+  console.log('submit', docName, docSpeciality, docPhonePrefix, docPhone, docEmail);
 
-  cb();
+  //cb();
 }
 
 export default function AddMedicationScreen( {navigation} ) {
@@ -25,13 +26,12 @@ export default function AddMedicationScreen( {navigation} ) {
   const specialitiesOfDoctors = ['Allergy and Immunology', 'Anesthesiology', 'Dermatology', 'Diagnostic Radiology', 'Emergency Medicine', 'Family Medicine',
                                   'Internal Medicine', 'Medical Genetics', 'Neurology', 'Nuclear Medicine', 'Obstetrics and Gynecology', 'Ophthalmology', 'Pathology',
                                   'Pediatrics', 'Physical Medicine and Rehabilitation', 'Preventive Medicine', 'Psychiatry', 'Radiation Oncology', 'Surgery', 'Urology'];
-
-  //const listOfCountries = countries;
   
   const [countryPickerVisible, setCountryPickerVisible] = useState(false);
   const [dataCountries, setDataCountries] = useState(Countries);
   const [countryCode, setCountryCode] = useState('+356');
   const [countryPlaceholder, setCountryPlaceholder] = useState('9999 9999');
+  const [countryFlagCode, setCountryFlagCode] = useState(require('./images/mt.png'));
 
   const onShowHideCountryPicker = () => {
     setCountryPickerVisible(!countryPickerVisible);
@@ -52,6 +52,8 @@ export default function AddMedicationScreen( {navigation} ) {
     setCountryCode(item.dialCode);
     setCountryPlaceholder(item.mask);
     onShowHideCountryPicker();
+    onChangeDoctorPhonePrefix(item.dialCode);
+    setCountryFlagCode(countryFlags.flags[item.code.toLowerCase()]);
   }
 
   let renderCountryPicker = () => {
@@ -78,6 +80,7 @@ export default function AddMedicationScreen( {navigation} ) {
                   <TouchableWithoutFeedback onPress={() => onCountryChange(item)}>
                     <View style={styles.countryPickerStyle}>
                       <View style={styles.countryPickerItemContainer}>
+                        <Image source={countryFlags.flags[item.code.toLowerCase()]} style={styles.flagImage}/>
                         <Text style={styles.countryPickerItemName}>{item.en}</Text>
                         <Text style={styles.countryPickerItemDialCode}>{item.dialCode}</Text>
                       </View>
@@ -112,9 +115,10 @@ export default function AddMedicationScreen( {navigation} ) {
           <TextInput
             style={styles.textInput}
             placeholder={'Doctor`s Name'}
-            onChangeText={text => onChangeValue('doctName', text)}
+            onChangeText={ function(text) {{onChangeValue('doctName', text)}; {onChangeDoctorName(text)}} }
             value={values.doctName}
             autoFocus={true}
+            autoCapitalize={'words'}
           />
         </View>
         )}
@@ -127,7 +131,7 @@ export default function AddMedicationScreen( {navigation} ) {
           <Picker
             style={{width:'80%'}}
             selectedValue={values.doctSpeciality}
-            onValueChange={(data) => onChangeValue('doctSpeciality', data)}
+            onValueChange={ function(data) {{onChangeValue('doctSpeciality', data)}; {onChangeDoctorSpeciality(specialitiesOfDoctors[data])}} }
             value={values.doctSpeciality}>
             {specialitiesOfDoctors.map((item, index) => {
               return (<Picker.Item label={item} value={index} key={index}/>)
@@ -141,30 +145,25 @@ export default function AddMedicationScreen( {navigation} ) {
         {({ onChangeValue, values }) => (
         <View>
           <Text>Doctor`s Phone Number</Text>
+
           <View style={styles.phoneNumberInputs}>
             <TouchableOpacity onPress={onShowHideCountryPicker}>
-              <View>
-                <Text>{countryCode + " "}</Text>
+              <View style={styles.testing}>
+                <Image source={countryFlagCode} style={styles.flagImage}/>
+                <Text>{countryCode}</Text>
               </View>
             </TouchableOpacity>
             {renderCountryPicker()}
-
+            
             <TextInputMask
               type={'custom'}
+              style={styles.textInput, styles.phoneNumberInputs}
               options={{mask: countryPlaceholder}}
-              onChangeText={text => onChangeValue('doctPhone', text)}
+              onChangeText={ function(text) {{onChangeValue('doctPhone', text)}; {onChangeDoctorPhone(text)}} }
               keyboardType={'phone-pad'}
               value={values.doctPhone}
               autoFocus={true}
             />
-            {/* <TextInput
-              style={styles.textInput, {width: '40%'}}
-              placeholder={countryPlaceholder}
-              onChangeText={text => onChangeValue('doctPhone', text)}
-              keyboardType={'phone-pad'}
-              value={values.doctPhone}
-              autoFocus={true}
-            /> */}
           </View>
         </View>
         )}
@@ -177,15 +176,24 @@ export default function AddMedicationScreen( {navigation} ) {
           <TextInput
             style={styles.textInput}
             placeholder={'Doctor`s Email'}
-            onChangeText={text => onChangeValue('doctEmail', text)}
+            onChangeText={ function(text) {{onChangeValue('doctEmail', text)}; {onChangeDoctorEmail(text)}} }
             keyboardType={'email-address'}
             value={values.doctEmail}
             autoFocus={true}
+            autoCapitalize={'none'}
           />
+          
+    {/* for testing purposes */}
+    {submitForm(doctorName, doctorSpeciality, doctorPhonePrefix, doctorPhone, doctorEmail)}
+
         </View>
         )}
       </AddMedDocForm.Step>
 
     </AddMedDocForm>
+
+    
+      
+    
   );
 }

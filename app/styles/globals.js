@@ -52,7 +52,10 @@ const styles = StyleSheet.create({
   },
   phoneNumberInputs: {
     flexDirection: 'row',
-    
+    alignItems: 'center'
+  },
+  testing: {
+    flexDirection: 'row'
   },
   countryPickerContainer: {
     paddingTop: 15,
@@ -103,6 +106,11 @@ const styles = StyleSheet.create({
     padding: 5,
     fontSize: 20,
     color: 'red'
+  },
+  flagImage: {
+    marginRight: 10,
+    width: 30,
+    height: 16
   }
 });
 
