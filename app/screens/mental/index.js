@@ -4,6 +4,8 @@ import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { Avatar, Button, Card, Title, Paragraph, ProgressBar, Colors } from 'react-native-paper';
 import {TabView, SceneMap} from 'react-native-tab-view';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import moment from 'moment';
+
 
 
 // const getTimeDiff = (differenceIn = 'milliseconds', floating= false) => {
@@ -22,7 +24,7 @@ const HabitRoute = (props) => {
   
   const navigation = useNavigation();
   const [boolean, setBool] = useState(false);
-  const [timeDiff, setTD] = useState(0);
+  const [counter, setCounter] = useState(1);
   return(
 
   <ScrollView>
@@ -41,13 +43,33 @@ const HabitRoute = (props) => {
               props.setPoints(props.points + 10);
               props.setCPts(props.consPts + 10);
               reward(props.consPts);
-              setBool(true);
-              //setTD((new Date("2021-02-05 00:00:00").getTime()) - (new Date().getTime())); 
-              //setTD(timeDiff/ (1000 * 60 * 60));
-              //console.log(timeDiff);
+              setCounter(counter + 1);
+
+              // number per day retrieved from db
+              const testCounter = 2;
+              const currentDate = new Date();
+              
+              //date retrieved from db
+              const retrievedDate   = new Date("2021-02-07");
+
+              const diff = (currentDate - retrievedDate) / (1000 * 60 * 60 * 24);
+
+              // checks if the current date is smaller the the retrieved date 
+              // checks if the user pressed the button more than he should be pressing it
+              if(diff <= 1 || counter >= testCounter){
+                  setBool(true);
+                  setCounter(0);
+              }
+              if(diff > 1 && counter < testCounter){
+                setBool(false);
+              }
               }}
-              disabled={boolean}>Done</Button>
+              disabled={boolean}
+              >Done</Button>
             <Button onPress={() => {
+              if (props.points != 0){
+                props.setPoints(props.points - 5);
+              }
               props.setCPts(0);
               setBool(false);
             }}>Fail</Button>
@@ -226,7 +248,7 @@ export default function MindScreen() {
   }
 
 
-  export function reward(consPoints){
+  export function reward(consPoints, points){
     
 
     if(consPoints == 50 ){Alert.alert("Reward", "beginner achievement");}
