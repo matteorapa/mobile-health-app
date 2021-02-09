@@ -5,6 +5,8 @@ import { Avatar, Button, Card, Title, Paragraph, ProgressBar, Colors } from 'rea
 import {TabView, SceneMap} from 'react-native-tab-view';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
+import { LineChart, Grid } from 'react-native-chart-kit';
+
 
 
 
@@ -113,13 +115,50 @@ const ProgressRoute = (props) => {
       setPerc((props.consPts - 100) / 100);
     }
   })
-  
+const data = [0, 60, 50, 60, 30, 70];
 
   return(
     <View>
       <Text>Progress screen</Text>
       <Title>{title}</Title>
       <ProgressBar progress={percentage} color={Colors.blue800} style={{height:30}}/>
+
+      <LineChart
+    data={{
+      labels: ["January", "February", "March", "April", "May", "June"],
+      datasets: [
+        {
+          data: data
+        }
+      ]
+    }}
+    width={Dimensions.get("window").width} // from react-native
+    height={220}
+    yAxisLabel=""
+    yAxisSuffix="pts"
+    yAxisInterval={1} // optional, defaults to 1
+    chartConfig={{
+      backgroundColor: "#0963F0",
+      backgroundGradientFrom: "#3579F3",
+      backgroundGradientTo: "#3579F3",
+      decimalPlaces: 0, // optional, defaults to 2dp
+      color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+      labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+      style: {
+        borderRadius: 16
+      },
+      propsForDots: {
+        r: "6",
+        strokeWidth: "2",
+        stroke: "#ffa726"
+      }
+    }}
+    bezier
+    style={{
+      marginVertical: 8,
+      borderRadius: 16
+    }}
+  />
     </View>
   );
 
