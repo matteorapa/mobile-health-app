@@ -2,7 +2,9 @@ import {Text, View, Button, TextInput, Image} from 'react-native';
 import React from 'react';
 import {AuthContext} from '../../auth';
 import {styles} from '../../styles/globals';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import ThemeButton from '../../components/ThemeButton';
+
+
 
 export default function SignInScreen({navigation}) {
   const [email, onChangeEmail] = React.useState('');
@@ -13,10 +15,7 @@ export default function SignInScreen({navigation}) {
   return (
     <View style={styles.container}>
       <View style={styles.box}>
-      <Image
-        style={styles.tinyLogo}
-        source={require('./mascot.png')}
-      />
+        <Image style={styles.tinyLogo} source={require('./mascot.png')} />
         <Text style={styles.heading}>Sign In</Text>
         <Text>Email Address</Text>
         <TextInput
@@ -34,29 +33,28 @@ export default function SignInScreen({navigation}) {
           value={password}
         />
 
-        <Button
-          title="Sign in"
-          
+        <ThemeButton
           accessibilityLabel="Sign-in button for email and password relogin"
-          onPress={() => {
+          text={'Sign in'}
+          onPressEvent={() => {
             signIn();
           }}
         />
+        <ThemeButton
+          type={'secondary'}
+          text={'CREATE AN ACCOUNT'}
+          onPressEvent={() => {
+            navigation.navigate('SignUp')
+          }}
+        />
+        <ThemeButton
+          type={'muted'}
+          text={'Using for a patient?'}
+          onPressEvent={() => {
+            navigation.navigate('DoctorSignUp')
+          }}
+        />
 
-        <View style={styles.signup}>
-          <Button
-            color="#000000"
-            title="Sign Up"
-            accessibilityLabel="Sign-up button"
-            onPress={() => navigation.navigate('SignUp')}
-          />
-
-          <Text
-            style={styles.link}
-            onPress={() => navigation.navigate('DoctorSignUp')}>
-            Using for a patient?
-          </Text>
-        </View>
       </View>
     </View>
   );

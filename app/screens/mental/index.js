@@ -6,6 +6,7 @@ import {TabView, SceneMap} from 'react-native-tab-view';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
 import { LineChart, Grid } from 'react-native-chart-kit';
+import {COLORS, LAYOUT, TYPE} from '../../styles/theme';
 
 
 
@@ -273,6 +274,7 @@ export default function MindScreen() {
       
 
  //add step counter
+
 
     return (
 <TabView
