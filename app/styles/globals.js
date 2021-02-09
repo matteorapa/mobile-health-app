@@ -1,5 +1,4 @@
-import { StyleSheet } from 'react-native';
-import { COLORS } from './theme'
+import {StyleSheet} from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
@@ -20,13 +19,13 @@ const styles = StyleSheet.create({
     paddingTop: 64
   },
   link: {
-    color: COLORS.primaryDark,
+    color: 'slategrey',
     padding: 6,
     alignSelf: 'center',
   },
   textInput: {
     height: 40,
-    borderColor: COLORS.primaryLight,
+    borderColor: 'lightslategrey',
     borderBottomWidth: 1,
     marginTop: 8,
     marginBottom: 16,
@@ -48,4 +47,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export { styles };
+export {styles};
