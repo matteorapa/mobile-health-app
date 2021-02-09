@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Text, TextInput, TextField, View , Button, TextInputComponent, FlatList, SafeAreaView, ScrollView, TouchableOpacity, Group, Alert } from 'react-native';
 import { styles } from '../../styles/globals';
-
+import ThemeButton from '../../components/ThemeButton';
+import {COLORS, LAYOUT, TYPE} from '../../styles/theme';
 
 class Step extends Component {
     state = {}
@@ -12,16 +13,34 @@ class Step extends Component {
                     onChangeValue: this.props.onChangeValue,
                     values: this.props.values
                 })}
+                
                 <View style={styles.navButtonsForm}>
-                    <Button
-                        title="Previous"
-                        disabled={this.props.currentIndex === 0}
-                        onPress={this.props.prevStep}
-                    />
-                    {this.props.isLast ? (
-                        <Button title="Submit" onPress={this.props.onSubmit}/>
+                    {this.props.isFirst ? (
+                        <ThemeButton
+                            type={'muted'}
+                            text={"Back"}
+                            onPressEvent={this.props.onBack} //go to main screen
+                        />
                     ) : (
-                        <Button title="Next" onPress={this.props.nextStep}/>
+                        <ThemeButton
+                            type={'muted'}
+                            text={"Previous"}
+                            onPressEvent={this.props.prevStep}
+                        />
+                    )}
+                    
+                    {this.props.isLast ? (
+                        <ThemeButton
+                            type={'muted'}
+                            text={"Submit"}
+                            onPressEvent={this.props.onSubmit}
+                        />
+                    ) : (
+                        <ThemeButton
+                            type={'muted'}
+                            text={"Next"}
+                            onPressEvent={this.props.nextStep}
+                        />
                     )}
                 </View>
             </View>
@@ -70,6 +89,10 @@ class AddMedDocForm extends Component {
         //console.log(JSON.stringify(this.state.values));
         console.log(this.state.values);
     };
+    
+    _onBack = () => {
+        console.log('Go to Medication Main Screen');
+    };
 
     _onChangeTimersNumber = (value) => {
         this.setState(prevState => ({
@@ -86,9 +109,11 @@ class AddMedDocForm extends Component {
                             currentIndex: this.state.index,
                             nextStep: this._nextStep,
                             prevStep: this._prevStep,
+                            isFirst: this.state.index === 0,
                             isLast: this.state.index === (this.props.children.length - 1),
                             onChangeValue: this._onChangeValue,
                             values: this.state.values,
+                            onBack: this._onBack,
                             onSubmit: this._onSubmit,
                             onChangeTimersNumber: this._onChangeTimersNumber,
                         })
