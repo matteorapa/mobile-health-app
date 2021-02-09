@@ -4,6 +4,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {AuthContext} from './auth';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { COLORS } from './styles/theme'
 
 import RemindersScreen from './screens/index';
 import MindScreen from './screens/mental/index';
@@ -15,7 +16,7 @@ import AddGuardianScreen from './screens/medication/addGuardian';
 import SignInScreen from './screens/auth/signin';
 import SignUpScreen from './screens/auth/signup';
 import DoctorSignUpScreen from './screens/auth/doctor_signup';
-import AddHabitScreen from './screens/mental/addHabit';
+import { initiateChannels } from './notifications';
 
 function MedicationStack() {
   const MedicationStack = createStackNavigator();
@@ -168,9 +169,22 @@ export default function App() {
     };
   }, []);
 
+  const MyTheme = {
+    dark: false,
+    colors: {
+      primary: COLORS.primary,
+      background: 'rgb(242, 242, 242)',
+      card: 'rgb(255, 255, 255)',
+      border: 'rgb(199, 199, 204)',
+      notification: 'rgb(255, 69, 58)',
+    },
+  };
+
+  initiateChannels()
+
   return (
     <AuthContext.Provider value={authContext}>
-      <NavigationContainer>
+      <NavigationContainer theme={MyTheme}>
         {accessToken ? <AppTabStack /> : <AuthStack />}
       </NavigationContainer>
     </AuthContext.Provider>

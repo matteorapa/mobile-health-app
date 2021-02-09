@@ -10,17 +10,9 @@ export default function MindScreen( {navigation} ) {
 
 
     return (
-      <ScrollView>
-        <Text>Mind Screen</Text>
-        <Button
-        title = "Add Habit"
-        onPress={() => {
-          navigation.navigate('Tasks', {
-            screen: 'AddHabit'
-          });
-        }}
-        />
-      </ScrollView>
+      <View style={LAYOUT.main}>
+        <Text style={TYPE.h1}>Your tasks</Text>
+      </View>
     );
   }
 
