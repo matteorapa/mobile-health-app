@@ -41,9 +41,9 @@ export default function AddMedicationScreen ({navigation}) {
     const [medicationReason, onChangeMedicationReason] = useState('');
     const [medicationDaily, onChangeMedicationDaily] = useState('');
     const [medicationDailyDosesNumber, onChangeMedicationDailyDosesNumber] = useState('');
+    const [medicationTime1, onChangeMedicationTime1] = useState(new Date());
     const [medicationStartDate, onChangeMedicationStartDate] = useState(new Date());
     const [medicationEndDate, onChangeMedicationEndDate] = useState(new Date());
-    const [medicationTime1, onChangeMedicationTime1] = useState(new Date());
     const [medicationInstructions, onChangeMedicationInstructions] = useState('');
     
     const [calendarStartVisible, onChangeCalendarStart] = useState(false);
@@ -179,7 +179,7 @@ export default function AddMedicationScreen ({navigation}) {
                 <TextInput
                   style={styles.textInput}
                   placeholder={'Number of Doses Each Day'}
-                  onChangeText={ function(text) {{onChangeValue('medicDailyDosesNumber', text)}; {onChangeMedicationDailyDosesNumber(text)}; {timersIncluded(text)}; {onChangeTimersNumber(text)} }}
+                  onChangeText={ function(text) {{onChangeValue('medicDailyDosesNumber', text)}; {onChangeMedicationDailyDosesNumber(text)}; {timersIncluded(text)}; }}
                   value={values.medicDailyDosesNumber}
                   keyboardType={'numeric'}
                   autoFocus={true}
@@ -205,15 +205,16 @@ export default function AddMedicationScreen ({navigation}) {
                         mode={'time'}
                         is24Hour={true}
                         isVisible={timeVisible}
-                        onConfirm={ function(data){{onChangeMedicationTime1(data)}; {onChangeTimeVisible(false)}; {onChangeValue('medicTimerArray', data)} }}
-                        onCancel={onChangeTimeVisible(false)}
+                        onConfirm={ function(data){{onChangeMedicationTime1(data)}; {onChangeTimeVisible(false)}; {onChangeValue('medicTimerArray', data)}} }
+                        onCancel={ function(){onChangeTimeVisible(false)} }
                       />
                       <TextInput
                         style={styles.textInput}
                         placeholder={'Time - hh:mm'}
                         value={Moment(medicationTime1.toString()).format("HH:mm")}
+                        keyboardType={'phone-pad'}
                         //value={values.medicTimerArray[timerNumber]}
-                        onChangeTimersNumber
+                        // onChangeTimersNumber
                       />
                     </View>
                   )}

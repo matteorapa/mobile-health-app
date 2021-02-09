@@ -66,7 +66,7 @@ export default function AddMedicationScreen( {navigation} ) {
                 autoFocus={true}
                 onChangeText={filterCountries}
                 placeholder={'Filter'}
-                focusable={true}
+                // focusable={true}
                 style={styles.filterInputStyle}
               />
             </View>
@@ -147,7 +147,7 @@ export default function AddMedicationScreen( {navigation} ) {
           <Text>Doctor`s Phone Number</Text>
 
           <View style={styles.phoneNumberInputs}>
-            <TouchableOpacity onPress={onShowHideCountryPicker}>
+            <TouchableOpacity onPress={onShowHideCountryPicker} autoFocus={true}>
               <View style={styles.testing}>
                 <Image source={countryFlagCode} style={styles.flagImage}/>
                 <Text>{countryCode}</Text>
@@ -157,12 +157,13 @@ export default function AddMedicationScreen( {navigation} ) {
             
             <TextInputMask
               type={'custom'}
-              style={styles.textInput, styles.phoneNumberInputs}
+              style={{width: '50%', borderBottomColor: 'black'}}
+              placeholder={countryPlaceholder}
               options={{mask: countryPlaceholder}}
-              onChangeText={ function(text) {{onChangeValue('doctPhone', text)}; {onChangeDoctorPhone(text)}} }
+              onChangeText={ function(text) {{onChangeValue('doctPhone', text)}; {onChangeValue('doctPhonePrefix', countryCode)}; {onChangeDoctorPhone(text)}} }
               keyboardType={'phone-pad'}
               value={values.doctPhone}
-              autoFocus={true}
+              autoFocus={false}
             />
           </View>
         </View>

@@ -1,4 +1,5 @@
 export const Countries = [
+    { ru:"Мальта",lt:"Malta",tr:"Malta", en: 'Malta',flag: '🇲🇹',code: 'MT', dialCode: '+356', mask: '9999 9999' },
     { ru:"Афганистан",lt:"Afganistanas",tr:"Afganistan", en: 'Afghanistan', flag: '🇦🇫', code: 'AF', dialCode: '+93', mask: '999 999 9999' },
     { ru:"Аландские острова",lt:"Alandų salos",tr:"Aland adaları", en: 'Åland Islands', flag: '🇦🇽', code: 'AX', dialCode: '+358', mask: '999 9999999' },
     { ru:"Албания",lt:"Albanija",tr:"Arnavutluk", en: 'Albania',flag: '🇦🇱',code: 'AL', dialCode: '+355', mask: '999 999 9999' },
@@ -130,7 +131,6 @@ export const Countries = [
     { ru:"Малайзия",lt:"Malaizija",tr:"Malezya", en: 'Malaysia',flag: '🇲🇾',code: 'MY', dialCode: '+60', mask: '999-999 9999' },
     { ru:"Мальдивы",lt:"Maldyvai",tr:"Maldivler", en: 'Maldives',flag: '🇲🇻',code: 'MV', dialCode: '+960', mask: '999-9999' },
     { ru:"Мали",lt:"Malis",tr:"Mali", en: 'Mali',flag: '🇲🇱',code: 'ML', dialCode: '+223', mask: '99 99 99 99' },
-    { ru:"Мальта",lt:"Malta",tr:"Malta", en: 'Malta',flag: '🇲🇹',code: 'MT', dialCode: '+356', mask: '9999 9999' },
     { ru:"Маршалловы острова",lt:"Maršalo salos",tr:"Marşal Adaları", en: 'Marshall Islands',flag: '🇲🇭',code: 'MH', dialCode: '+692', mask: '999-9999' },
     { ru:"Мартиника",lt:"Martinika",tr:"Martinik", en: 'Martinique',flag: '🇲🇶',code: 'MQ', dialCode: '+596', mask: '9999 99 99 99' },
     { ru:"Мавритания",lt:"Mauritanija",tr:"Moritanya", en: 'Mauritania',flag: '🇲🇷',code: 'MR', dialCode: '+222', mask: '99 99 99 99' },
