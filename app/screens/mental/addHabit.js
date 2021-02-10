@@ -2,13 +2,17 @@ import { Text, View, Button, TextInput, Alert } from 'react-native';
 import React, { useState } from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
- 
+import {addHabit, deleteItem, editItem} from '../../DBFunctions';
  
 
 
 
 
 export default function AddHabitScreen( {navigation} ) {
+
+  const [itemId, setItemId] = useState();
+  const [itemName, setItemName] = useState('');
+  const [items, setItems] = useState([]);
 
     const [title, setTitle] = useState(''); 
     const [description, setDesc] = useState(''); 
@@ -59,8 +63,8 @@ export default function AddHabitScreen( {navigation} ) {
       
       <Text>{date.toDateString()}</Text>
       <Button title="Start Date" onPress={showDatepicker}></Button>
-      <Text>{date.toTimeString()}</Text>
-      <Button title="Time" onPress={showTimepicker}></Button>
+      {/* <Text>{date.toTimeString()}</Text>
+      <Button title="Time" onPress={showTimepicker}></Button> */}
         
       
         {show && (
@@ -73,11 +77,7 @@ export default function AddHabitScreen( {navigation} ) {
           onChange={onChange}
         />
       )}
- 
-        <TextInput
-        placeholder="Number per Week" 
-        onChangeText={numPerW => setNPW(numPerW)}
-        defaultValue={numPerW}/> 
+
 
         <TextInput
         placeholder="Number per day" 
@@ -95,6 +95,7 @@ export default function AddHabitScreen( {navigation} ) {
 
       <Button title="Submit" onPress={() => {
         //saveHabit(title,description,date.toDateString(),date.toTimeString(),numPerW,numPerD,category);
+        {addHabit(title, description, date.toDateString(), numPerD, category);}
         navigation.navigate('Tasks', {
           screen: 'Index'
         });

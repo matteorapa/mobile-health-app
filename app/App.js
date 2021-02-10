@@ -20,6 +20,7 @@ import AddHabitScreen from './screens/mental/addHabit';
 import EditHabitScreen from './screens/mental/editHabit';
 import AddReminderScreen from './screens/mental/addReminder';
 import { initiateChannels } from './notifications';
+import {addItem, deleteItem, editItem} from './DBFunctions';
 
 function MedicationStack() {
   const MedicationStack = createStackNavigator();
@@ -163,6 +164,12 @@ export default function App() {
   const [accessToken, setAccessToken] = React.useState(false);
   const [refreshToken, setRefreshToken] = React.useState(null);
   const [isLoading, setIsLoading] = React.useState(true);
+
+  const [itemId, setItemId] = React.useState();
+  const [itemName, setItemName] = React.useState('');
+  const [items, setItems] = React.useState([]);
+
+  addItem('test2', 'test');
 
   const authContext = React.useMemo(() => {
     return {
