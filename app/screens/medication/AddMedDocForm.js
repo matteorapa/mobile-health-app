@@ -13,7 +13,7 @@ class Step extends Component {
                     onChangeValue: this.props.onChangeValue,
                     values: this.props.values
                 })}
-                
+
                 <View style={styles.navButtonsForm}>
                     {this.props.isFirst ? (
                         <ThemeButton
@@ -32,8 +32,8 @@ class Step extends Component {
                     {this.props.isLast ? (
                         <ThemeButton
                             type={'muted'}
-                            text={"Submit"}
-                            onPressEvent={this.props.onSubmit}
+                            text={"Preview"}
+                            onPressEvent={() => {this.props.onPreview}}
                         />
                     ) : (
                         <ThemeButton
@@ -85,7 +85,7 @@ class AddMedDocForm extends Component {
         }));
     };
 
-    _onSubmit = () => {
+    _onPreview = () => {
         //console.log(JSON.stringify(this.state.values));
         console.log(this.state.values);
     };
@@ -114,7 +114,7 @@ class AddMedDocForm extends Component {
                             onChangeValue: this._onChangeValue,
                             values: this.state.values,
                             onBack: this._onBack,
-                            onSubmit: this._onSubmit,
+                            onPreview: this._onPreview,
                             onChangeTimersNumber: this._onChangeTimersNumber,
                         })
                     }

@@ -4,12 +4,12 @@ import { Picker } from '@react-native-community/picker';
 import {styles} from '../../styles/globals';
 
 import AddMedDocForm from './AddMedDocForm';
-
-import DropDownPicker from 'react-native-dropdown-picker'
+import { addMedication } from '../../DBFunctions';
 
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import Moment from 'moment';
-import TimePicker from 'react-native-modal-datetime-picker';
+
+// import TimePicker from 'react-native-modal-datetime-picker';
 //import DateTimePicker from '@react-native-community/datetimepicker';
 //import CalendarIcon from 'react-calendar-icon'
 // import CalendarIcon from 'react-native-vector-icons'
@@ -20,17 +20,21 @@ import TimePicker from 'react-native-modal-datetime-picker';
 // import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker} from '@material-ui/pickers';
 // import { Grid } from '@material-ui/core';
 
-function submitForm (medName, medType, medDosage, medReason,
+function submitForm (medName, medType, medDosage, medDosageMetric, medReason,
   medDaily, medDailyDosesNumber, medTime1, medStartDate, medEndDate,
   medInstructions, cb){
   //check auth of form
 
   //submit to firebase table
-  console.log('submit', medName, medType, medDosage, medReason,
+  console.log('submit', medName, medType, medDosage, medDosageMetric, medReason,
                 medDaily, medDailyDosesNumber, medTime1, medStartDate, medEndDate,
                 medInstructions);
 
-  cb();
+  addMedication(medName, medType, medDosage, medDosageMetric, medReason,
+                medDaily, medDailyDosesNumber, medTime1, medStartDate, medEndDate,
+                medInstructions);
+
+  //cb();
 }
 
 export default function AddMedicationScreen ({navigation}) {
@@ -38,6 +42,7 @@ export default function AddMedicationScreen ({navigation}) {
     const [medicationName, onChangeMedicationName] = useState('');
     const [medicationType, onChangeMedicationType] = useState('');
     const [medicationDosage, onChangeMedicationDosage] = useState('');
+    const [medicationDosageMetric, onChangeMedicationDosageMetric] = useState('');
     const [medicationReason, onChangeMedicationReason] = useState('');
     const [medicationDaily, onChangeMedicationDaily] = useState('');
     const [medicationDailyDosesNumber, onChangeMedicationDailyDosesNumber] = useState('');
@@ -90,7 +95,7 @@ export default function AddMedicationScreen ({navigation}) {
                 <TextInput
                   style={styles.textInput}
                   placeholder={'Medication Name'}
-                  onChangeText={text => onChangeValue('medicName', text)}
+                  onChangeText={ function(text) {{onChangeValue('medicName', text)}; {onChangeMedicationName(text)}} }
                   value={values.medicName}
                   autoFocus={true}
                 />
@@ -105,7 +110,7 @@ export default function AddMedicationScreen ({navigation}) {
                 <TextInput
                   style={styles.textInput}
                   placeholder={'Medication Type'}
-                  onChangeText={(text) => onChangeValue('medicType', text)}
+                  onChangeText={ function(text) {{onChangeValue('medicType', text)}; {onChangeMedicationType(text)}} }
                   value={values.medicType}
                   autoFocus={true}
                 />
@@ -121,7 +126,7 @@ export default function AddMedicationScreen ({navigation}) {
                   <TextInput
                     style={styles.textInput, {width: '40%'}}
                     placeholder={'Medication Dosage'}
-                    onChangeText={(text) => onChangeValue('medicDosage', text)}
+                    onChangeText={ function(text) {{onChangeValue('medicDosage', text)}; {onChangeMedicationDosage(text)}} }
                     value={values.medicDosage}
                     keyboardType={'numeric'}
                     autoFocus={true}
@@ -129,7 +134,7 @@ export default function AddMedicationScreen ({navigation}) {
                   <Picker
                     style={{width:'30%'}}
                     selectedValue={values.medicDosageMetric}
-                    onValueChange={(data) => onChangeValue('medicDosageMetric', data)}
+                    onValueChange={ function(data) {{onChangeValue('medicDosageMetric', data)}; {onChangeMedicationDosageMetric(data.value)}} }
                     value={values.medicDosageMetric}>
                     {metricsOfDosage.map((item, index) => {
                       return (<Picker.Item label={item} value={index} key={index}/>)
@@ -147,7 +152,7 @@ export default function AddMedicationScreen ({navigation}) {
                 <TextInput
                   style={styles.textInput}
                   placeholder={'Medication Reason'}
-                  onChangeText={(text) => onChangeValue('medicReason', text)}
+                  onChangeText={ function(text) {{onChangeValue('medicReason', text)}; {onChangeMedicationReason(text)}} }
                   value={values.medicReason}
                   autoFocus={true}
                 />
@@ -162,7 +167,7 @@ export default function AddMedicationScreen ({navigation}) {
                 <Picker
                   style={{width:'30%'}}
                   selectedValue={values.medicDaily}
-                  onValueChange={(data) => onChangeValue('medicDaily', data)}
+                  onValueChange={ function(data) {{onChangeValue('medicDaily', data)}; {onChangeMedicationDaily(data.value)}} }
                   value={values.medicDaily}>
                   {dailyDosageOptions.map((item, index) => {
                     return (<Picker.Item label={item} value={index} key={index}/>)
@@ -179,7 +184,7 @@ export default function AddMedicationScreen ({navigation}) {
                 <TextInput
                   style={styles.textInput}
                   placeholder={'Number of Doses Each Day'}
-                  onChangeText={ function(text) {{onChangeValue('medicDailyDosesNumber', text)}; {onChangeMedicationDailyDosesNumber(text)}; {timersIncluded(text)}; }}
+                  onChangeText={ function(text) {{onChangeValue('medicDailyDosesNumber', text)}; {onChangeMedicationDailyDosesNumber(text)}; {timersIncluded(text)}} }
                   value={values.medicDailyDosesNumber}
                   keyboardType={'numeric'}
                   autoFocus={true}
@@ -281,13 +286,35 @@ export default function AddMedicationScreen ({navigation}) {
                 <TextInput
                   style={styles.textInput}
                   placeholder={'Medication Instructions'}
-                  onChangeText={(text) => onChangeValue('medicInstructions', text)}
+                  onChangeText={ function(text) {{onChangeValue('medicInstructions', text)}; {onChangeMedicationInstructions(text)}} }
                   value={values.medicInstructions}
                   autoFocus={true}
                 />
               </View>
               )}
             </AddMedDocForm.Step>
+
+            <View>
+              <Text>Medication Name:         {medicationName}</Text>
+              <Text>Medication Type:         {medicationType}</Text>
+              <Text>Medication Dosage:       {medicationDosage} {medicationDosageMetric}</Text>
+              <Text>Medication Reason:       {medicationReason}</Text>
+              <Text>Medication Daily:        {medicationDaily}</Text>
+              <Text>Medication Daily Doses:  {medicationDailyDosesNumber}</Text>
+              <Text>Medication Time:         {medicationTime1.toTimeString()}</Text>
+              <Text>Medication Start Date:   {medicationStartDate.toDateString()}</Text>
+              <Text>Medication End Date:     {medicationEndDate.toDateString()}</Text>
+              <Text>Medication Instructions: {medicationInstructions}</Text>
+              <Button
+                title={'Submit'}
+                onPress={() => {
+                  {submitForm(medicationName, medicationType, medicationDosage, medicationDosageMetric, medicationReason, medicationDaily, medicationDailyDosesNumber, medicationTime1.toTimeString(), medicationStartDate.toDateString(), medicationEndDate.toDateString(), medicationInstructions)}
+                  navigation.navigate('Medication', {
+                    screen: 'Index'
+                  });
+                }}
+              />
+            </View>
 
           </AddMedDocForm>
     );

@@ -6,6 +6,9 @@ import AddMedDocForm from './AddMedDocForm';
 import { Countries } from './Countries';
 import { TextInputMask } from 'react-native-masked-text';
 import { countryFlags } from './countryFlags';
+import { addDoctor } from '../../DBFunctions';
+import ThemeButton from '../../components/ThemeButton';
+import {COLORS, LAYOUT, TYPE} from '../../styles/theme';
 
 function submitForm (docName, docSpeciality, docPhonePrefix, docPhone, docEmail, cb){
   //check auth of form
@@ -13,20 +16,22 @@ function submitForm (docName, docSpeciality, docPhonePrefix, docPhone, docEmail,
   //submit to firebase table
   console.log('submit', docName, docSpeciality, docPhonePrefix, docPhone, docEmail);
 
+  addDoctor(docName, docSpeciality, docPhonePrefix, docPhone, docEmail);
+
   //cb();
 }
 
 export default function AddMedicationScreen( {navigation} ) {
-  const [doctorName, onChangeDoctorName] = React.useState('');
-  const [doctorSpeciality, onChangeDoctorSpeciality] = React.useState('');
-  const [doctorPhonePrefix, onChangeDoctorPhonePrefix] = React.useState('');
-  const [doctorPhone, onChangeDoctorPhone] = React.useState('');
-  const [doctorEmail, onChangeDoctorEmail] = React.useState('');
-
   const specialitiesOfDoctors = ['Allergy and Immunology', 'Anesthesiology', 'Dermatology', 'Diagnostic Radiology', 'Emergency Medicine', 'Family Medicine',
                                   'Internal Medicine', 'Medical Genetics', 'Neurology', 'Nuclear Medicine', 'Obstetrics and Gynecology', 'Ophthalmology', 'Pathology',
                                   'Pediatrics', 'Physical Medicine and Rehabilitation', 'Preventive Medicine', 'Psychiatry', 'Radiation Oncology', 'Surgery', 'Urology'];
   
+  const [doctorName, onChangeDoctorName] = React.useState('');
+  const [doctorSpeciality, onChangeDoctorSpeciality] = React.useState(specialitiesOfDoctors[0]);
+  const [doctorPhonePrefix, onChangeDoctorPhonePrefix] = React.useState('+356');
+  const [doctorPhone, onChangeDoctorPhone] = React.useState('');
+  const [doctorEmail, onChangeDoctorEmail] = React.useState('');
+
   const [countryPickerVisible, setCountryPickerVisible] = useState(false);
   const [dataCountries, setDataCountries] = useState(Countries);
   const [countryCode, setCountryCode] = useState('+356');
@@ -183,15 +188,28 @@ export default function AddMedicationScreen( {navigation} ) {
             autoFocus={true}
             autoCapitalize={'none'}
           />
-          
-    {/* for testing purposes */}
-    {submitForm(doctorName, doctorSpeciality, doctorPhonePrefix, doctorPhone, doctorEmail)}
-
         </View>
         )}
       </AddMedDocForm.Step>
 
+      <View>
+        <Text>Doctor Name:       {doctorName}</Text>
+        <Text>Doctor Speciality: {doctorSpeciality}</Text>
+        <Text>Doctor Phone:      ({doctorPhonePrefix}) {doctorPhone}</Text>
+        <Text>Doctor Email:      {doctorEmail}</Text>
+        <Button
+          title={'Submit'}
+          onPress={() => {
+            {submitForm(doctorName, doctorSpeciality, doctorPhonePrefix, doctorPhone, doctorEmail)}
+            navigation.navigate('Medication', {
+              screen: 'Index'
+            });
+          }}
+        />
+      </View>
+
     </AddMedDocForm>
+
 
     
       
