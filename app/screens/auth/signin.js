@@ -4,7 +4,6 @@ import {AuthContext} from '../../auth';
 import {styles} from '../../styles/globals';
 import ThemeButton from '../../components/ThemeButton';
 import {logIn} from './AuthFunctionality';
-import {AsyncStorage} from '@react-native-community/async-storage';
 
 export default function SignInScreen({navigation}) {
   const [email, onChangeEmail] = React.useState('');
@@ -19,13 +18,11 @@ export default function SignInScreen({navigation}) {
       .then((result) => {
         setUserId(result);
         global.uid = result;
-        console.log(global.uid);
         signIn();
       })
       .catch((error) => {
         console.log(error);
       });
-    console.log(userId);
   };
 
   return (

@@ -6,8 +6,6 @@ export const logIn = (email, password) => {
     .signInWithEmailAndPassword(email, password)
     .then(data => {
             userID = data.user.uid;
-            // console.log(userID);
-
             resolve(userID)
         })
     .catch(error => {
