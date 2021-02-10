@@ -3,15 +3,16 @@ import React from 'react';
 import {AuthContext} from '../../auth';
 import {styles} from '../../styles/globals';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { createUser } from './AuthFunctionality'
+import database from '@react-native-firebase/database'
+import auth from '@react-native-firebase/auth';
+
 
 export default function SignUpScreen({navigation}) {
 
   const [email, onChangeEmail] = React.useState('');
   const [password, onChangePassword] = React.useState('');
-  const [dob, onChangeDob] = React.useState('');
-  const [sex, onChangeSex] = React.useState('Male');
-
-  const {signUp} = React.useContext(AuthContext);
+  const [VerifyPassword, onChangeVerifyPassword] = React.useState('');
 
   return (
     <View>
@@ -33,28 +34,38 @@ export default function SignUpScreen({navigation}) {
             secureTextEntry={true}
             value={password}
           />
-          <Text> Verify Password</Text>
           <TextInput
             style={styles.textInput}
             placeholder={'Verify Password'}
-            onChangeText={(text) => onChangePassword(text)}
+            onChangeText={(text) => onChangeVerifyPassword(text)}
             secureTextEntry={true}
-            value={password}
+            value={VerifyPassword}
           />
-          <Text>Date of Birth</Text>
-          <TextInput
-            style={styles.textInput}
-            placeholder={'01/08/1978'}
-            onChangeText={(text) => onChangePassword(text)}
-            secureTextEntry={true}
-            value={password}
-          />
-
           <Button
             title="Sign Up"
-            accessibilityLabel="Sign-in button for email and password relogin"
+            accessibilityLabel="Sign-up button with email and password as values"
             onPress={() => {
-              signUp();
+              if (VerifyPassword != password){
+                console.log('Passwords do not match');
+              } else {
+                auth()
+                  .createUserWithEmailAndPassword(email, password)
+                  .then(data => {
+                      addUser(data.user.uid,'Patient')
+                  })
+                  .catch(error => {
+                      if (error.code === 'auth/email-already-in-use') {
+                      console.log('That email address is already in use!');
+                      }
+
+                      if (error.code === 'auth/invalid-email') {
+                      console.log('That email address is invalid!');
+                      }
+
+                      console.error(error);
+                  });
+              navigation.navigate('SignIn');
+              }
             }}
           />
           <Text
@@ -83,3 +94,25 @@ export default function SignUpScreen({navigation}) {
     </View>
   );
 }
+
+export const addUser = (userId, role) => {
+  return new Promise(function(resolve,reject){
+      let key;
+      if (userId != null) {
+         key = userId;
+      } else {
+        key = database().ref().push().key
+      }
+
+      let dataToSave = {
+          userId: key,
+          role: role,
+      };
+      database().ref('UserRoles/' + key).update(dataToSave).then((snapshot)=>{
+          resolve(snapshot)
+      }).catch(err => {
+          reject(err);
+      });
+
+  });
+};

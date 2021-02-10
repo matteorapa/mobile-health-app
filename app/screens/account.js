@@ -7,6 +7,7 @@ import PaddedDivider from '../components/PaddedDivider';
 import {COLORS, LAYOUT, TYPE} from '../styles/theme';
 import acc from './profile.jpg';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { logOut } from './auth/AuthFunctionality'
 
 export default function AccountScreen({navigation}) {
   const {signOut} = React.useContext(AuthContext);
@@ -37,7 +38,8 @@ export default function AccountScreen({navigation}) {
         type={'secondary'}
         text={'Sign out'}
         onPress={() => {
-          signOut();
+          logOut();
+          navigation.navigate('SignIn')
         }}
       />
 

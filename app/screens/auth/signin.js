@@ -3,14 +3,14 @@ import React from 'react';
 import {AuthContext} from '../../auth';
 import {styles} from '../../styles/globals';
 import ThemeButton from '../../components/ThemeButton';
-
-
+import { logIn } from './AuthFunctionality'
 
 export default function SignInScreen({navigation}) {
   const [email, onChangeEmail] = React.useState('');
   const [password, onChangePassword] = React.useState('');
 
-  const {signIn} = React.useContext(AuthContext);
+  
+  const {signIn} = React.useContext(AuthContext); 
 
   return (
     <View style={styles.container}>
@@ -37,19 +37,20 @@ export default function SignInScreen({navigation}) {
           accessibilityLabel="Sign-in button for email and password relogin"
           text={'Sign in'}
           onPressEvent={() => {
+            logIn(email, password);
             signIn();
           }}
         />
         <ThemeButton
           type={'secondary'}
-          text={'CREATE AN ACCOUNT'}
+          text={'CREATE A PATIENT ACCOUNT'}
           onPressEvent={() => {
             navigation.navigate('SignUp')
           }}
         />
         <ThemeButton
           type={'muted'}
-          text={'Using for a patient?'}
+          text={'Create Doctor Account'}
           onPressEvent={() => {
             navigation.navigate('DoctorSignUp')
           }}

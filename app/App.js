@@ -17,6 +17,7 @@ import SignInScreen from './screens/auth/signin';
 import SignUpScreen from './screens/auth/signup';
 import DoctorSignUpScreen from './screens/auth/doctor_signup';
 import { initiateChannels } from './notifications';
+import { createUser, logOut, signIn} from './screens/auth/AuthFunctionality'
 
 function MedicationStack() {
   const MedicationStack = createStackNavigator();
