@@ -15,6 +15,8 @@ export default function AccountScreen({navigation}) {
   const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
   let accountImg = false;
 
+  console.log(global.uid);
+
   return (
     <View style={LAYOUT.main}>
       <View style={LAYOUT.container}>
