@@ -7,6 +7,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
 import { LineChart, Grid } from 'react-native-chart-kit';
 import {COLORS, LAYOUT, TYPE} from '../../styles/theme';
+import {addHabit, getHabit, editItem} from '../../DBFunctions';
 
 
 
@@ -26,6 +27,7 @@ import {COLORS, LAYOUT, TYPE} from '../../styles/theme';
 const HabitRoute = (props) => {
   
   const navigation = useNavigation();
+
   const [boolean, setBool] = useState(false);
   const [counter, setCounter] = useState(1);
   return(
@@ -33,56 +35,9 @@ const HabitRoute = (props) => {
   <ScrollView>
 
         <Text>Mind Screen</Text>
+        
+        {getHabit(props)}
 
-        <Card>
-          <Title>Habit Title</Title>
-          <Paragraph>
-            Description
-            start date
-            time
-          </Paragraph>
-          <Card.Actions>
-            <Button onPress={() => {
-              props.setPoints(props.points + 10);
-              props.setCPts(props.consPts + 10);
-              reward(props.consPts);
-              setCounter(counter + 1);
-
-              // number per day retrieved from db
-              const testCounter = 2;
-              const currentDate = new Date();
-              
-              //date retrieved from db
-              const retrievedDate   = new Date("2021-02-07");
-
-              const diff = (currentDate - retrievedDate) / (1000 * 60 * 60 * 24);
-
-              // checks if the current date is smaller the the retrieved date 
-              // checks if the user pressed the button more than he should be pressing it
-              if(diff <= 1 || counter >= testCounter){
-                  setBool(true);
-                  setCounter(0);
-              }
-              if(diff > 1 && counter < testCounter){
-                setBool(false);
-              }
-              }}
-              disabled={boolean}
-              >Done</Button>
-            <Button onPress={() => {
-              if (props.points != 0){
-                props.setPoints(props.points - 5);
-              }
-              props.setCPts(0);
-              setBool(false);
-            }}>Fail</Button>
-            <Button onPress={() => {
-          navigation.navigate('Tasks', {
-            screen: 'EditHabit'
-          });
-        }}>Edit</Button>
-          </Card.Actions>
-        </Card>
 
         {/* add FAB button from react native paper */}
         <Button

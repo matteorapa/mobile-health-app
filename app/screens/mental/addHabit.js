@@ -19,6 +19,8 @@ export default function AddHabitScreen( {navigation} ) {
     const [numPerW, setNPW] = useState(''); 
     const [numPerD, setNPD] = useState(''); 
     const [category, setCat] = useState(''); 
+
+    const currentDate = new Date().toDateString();
     
  
     const [date, setDate] = useState(new Date());
@@ -95,7 +97,7 @@ export default function AddHabitScreen( {navigation} ) {
 
       <Button title="Submit" onPress={() => {
         //saveHabit(title,description,date.toDateString(),date.toTimeString(),numPerW,numPerD,category);
-        {addHabit(title, description, date.toDateString(), numPerD, category);}
+        {addHabit(title, description, date.toDateString(), numPerD, category, 0, 0, currentDate);}
         navigation.navigate('Tasks', {
           screen: 'Index'
         });
