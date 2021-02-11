@@ -106,8 +106,8 @@ export default function AddMedicationScreen( {navigation} ) {
   return (
     <AddMedDocForm initialValues={{
       doctName: '',
-      doctSpeciality: '',
-      doctPhonePrefix: '',
+      doctSpeciality: specialitiesOfDoctors[0],
+      doctPhonePrefix: '+356',
       doctPhone: '',
       doctEmail: '',
     }}>
@@ -137,7 +137,8 @@ export default function AddMedicationScreen( {navigation} ) {
             style={{width:'80%'}}
             selectedValue={values.doctSpeciality}
             onValueChange={ function(data) {{onChangeValue('doctSpeciality', data)}; {onChangeDoctorSpeciality(specialitiesOfDoctors[data])}} }
-            value={values.doctSpeciality}>
+            value={values.doctSpeciality}
+          >
             {specialitiesOfDoctors.map((item, index) => {
               return (<Picker.Item label={item} value={index} key={index}/>)
             })}
@@ -193,10 +194,10 @@ export default function AddMedicationScreen( {navigation} ) {
       </AddMedDocForm.Step>
 
       <View>
-        <Text>Doctor Name:       {doctorName}</Text>
-        <Text>Doctor Speciality: {doctorSpeciality}</Text>
-        <Text>Doctor Phone:      ({doctorPhonePrefix}) {doctorPhone}</Text>
-        <Text>Doctor Email:      {doctorEmail}</Text>
+        <Text>Doctor Name:        {doctorName}</Text>
+        <Text>Doctor Speciality:  {doctorSpeciality}</Text>
+        <Text>Doctor Phone:       ({doctorPhonePrefix}) {doctorPhone}</Text>
+        <Text>Doctor Email:         {doctorEmail}</Text>
         <Button
           title={'Submit'}
           onPress={() => {

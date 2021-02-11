@@ -37,20 +37,41 @@ function submitForm (medName, medType, medDosage, medDosageMetric, medReason,
   //cb();
 }
 
-export default function AddMedicationScreen ({navigation}) {
+export default function AddMedicationScreen ({route, navigation}) {
+  {console.log("Route ", route.params)}
+    const {loadedMedication} = route.params;
 
-    const [medicationName, onChangeMedicationName] = useState('');
-    const [medicationType, onChangeMedicationType] = useState('');
-    const [medicationDosage, onChangeMedicationDosage] = useState('');
-    const [medicationDosageMetric, onChangeMedicationDosageMetric] = useState('');
-    const [medicationReason, onChangeMedicationReason] = useState('');
-    const [medicationDaily, onChangeMedicationDaily] = useState('');
-    const [medicationDailyDosesNumber, onChangeMedicationDailyDosesNumber] = useState('');
-    const [medicationTime1, onChangeMedicationTime1] = useState(new Date());
-    const [medicationStartDate, onChangeMedicationStartDate] = useState(new Date());
-    const [medicationEndDate, onChangeMedicationEndDate] = useState(new Date());
-    const [medicationInstructions, onChangeMedicationInstructions] = useState('');
-    
+    const typeOfMedication = ['Liquid Solution', 'Pill/Tablet', 'Capsule', 'Tropical (cream/ointment)', 'Drops', 'Inhaler', 'Injection', 'Patches', 'Other'];
+    const metricsOfDosage = ['ml', 'mg', 'g', 'Pills'];
+    const dailyDosageOptions = ['Yes', 'No'];
+
+    const [medicationName, onChangeMedicationName] = useState((loadedMedication == '') ? '' : loadedMedication.medicationName);
+    const [medicationType, onChangeMedicationType] = useState((loadedMedication == '') ? typeOfMedication[0] : loadedMedication.medicationType);
+    const [medicationDosage, onChangeMedicationDosage] = useState((loadedMedication == '') ? '' : loadedMedication.medicationDosage);
+    const [medicationDosageMetric, onChangeMedicationDosageMetric] = useState((loadedMedication == '') ? metricsOfDosage[3] : loadedMedication.medicationDosageMetric);
+    const [medicationReason, onChangeMedicationReason] = useState((loadedMedication == '') ? '' : loadedMedication.medicationReason);
+    const [medicationDaily, onChangeMedicationDaily] = useState((loadedMedication == '') ? dailyDosageOptions[0] : loadedMedication.medicationDaily);
+    const [medicationDailyDosesNumber, onChangeMedicationDailyDosesNumber] = useState((loadedMedication == '') ? '' : loadedMedication.medicationDailyDosesNumber);
+    const [medicationTime1, onChangeMedicationTime1] = useState((loadedMedication == '') ? new Date() : new Date(loadedMedication.medicationTime1));
+    const [medicationStartDate, onChangeMedicationStartDate] = useState((loadedMedication == '') ? new Date() : new Date(loadedMedication.medicationStartDate));
+    const [medicationEndDate, onChangeMedicationEndDate] = useState((loadedMedication == '') ? new Date() : new Date(loadedMedication.medicationEndDate));
+    const [medicationInstructions, onChangeMedicationInstructions] = useState((loadedMedication == '') ? '' : loadedMedication.medicationInstructions);
+
+    // if(loadedMedication != '') {
+    //   console.log("Not Empty");
+    //   onChangeMedicationName(loadedMedication.medicationName);
+    //   onChangeMedicationType(loadedMedication.medicationType);
+    //   onChangeMedicationDosage(loadedMedication.medicationDosage);
+    //   onChangeMedicationDosageMetric(loadedMedication.medicationDosageMetric);
+    //   onChangeMedicationReason(loadedMedication.medicationReason);
+    //   onChangeMedicationDaily(loadedMedication.medicationDaily);
+    //   onChangeMedicationDailyDosesNumber(loadedMedication.medicationDailyDosesNumber);
+    //   onChangeMedicationTime1(new Date(loadedMedication.medicationTime1));
+    //   onChangeMedicationStartDate(new Date(loadedMedication.medicationStartDate));
+    //   onChangeMedicationEndDate(new Date(loadedMedication.medicationEndDate));
+    //   onChangeMedicationInstructions(loadedMedication.medicationInstructions);
+    // }
+
     const [calendarStartVisible, onChangeCalendarStart] = useState(false);
     const [calendarEndVisible, onChangeCalendarEnd] = useState(false);
 
@@ -59,9 +80,6 @@ export default function AddMedicationScreen ({navigation}) {
     const [timersToInclude, onChangeTimersToInclude] = useState([]);
 
     const timerArray = [];
-
-    const metricsOfDosage = ['ml', 'mg', 'g', 'Pills'];
-    const dailyDosageOptions = ['Yes', 'No'];
 
     function range(start, end) {
       return Array(end - start + 1).fill().map((_, idx) => start + idx);
@@ -73,19 +91,18 @@ export default function AddMedicationScreen ({navigation}) {
     
     return (
           <AddMedDocForm initialValues={{
-            medicName: '',
-            medicType: '',
-            medicDosage: '',
-            medicDosageMetric: '',
-            medicReason: '',
-            medicDaily: '',
-            medicDailyDosesNumber: '',
-            medicTime1: '',
-            medicTime2: '',
+            medicName: medicationName,
+            medicType: medicationType,
+            medicDosage: medicationDosage,
+            medicDosageMetric: medicationDosageMetric,
+            medicReason: medicationReason,
+            medicDaily: medicationDaily,
+            medicDailyDosesNumber: medicationDailyDosesNumber,
+            medicTime1: medicationTime1,
             medicTimerArray: [],
-            medicStartDate: '',
-            medicEndDate: '',
-            medicInstructions: ''
+            medicStartDate: medicationStartDate,
+            medicEndDate: medicationEndDate,
+            medicInstructions: medicationInstructions
           }}>
 
             <AddMedDocForm.Step>
@@ -97,7 +114,7 @@ export default function AddMedicationScreen ({navigation}) {
                   placeholder={'Medication Name'}
                   onChangeText={ function(text) {{onChangeValue('medicName', text)}; {onChangeMedicationName(text)}} }
                   value={values.medicName}
-                  autoFocus={true}
+                  autoFocus={(loadedMedication == '') ? true : false}
                 />
               </View>
               )}
@@ -107,13 +124,26 @@ export default function AddMedicationScreen ({navigation}) {
               {({ onChangeValue, values }) => (
               <View>
                 <Text>Medication Type</Text>
-                <TextInput
+                <Picker 
+                  style={{width: '80%'}}
+                  selectedValue={values.medicType}
+                  onValueChange={ function(data) {{onChangeValue('medicType', data)}; {onChangeMedicationType(typeOfMedication[data])}} }
+                  value={values.medicType}
+                >
+                  {typeOfMedication.map((item, index) => {
+                    return (<Picker.Item label={item} value={index} key={index}/>)
+                  })}
+                </Picker>
+
+
+
+                {/* <TextInput
                   style={styles.textInput}
                   placeholder={'Medication Type'}
                   onChangeText={ function(text) {{onChangeValue('medicType', text)}; {onChangeMedicationType(text)}} }
                   value={values.medicType}
                   autoFocus={true}
-                />
+                /> */}
               </View>
               )}
             </AddMedDocForm.Step>
@@ -129,12 +159,12 @@ export default function AddMedicationScreen ({navigation}) {
                     onChangeText={ function(text) {{onChangeValue('medicDosage', text)}; {onChangeMedicationDosage(text)}} }
                     value={values.medicDosage}
                     keyboardType={'numeric'}
-                    autoFocus={true}
+                    autoFocus={(loadedMedication == '') ? true : false}
                   />
                   <Picker
                     style={{width:'30%'}}
                     selectedValue={values.medicDosageMetric}
-                    onValueChange={ function(data) {{onChangeValue('medicDosageMetric', data)}; {onChangeMedicationDosageMetric(data.value)}} }
+                    onValueChange={ function(data) {{onChangeValue('medicDosageMetric', data)}; {onChangeMedicationDosageMetric(metricsOfDosage[data])}} }
                     value={values.medicDosageMetric}>
                     {metricsOfDosage.map((item, index) => {
                       return (<Picker.Item label={item} value={index} key={index}/>)
@@ -154,7 +184,7 @@ export default function AddMedicationScreen ({navigation}) {
                   placeholder={'Medication Reason'}
                   onChangeText={ function(text) {{onChangeValue('medicReason', text)}; {onChangeMedicationReason(text)}} }
                   value={values.medicReason}
-                  autoFocus={true}
+                  autoFocus={(loadedMedication == '') ? true : false}
                 />
               </View>
               )}
@@ -167,7 +197,7 @@ export default function AddMedicationScreen ({navigation}) {
                 <Picker
                   style={{width:'30%'}}
                   selectedValue={values.medicDaily}
-                  onValueChange={ function(data) {{onChangeValue('medicDaily', data)}; {onChangeMedicationDaily(data.value)}} }
+                  onValueChange={ function(data) {{onChangeValue('medicDaily', data)}; {onChangeMedicationDaily(dailyDosageOptions[data])}} }
                   value={values.medicDaily}>
                   {dailyDosageOptions.map((item, index) => {
                     return (<Picker.Item label={item} value={index} key={index}/>)
@@ -187,7 +217,7 @@ export default function AddMedicationScreen ({navigation}) {
                   onChangeText={ function(text) {{onChangeValue('medicDailyDosesNumber', text)}; {onChangeMedicationDailyDosesNumber(text)}; {timersIncluded(text)}} }
                   value={values.medicDailyDosesNumber}
                   keyboardType={'numeric'}
-                  autoFocus={true}
+                  autoFocus={(loadedMedication == '') ? true : false}
                 />
               </View>
               )}
@@ -216,7 +246,7 @@ export default function AddMedicationScreen ({navigation}) {
                       <TextInput
                         style={styles.textInput}
                         placeholder={'Time - hh:mm'}
-                        value={Moment(medicationTime1.toString()).format("HH:mm")}
+                        value={Moment(medicationTime1.toString()).utcOffset(0, true).format("HH:mm")}
                         keyboardType={'phone-pad'}
                         //value={values.medicTimerArray[timerNumber]}
                         // onChangeTimersNumber
@@ -247,7 +277,7 @@ export default function AddMedicationScreen ({navigation}) {
                   style={styles.textInput}
                   placeholder={'Start Date - dd/mm/yyyy'}
                   //value={medicationStartDate.toDateString()}
-                  value={Moment(medicationStartDate.toString()).format("DD/MM/yyyy")}
+                  value={Moment(medicationStartDate.toString()).format("DD/MM/YYYY")}
                 />
               </View>
               )}
@@ -273,7 +303,7 @@ export default function AddMedicationScreen ({navigation}) {
                   style={styles.textInput}
                   placeholder={'End Date - dd/mm/yyyy'}
                   //value={medicationEndDate.toDateString()}
-                  value={Moment(medicationEndDate.toString()).format("DD/MM/yyyy")}
+                  value={Moment(medicationEndDate.toString()).format("DD/MM/YYYY")}
                 />
               </View>
               )}
@@ -288,23 +318,23 @@ export default function AddMedicationScreen ({navigation}) {
                   placeholder={'Medication Instructions'}
                   onChangeText={ function(text) {{onChangeValue('medicInstructions', text)}; {onChangeMedicationInstructions(text)}} }
                   value={values.medicInstructions}
-                  autoFocus={true}
+                  autoFocus={(loadedMedication == '') ? true : false}
                 />
               </View>
               )}
             </AddMedDocForm.Step>
 
             <View>
-              <Text>Medication Name:         {medicationName}</Text>
-              <Text>Medication Type:         {medicationType}</Text>
-              <Text>Medication Dosage:       {medicationDosage} {medicationDosageMetric}</Text>
-              <Text>Medication Reason:       {medicationReason}</Text>
-              <Text>Medication Daily:        {medicationDaily}</Text>
+              <Text>Medication Name:            {medicationName}</Text>
+              <Text>Medication Type:              {medicationType}</Text>
+              <Text>Medication Dosage:         {medicationDosage} {medicationDosageMetric}</Text>
+              <Text>Medication Reason:         {medicationReason}</Text>
+              <Text>Medication Daily:              {medicationDaily}</Text>
               <Text>Medication Daily Doses:  {medicationDailyDosesNumber}</Text>
-              <Text>Medication Time:         {medicationTime1.toTimeString()}</Text>
-              <Text>Medication Start Date:   {medicationStartDate.toDateString()}</Text>
-              <Text>Medication End Date:     {medicationEndDate.toDateString()}</Text>
-              <Text>Medication Instructions: {medicationInstructions}</Text>
+              <Text>Medication Time:              {medicationTime1.toTimeString()}</Text>
+              <Text>Medication Start Date:     {medicationStartDate.toDateString()}</Text>
+              <Text>Medication End Date:       {medicationEndDate.toDateString()}</Text>
+              <Text>Medication Instructions:  {medicationInstructions}</Text>
               <Button
                 title={'Submit'}
                 onPress={() => {

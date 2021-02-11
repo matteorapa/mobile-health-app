@@ -8,55 +8,37 @@ import ThemeButton from '../../components/ThemeButton';
 import {COLORS, LAYOUT, TYPE} from '../../styles/theme';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
+import { ReadDoctor, ReadMedication, readMedication } from '../../DBFunctions';
+
 export default function MedicationScreen({navigation}) {
-  const [date, setDate] = useState(new Date());
-  const [mode, setMode] = useState('date');
-  const [show, setShow] = useState(false);
+  const [myDoctors, setMyDoctors] = useState([]);
+  // const [date, setDate] = useState(new Date());
+  // const [mode, setMode] = useState('date');
+  // const [show, setShow] = useState(false);
   
-  const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setShow(Platform.OS === 'ios');
-    setDate(currentDate);
-  };
+  // const onChange = (event, selectedDate) => {
+  //   const currentDate = selectedDate || date;
+  //   setShow(Platform.OS === 'ios');
+  //   setDate(currentDate);
+  // };
 
-  const showMode = (currentMode) => {
-    setShow(true);
-    setMode(currentMode);
-  };
+  // const showMode = (currentMode) => {
+  //   setShow(true);
+  //   setMode(currentMode);
+  // };
 
-  const showDatepicker = () => {
-    showMode('date');
-  };
+  // const showDatepicker = () => {
+  //   showMode('date');
+  // };
 
-  const showTimepicker = () => {
-    showMode('time');
-  };
-
+  // const showTimepicker = () => {
+  //   showMode('time');
+  // };
 
   return (
     <View style={LAYOUT.main}>
 
-      <List.Section>
-        <List.Subheader>Your Medication</List.Subheader>
-        <TouchableOpacity>
-          <List.Item
-            title="Pill 1"
-            left={() => <Image source={require('./drugs.png')} style={{width: 22, height: 22}} />}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <List.Item
-            title="Pill 2"
-            left={() => <Image source={require('./drugs.png')} style={{width: 22, height: 22}} />}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <List.Item
-            title="Pill 3"
-            left={() => <Image source={require('./drugs.png')} style={{width: 22, height: 22}} />}
-          />
-        </TouchableOpacity>
-      </List.Section>
+      <ReadMedication navigation = {navigation} />
 
       <ThemeButton
         icon={'add'}
@@ -64,26 +46,13 @@ export default function MedicationScreen({navigation}) {
         accessibilityLabel="Add medication to list"
         onPressEvent={() => {
           navigation.navigate('Medication', {
-            screen: 'AddMedication'
+            screen: 'AddMedication',
+            params: {loadedMedication: ''}
           });
         }}
       />
 
-      <List.Section>
-        <List.Subheader>Your Doctors</List.Subheader>
-        <TouchableOpacity>
-        <List.Item
-          title="Doctor 1"
-          left={() => <Icon name="face" size={24} />}
-        />
-        </TouchableOpacity>
-        <TouchableOpacity>
-        <List.Item
-          title="Doctor 2"
-          left={() => <Icon name="face" size={24} />}
-        />
-        </TouchableOpacity>
-      </List.Section>
+      <ReadDoctor navigation = {navigation} />
 
       <ThemeButton
         icon={'add'}
@@ -97,33 +66,6 @@ export default function MedicationScreen({navigation}) {
       />
 
     </View>
-
-    // <View>
-    //   <Text>Medications</Text>
-    //   <Text>Active Medications</Text>
-    //   <Text>Past Medications</Text>
-    //   <Text>Your Doctors</Text>
-
-    //   <Button
-    //         title="Add Doctor"
-    //         color="#000000"
-    //         accessibilityLabel="Add doctor to list"
-    //         onPress={() => {
-    //           navigation.navigate('Medication', {
-    //             screen: 'AddDoctor'
-    //           });
-    //         }}
-    //       />
-    //   <Button
-    //         title="Add Medication"
-    //         color="#000000"
-    //         accessibilityLabel="Add medication to list"
-    //         onPress={() => {
-    //           navigation.navigate('Medication', {
-    //             screen: 'AddMedication'
-    //           });
-    //         }}
-    //       />
-    // </View>
+    
   );
 }

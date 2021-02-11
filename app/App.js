@@ -17,6 +17,8 @@ import SignInScreen from './screens/auth/signin';
 import SignUpScreen from './screens/auth/signup';
 import DoctorSignUpScreen from './screens/auth/doctor_signup';
 import { initiateChannels } from './notifications';
+import ViewMedication from './screens/medication/viewMedication';
+import ViewDoctor from './screens/medication/viewDoctor';
 
 function MedicationStack() {
   const MedicationStack = createStackNavigator();
@@ -44,6 +46,16 @@ function MedicationStack() {
       <MedicationStack.Screen
         name="AddGuardian"
         component={AddGuardianScreen}
+        options={options}
+      />
+      <MedicationStack.Screen
+        name="ViewMedication"
+        component={ViewMedication}
+        options={options}
+      />
+      <MedicationStack.Screen
+        name="ViewDoctor"
+        component={ViewDoctor}
         options={options}
       />
     </MedicationStack.Navigator>
