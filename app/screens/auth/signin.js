@@ -1,5 +1,5 @@
-import {Text, View, Button, TextInput, Image} from 'react-native';
-import React from 'react';
+import {Text, View, Button, TextInput, Image, Alert} from 'react-native';
+import React, {Component} from 'react';
 import {AuthContext} from '../../auth';
 import {styles} from '../../styles/globals';
 import ThemeButton from '../../components/ThemeButton';
@@ -22,6 +22,7 @@ export default function SignInScreen({navigation}) {
       })
       .catch((error) => {
         console.log(error);
+        Alert.alert('Login Failed','Email or Password is invalid!', [{text: 'Try Again', onPress: () => console.log('alert closed')}]);
       });
   };
 

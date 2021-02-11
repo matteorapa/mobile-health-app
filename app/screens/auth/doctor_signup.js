@@ -6,6 +6,9 @@ import auth from '@react-native-firebase/auth';
 
 
 export default function SignUpScreen({navigation}) {
+
+  const [Name, onChangeName] = React.useState('');
+  const [Surname, onChangeSurname] = React.useState('');
   const [email, onChangeEmail] = React.useState('');
   const [password, onChangePassword] = React.useState('');
   const [VerifyPassword, onChangeVerifyPassword] = React.useState('');
@@ -15,6 +18,21 @@ export default function SignUpScreen({navigation}) {
       <View style={styles.container}>
         <View style={styles.box}>
           <Text style={styles.heading}>Doctor Sign Up</Text>
+          <Text style={styles.heading}>Sign Up</Text>
+          <Text>Name</Text>
+          <TextInput
+            style={styles.textInput}
+            placeholder={'First Name'}
+            onChangeText={(text) => onChangeName(text)}
+            value={Name}
+          />
+           <Text>Surname</Text>
+          <TextInput
+            style={styles.textInput}
+            placeholder={'Your Last Name'}
+            onChangeText={(text) => onChangeSurname(text)}
+            value={Surname}
+          />
           <Text>Email Address</Text>
           <TextInput
             style={styles.textInput}
@@ -47,7 +65,7 @@ export default function SignUpScreen({navigation}) {
                 auth()
                   .createUserWithEmailAndPassword(email, password)
                   .then(data => {
-                      addDoctor(data.user.uid,'Doctor')
+                      addDoctor(data.user.uid,'Doctor', Name, Surname)
                   })
                   .catch(error => {
                       if (error.code === 'auth/email-already-in-use') {
@@ -92,7 +110,7 @@ export default function SignUpScreen({navigation}) {
   );
 }
 
-export const addDoctor = (doctorId, role) => {
+export const addDoctor = (doctorId, role, Name, Surname) => {
   return new Promise(function(resolve,reject){
       let key;
       if (doctorId != null) {
@@ -104,6 +122,8 @@ export const addDoctor = (doctorId, role) => {
       let dataToSave = {
           doctorId: key,
           role: role,
+          name: Name,
+          surname: Surname,
       };
       database().ref('UserRoles/' + key).update(dataToSave).then((snapshot)=>{
           resolve(snapshot)

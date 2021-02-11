@@ -8,14 +8,13 @@ import {COLORS, LAYOUT, TYPE} from '../styles/theme';
 import acc from './profile.jpg';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { logOut } from './auth/AuthFunctionality'
+import RNRestart from 'react-native-restart'; 
 
 export default function AccountScreen({navigation}) {
   const {signOut} = React.useContext(AuthContext);
   const [isSwitchOn, setIsSwitchOn] = React.useState(false);
   const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
   let accountImg = false;
-
-  console.log(global.uid);
 
   return (
     <View style={LAYOUT.main}>
@@ -28,20 +27,10 @@ export default function AccountScreen({navigation}) {
       </View>
 
       <ThemeButton
-        type={'muted'}
-        text={'Edit'}
-        icon={'edit'}
-        onPress={() => {
-          signOut();
-        }}
-      />
-
-      <ThemeButton
         type={'secondary'}
         text={'Sign out'}
-        onPress={() => {
-          logOut();
-          navigation.navigate('SignIn')
+        onPressEvent={() => {
+          RNRestart.Restart();
         }}
       />
 

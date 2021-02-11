@@ -1,4 +1,4 @@
-import {Text, View, Button, TextInput} from 'react-native';
+import {Text, View, Button, TextInput, Alert} from 'react-native';
 import React from 'react';
 import {AuthContext} from '../../auth';
 import {styles} from '../../styles/globals';
@@ -10,6 +10,8 @@ import auth from '@react-native-firebase/auth';
 
 export default function SignUpScreen({navigation}) {
 
+  const [Name, onChangeName] = React.useState('');
+  const [Surname, onChangeSurname] = React.useState('');
   const [email, onChangeEmail] = React.useState('');
   const [password, onChangePassword] = React.useState('');
   const [VerifyPassword, onChangeVerifyPassword] = React.useState('');
@@ -19,6 +21,20 @@ export default function SignUpScreen({navigation}) {
       <View style={styles.container}>
         <View style={styles.box}>
           <Text style={styles.heading}>Sign Up</Text>
+          <Text>Name</Text>
+          <TextInput
+            style={styles.textInput}
+            placeholder={'First Name'}
+            onChangeText={(text) => onChangeName(text)}
+            value={Name}
+          />
+           <Text>Surname</Text>
+          <TextInput
+            style={styles.textInput}
+            placeholder={'Your Last Name'}
+            onChangeText={(text) => onChangeSurname(text)}
+            value={Surname}
+          />
           <Text>Email Address</Text>
           <TextInput
             style={styles.textInput}
@@ -51,20 +67,22 @@ export default function SignUpScreen({navigation}) {
                 auth()
                   .createUserWithEmailAndPassword(email, password)
                   .then(data => {
-                      addUser(data.user.uid,'Patient')
+                      addUser(data.user.uid,'Patient', Name, Surname)
+                      navigation.navigate('SignIn');
                   })
                   .catch(error => {
                       if (error.code === 'auth/email-already-in-use') {
-                      console.log('That email address is already in use!');
+                      Alert.alert('Sign up Failed','Email already in use', [{text: 'Try Again', onPress: () => console.log('alert closed')}]);
+                      navigation.navigate('SignIn');
                       }
 
                       if (error.code === 'auth/invalid-email') {
+                      Alert.alert('Sign up Failed','Invalid Email format', [{text: 'Try Again', onPress: () => console.log('alert closed')}]);
                       console.log('That email address is invalid!');
                       }
 
                       console.error(error);
                   });
-              navigation.navigate('SignIn');
               }
             }}
           />
@@ -95,7 +113,7 @@ export default function SignUpScreen({navigation}) {
   );
 }
 
-export const addUser = (userId, role) => {
+export const addUser = (userId, role, Name, Surname) => {
   return new Promise(function(resolve,reject){
       let key;
       if (userId != null) {
@@ -107,6 +125,8 @@ export const addUser = (userId, role) => {
       let dataToSave = {
           userId: key,
           role: role,
+          Name: Name,
+          surname: Surname
       };
       database().ref('UserRoles/' + key).update(dataToSave).then((snapshot)=>{
           resolve(snapshot)
