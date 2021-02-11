@@ -1,17 +1,13 @@
 import {Text, View, Button, TextInput, Alert} from 'react-native';
-import React, {useState} from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useNavigation} from '@react-navigation/native';
+
 import {Picker} from '@react-native-picker/picker';
-import { TimePickerModal } from 'react-native-paper-dates'
-import {
-  addHabit,
-  getHabit,
-  editItem,
-  listHabitIds,
-  addReminder,
-} from '../../DBFunctions';
-import nanoid from 'nanoid'
+import {TimePickerModal} from 'react-native-paper-dates';
+import {listHabitIds, addReminder} from '../../DBFunctions';
+import {set} from 'react-native-reanimated';
+
 
 export default function AddReminderScreen({navigation}) {
   //array with the list of habits saved to choose a habit
@@ -19,47 +15,24 @@ export default function AddReminderScreen({navigation}) {
   const [state, setState] = React.useState('');
   const [title, setTitle] = useState('');
   const [date, setDate] = useState(new Date());
-  const [mode, setMode] = useState('date');
-  const [show, setShow] = useState(false);
+  const [hours1, setHours] = useState();
+  const [minutes1, setMinutes] = useState();
   const [frequency, setFrequency] = useState('Daily');
 
-  const onChange = (event, selectedDate) => {
-    console.log(selectedDate);
-    const currentDate = selectedDate || date;
-    setShow(Platform.OS === 'ios');
-    setDate(currentDate);
-  };
+  const [visible, setVisible] = useState(false);
 
-  const showMode = (currentMode) => {
-    setShow(true);
-    setMode(currentMode);
-  };
+  const onDismiss = useCallback(() => {
+    setVisible(false);
+  }, [setVisible]);
 
-  const showDatepicker = () => {
-    showMode('date');
-  };
-
-  const showTimepicker = () => {
-    showMode('time');
-  };
-
-  <>
-      <TimePickerModal
-        visible={visible}
-        onDismiss={onDismiss}
-        onConfirm={onConfirm}
-        hours={12} // default: current hours
-        minutes={14} // default: current minutes
-        label="Select time" // optional, default 'Select time'
-        cancelLabel="Cancel" // optional, default: 'Cancel'
-        confirmLabel="Ok" // optional, default: 'Ok'
-        animationType="fade" // optional, default is 'none'
-        locale={'en'} // optional, default is automically detected by your system
-      />
-      <Button onPress={()=> setVisible(true)}>
-        Pick time
-      </Button>
-    </>
+  const onConfirm = useCallback(
+    ({hours, minutes}) => {
+      setVisible(false);
+      setHours(hours);
+      setMinutes(minutes);
+    },
+    [setVisible],
+  );
 
   return (
     <View>
@@ -71,60 +44,41 @@ export default function AddReminderScreen({navigation}) {
         onValueChange={(itemValue, itemIndex) => {
           setState(itemValue);
         }}>
-        {listHabitIds()}
-      </Picker>
+          {listHabitIds()}
 
+      </Picker>
+  
       <TextInput
         placeholder="Title"
         onChangeText={(title) => setTitle(title)}
         defaultValue={title}
       />
 
-      <Text>{date.toTimeString()}</Text>
-      <Button title="Time" onPress={showTimepicker}></Button>
+      <Text>{hours1}</Text>
 
-      {show && (
-        <DateTimePicker
-          testID="dateTimePicker"
-          value={date}
-          mode={mode}
-          is24Hour={true}
-          display="default"
-          onChange={onChange}
-        />
-      )}
-
-      <Button
-        title="Submit"
-        onPress={() => {
-          addReminder(state, null, title, date.toTimeString());
-
-          navigation.navigate('Tasks', {
-            screen: 'Index',
-          });
-        }}
-      />
-
-      <Button title="Go back" onPress={() => navigation.goBack()} />
-
-      <>
       <TimePickerModal
         visible={visible}
         onDismiss={onDismiss}
         onConfirm={onConfirm}
         hours={12} // default: current hours
         minutes={14} // default: current minutes
-        label="Select time" // optional, default 'Select time'
-        cancelLabel="Cancel" // optional, default: 'Cancel'
-        confirmLabel="Ok" // optional, default: 'Ok'
-        animationType="fade" // optional, default is 'none'
-        locale={'en'} // optional, default is automically detected by your system
       />
-      <Button onPress={()=> setVisible(true)}>
-        Pick time
-      </Button>
-    </>
-      
+      <Button onPress={() => setVisible(true)} title={'Pick Time'}></Button>
+
+      <Button
+        title="Submit"
+        onPress={() => {
+          console.log("habit: ",state)
+          console.log("title: ",title)
+            console.log("hour: ",hours1)
+            console.log("minutes: ",minutes1)
+            {addReminder(state, title, hours1, minutes1);}
+          
+          navigation.goBack();
+        }}
+      />
+
+      <Button title="Go back" onPress={() => navigation.goBack()} />
     </View>
   );
 }

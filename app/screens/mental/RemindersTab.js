@@ -23,16 +23,6 @@ export default function ReminderRoute(props){
   const [show, setShow] = useState(false);
   const [frequency, setFrequency] = useState('Daily')
 
-  const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setShow(Platform.OS === 'ios');
-    setDate(currentDate);
-  };
-
-  const showMode = (currentMode) => {
-    setShow(true);
-    setMode(currentMode);
-  };
 
 
   return (
@@ -44,23 +34,14 @@ export default function ReminderRoute(props){
         <Paragraph>time</Paragraph>
         <Card.Actions>
           <Button>Remove</Button>
-          <Button onPress={() => showTimepicker}>Edit</Button>
+          <Button >Edit</Button>
         </Card.Actions>
       </Card>
 
       {getReminder()}
 
 
-      {show && (
-        <DateTimePicker
-          testID="dateTimePicker"
-          value={date}
-          mode={mode}
-          is24Hour={true}
-          display="default"
-          onChange={onChange}
-        />
-      )}
+     
 
       <Button
         icon="plus"
