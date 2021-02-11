@@ -1,68 +1,65 @@
-import { Text, View, Button, TextInput, Alert } from 'react-native';
-import React, { useState } from 'react';
+import {Text, View, Button, TextInput, Alert} from 'react-native';
+import React, {useState} from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import {addHabit, deleteItem, editItem, deleteHabit} from '../../DBFunctions';
 
- 
 //to do
-//placeholders, date and time set as current values 
+//placeholders, date and time set as current values
 
+export default function EditHabitScreen({navigation, route}) {
+  const {habit} = route.params;
 
-export default function EditHabitScreen( {navigation} ) {
+  //fill component state with habit details from db
 
-    const [title, setTitle] = useState(''); 
-    const [description, setDesc] = useState(''); 
-    const [numPerW, setNPW] = useState(''); 
-    const [numPerD, setNPD] = useState(''); 
-    const [category, setCat] = useState(''); 
-    
- 
-    const [date, setDate] = useState(new Date());
-    const [mode, setMode] = useState('date');
-    const [show, setShow] = useState(false);
-  
-    const onChange = (event, selectedDate) => {
-      const currentDate = selectedDate || date;
-      setShow(Platform.OS === 'ios');
-      setDate(currentDate);
-    };
-  
-    const showMode = (currentMode) => {
-      setShow(true);
-      setMode(currentMode);
-    };
-  
-    const showDatepicker = () => {
-      showMode('date');
-    };
-  
-    const showTimepicker = () => {
-      showMode('time');
-    };
- 
- 
-    return (
-      <View>
-        <Text>Edit Habit Screen</Text>
- 
- 
-        <TextInput
-        placeholder="Title" 
-        onChangeText={title => setTitle(title)}
-        defaultValue={title}/> 
- 
-        <TextInput
-        placeholder="Description" 
-        onChangeText={description => setDesc(description)}
-        defaultValue={description}/> 
- 
-      
+  const [title, setTitle] = useState(habit.habitId);
+  const [description, setDesc] = useState(habit.habitDesc);
+  const [numPerD, setNPD] = useState(habit.numPerD);
+  const [category, setCat] = useState(habit.category);
+  const [date, setDate] = useState(new Date(habit.startDate));
+  const [mode, setMode] = useState('date');
+  const [show, setShow] = useState(false);
+
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setShow(Platform.OS === 'ios');
+    setDate(currentDate);
+  };
+
+  const showMode = (currentMode) => {
+    setShow(true);
+    setMode(currentMode);
+  };
+
+  const showDatepicker = () => {
+    showMode('date');
+  };
+
+  const showTimepicker = () => {
+    showMode('time');
+  };
+
+  return (
+    <View>
+      <Text>Edit Habit Screen</Text>
+      <Text>date - {habit.startDate}</Text>
+
+      <TextInput
+        placeholder="Title"
+        onChangeText={(title) => setTitle(title)}
+        defaultValue={title}
+      />
+
+      <TextInput
+        placeholder="Description"
+        onChangeText={(description) => setDesc(description)}
+        defaultValue={description}
+      />
+
       <Text>{date.toDateString()}</Text>
       <Button title="Start Date" onPress={showDatepicker}></Button>
-      <Text>{date.toTimeString()}</Text>
-      <Button title="Time" onPress={showTimepicker}></Button>
-        
-      
-        {show && (
+
+
+      {show && (
         <DateTimePicker
           testID="dateTimePicker"
           value={date}
@@ -72,39 +69,32 @@ export default function EditHabitScreen( {navigation} ) {
           onChange={onChange}
         />
       )}
- 
-        <TextInput
-        placeholder="Number per Week" 
-        onChangeText={numPerW => setNPW(numPerW)}
-        defaultValue={numPerW}/> 
 
-        <TextInput
-        placeholder="Number per day" 
-        onChangeText={numPerD => setNPD(numPerD)}
-        defaultValue={numPerD}/>  
-        
- 
+      <TextInput
+        placeholder="Number per day"
+        onChangeText={(numPerD) => setNPD(numPerD)}
+        defaultValue={numPerD}
+      />
+
       <TextInput
         placeholder="Category"
-        onChangeText={category => setCat(category)}
+        onChangeText={(category) => setCat(category)}
         defaultValue={category}
       />
 
-      {/* Add variable to store points */}
+      <Button
+        title="Save Changes"
+        onPress={() => {
 
-      <Button title="Submit" onPress={() => {
-        //saveHabit(title,description,date.toDateString(),date.toTimeString(),numPerW,numPerD,category);
-        navigation.navigate('Tasks', {
-          screen: 'Index'
-        });
-        
-        }} />  
+          //edit using db function
+          addHabit(title, description, date.toISOString(), numPerD, category, habit.consPts, habit.points, habit.date);
+          navigation.navigate('Tasks', {
+            screen: 'Index',
+          });
+        }}
+      />
 
-        <Button title="Go back" onPress={() => navigation.goBack()} /> 
-
- 
- 
-      </View>
-    );
-  }
-
+      <Button title="Go back" onPress={() => navigation.goBack()} />
+    </View>
+  );
+}

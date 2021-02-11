@@ -1,75 +1,65 @@
-import { Text, View, Button, TextInput, Alert } from 'react-native';
-import React, { useState } from 'react';
+import {Text, View, Button, TextInput, Alert} from 'react-native';
+import React, {useState} from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {addHabit, deleteItem, editItem} from '../../DBFunctions';
- 
+import {addHabit} from '../../DBFunctions';
 
+export default function AddHabitScreen({navigation}) {
 
+  //component state for addHabit form
+  const [title, setTitle] = useState('');
+  const [description, setDesc] = useState('');
+  const [numPerW, setNPW] = useState('');
+  const [numPerD, setNPD] = useState('');
+  const [category, setCat] = useState('');
 
+  const currentDate = new Date().toISOString();
 
-export default function AddHabitScreen( {navigation} ) {
+  const [date, setDate] = useState(new Date());
+  const [mode, setMode] = useState('date');
+  const [show, setShow] = useState(false);
 
-  const [itemId, setItemId] = useState();
-  const [itemName, setItemName] = useState('');
-  const [items, setItems] = useState([]);
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setShow(Platform.OS === 'ios');
+    setDate(currentDate);
+  };
 
-    const [title, setTitle] = useState(''); 
-    const [description, setDesc] = useState(''); 
-    const [numPerW, setNPW] = useState(''); 
-    const [numPerD, setNPD] = useState(''); 
-    const [category, setCat] = useState(''); 
+  const showMode = (currentMode) => {
+    setShow(true);
+    setMode(currentMode);
+  };
 
-    const currentDate = new Date().toDateString();
-    
- 
-    const [date, setDate] = useState(new Date());
-    const [mode, setMode] = useState('date');
-    const [show, setShow] = useState(false);
-  
-    const onChange = (event, selectedDate) => {
-      const currentDate = selectedDate || date;
-      setShow(Platform.OS === 'ios');
-      setDate(currentDate);
-    };
-  
-    const showMode = (currentMode) => {
-      setShow(true);
-      setMode(currentMode);
-    };
-  
-    const showDatepicker = () => {
-      showMode('date');
-    };
-  
-    const showTimepicker = () => {
-      showMode('time');
-    };
- 
- 
-    return (
-      <View>
-        <Text>Add Habit Screen</Text>
- 
- 
-        <TextInput
-        placeholder="Title" 
-        onChangeText={title => setTitle(title)}
-        defaultValue={title}/> 
- 
-        <TextInput
-        placeholder="Description" 
-        onChangeText={description => setDesc(description)}
-        defaultValue={description}/> 
- 
-      
+  const showDatepicker = () => {
+    showMode('date');
+  };
+
+  const showTimepicker = () => {
+    showMode('time');
+  };
+
+  return (
+    <View>
+      <Text>Add Habit Screen</Text>
+
+      <TextInput
+        placeholder="Title"
+        onChangeText={(title) => setTitle(title)}
+        defaultValue={title}
+      />
+
+      <TextInput
+        placeholder="Description"
+        onChangeText={(description) => setDesc(description)}
+        defaultValue={description}
+      />
+
       <Text>{date.toDateString()}</Text>
       <Button title="Start Date" onPress={showDatepicker}></Button>
       {/* <Text>{date.toTimeString()}</Text>
       <Button title="Time" onPress={showTimepicker}></Button> */}
-        
-      
-        {show && (
+
+      {show && (
         <DateTimePicker
           testID="dateTimePicker"
           value={date}
@@ -80,35 +70,43 @@ export default function AddHabitScreen( {navigation} ) {
         />
       )}
 
+      <TextInput
+        placeholder="Number per day"
+        onChangeText={(numPerD) => setNPD(numPerD)}
+        defaultValue={numPerD}
+      />
 
-        <TextInput
-        placeholder="Number per day" 
-        onChangeText={numPerD => setNPD(numPerD)}
-        defaultValue={numPerD}/>  
-        
- 
       <TextInput
         placeholder="Category"
-        onChangeText={category => setCat(category)}
+        onChangeText={(category) => setCat(category)}
         defaultValue={category}
       />
 
       {/* Add variable to store points */}
 
-      <Button title="Submit" onPress={() => {
-        //saveHabit(title,description,date.toDateString(),date.toTimeString(),numPerW,numPerD,category);
-        {addHabit(title, description, date.toDateString(), numPerD, category, 0, 0, currentDate);}
-        navigation.navigate('Tasks', {
-          screen: 'Index'
-        });
-        
-        }} />  
+      <Button
+        title="Submit"
+        onPress={() => {
+          //saveHabit(title,description,date.toDateString(),date.toTimeString(),numPerW,numPerD,category);
+          {
+            addHabit(
+              title,
+              description,
+              date.toISOString(),
+              numPerD,
+              category,
+              0,
+              0,
+              currentDate,
+            );
+          }
+          navigation.navigate('Tasks', {
+            screen: 'Index',
+          });
+        }}
+      />
 
-        <Button title="Go back" onPress={() => navigation.goBack()} /> 
-
- 
- 
-      </View>
-    );
-  }
-
+      <Button title="Go back" onPress={() => navigation.goBack()} />
+    </View>
+  );
+}

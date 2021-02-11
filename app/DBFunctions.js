@@ -2,6 +2,11 @@ import database from '@react-native-firebase/database'
 import * as React from 'react';
 import { Avatar, Button, Card, Title, Paragraph, ProgressBar, Colors } from 'react-native-paper';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import {Picker} from '@react-native-picker/picker';
+import DateTimePicker from '@react-native-community/datetimepicker';
+//import reward from './screens/mental/index';
+import { View } from 'react-native';
+
 
 
 export const addItem = (itemId, itemName) => {
@@ -54,13 +59,16 @@ export const addHabit = (habitId, habitDesc, startDate, numPD, category, consPts
     });
 };
 
-export const getHabit = (props) => {
+export const getHabit = () => {
     const [habits, setHabits] = React.useState([]);
-    const habitRef = database().ref('/habits');
+
     const navigation = useNavigation();
 
     const [boolean, setBool] = React.useState(false);
     const [counter, setCounter] = React.useState(1);
+
+    React.useEffect(() => {
+    const habitRef = database().ref('/habits');
     const onLoadingListener = habitRef.on('value', snapshot =>{
         setHabits([]);
         snapshot.forEach(function(childSnapshot){
@@ -68,21 +76,38 @@ export const getHabit = (props) => {
         });
     });
 
-    const show = () => habits.map((element) => {
+    return () => {
         habitRef.off('value', onLoadingListener);
+    }
+
+}, []);
+
+    return habits.map((element) => {
+
+        
+        
         return(
-            <Card key={element.habitId}>
+            <Card key={element.habitId} onPress={ () => {
+
+                 
+                navigation.navigate('Tasks', {
+                    params: {habit: element},
+                    screen: 'Details'
+                  })
+                
+                }
+            }>
             <Title>{element.habitId}</Title>
             <Paragraph>
               Description
               start date
               time
             </Paragraph>
+            
             <Card.Actions>
               <Button onPress={() => {
-                props.setPoints(props.points + 10);
-                props.setCPts(props.consPts + 10);
-                reward(props.consPts);
+                setPoints(element.habitId, element.habitDesc, element.startDate, element.numPD, element.category, element.consPts + 10, element.points + 10, element.date );
+                //reward(element.consPts);
                 setCounter(counter + 1);
   
                 // number per day retrieved from db
@@ -96,6 +121,7 @@ export const getHabit = (props) => {
   
                 // checks if the current date is smaller the the retrieved date 
                 // checks if the user pressed the button more than he should be pressing it
+                
                 if(diff <= 1 || counter >= testCounter){
                     setBool(true);
                     setCounter(0);
@@ -103,29 +129,27 @@ export const getHabit = (props) => {
                 if(diff > 1 && counter < testCounter){
                   setBool(false);
                 }
-                }}
+                }
+                }
+                    
                 disabled={boolean}
                 >Done</Button>
               <Button onPress={() => {
-                if (props.points != 0){
-                  props.setPoints(props.points - 5);
+                if (element.points < 0 || element.points == 0){
+                    setPoints(element.habitId, element.habitDesc, element.startDate, element.numPD, element.category, 0, 0, element.date );
                 }
-                props.setCPts(0);
+                else{
+                setPoints(element.habitId, element.habitDesc, element.startDate, element.numPD, element.category, 0, element.points - 5, element.date );
+                }
                 setBool(false);
               }}>Fail</Button>
-              <Button onPress={() => {
-                
-                console.log(getHabit());
-            navigation.navigate('Tasks', {
-              screen: 'EditHabit'
-            });
-          }}>Edit</Button>
+             
             </Card.Actions>
           </Card>
+        
         );
       });
 
-      return show();
     
     // return () => {
     //     habitRef.off('value', onLoadingListener);
@@ -133,10 +157,210 @@ export const getHabit = (props) => {
 
 }
 
-export const listHabits = (habits) =>{
+
+
+const setPoints = (key, habitDesc, startDate, numPD, category, consPts, points, date) =>{
     
+    database()
+  .ref('/habits/' + key)
+  .set({
+            habitId:key,
+            habitDesc: habitDesc,
+            startDate: startDate,
+            numPerD: numPD,
+            category: category,
+            consPts: consPts,
+            points: points,
+            date: date,
+  })
 
 }
+
+
+
+export const listHabitIds = () => {
+    const [habits, setHabits] = React.useState([]);
+    const habitRef = database().ref('/habits');
+
+
+    const onLoadingListener = habitRef.on('value', snapshot =>{
+        setHabits([]);
+        snapshot.forEach(function(childSnapshot){
+            setHabits(habits => [...habits, childSnapshot.val()]);
+        });
+    });
+
+    return habits.map((element) => {
+
+        habitRef.off('value', onLoadingListener);
+        
+        return(
+            
+            <Picker.Item key={element.habitId} label={element.habitId} value={element.habitId} />
+        
+        );
+      });
+
+    
+    // return () => {
+    //     habitRef.off('value', onLoadingListener);
+    // }
+
+}
+
+export const deleteHabit = (habitId, deleteConfirm) => {
+
+    database().ref('habits/' + habitId).remove().then(() => {
+    }).catch((err) =>{
+        console.log(err)
+    });
+
+}
+
+export const addReminder = (habitId, reminderId, reminderTitle, time) => {
+    return new Promise(function(resolve,reject){
+        let key;
+        if (reminderId != null) {
+            key = reminderId;
+        } else {
+            key=database().ref().push().key //reason for this part of code: if the key is not empty, i.e. already exist, this means that the record is being editted.
+        }
+
+        let dataToSave = {
+            habitId:habitId,
+            reminderId: key,
+            reminderTitle: reminderTitle,
+            time: time,
+        };
+        database().ref('reminders/' + key).update(dataToSave).then((snapshot)=>{
+            resolve(snapshot)
+        }).catch(err => {
+            reject(err);
+        });
+
+    });
+};
+
+export const getReminder = () => {
+    const [reminders, setReminders] = React.useState([]);
+    // const [date, setDate] = useState(new Date());
+    // const [mode, setMode] = useState('date');
+    // const [show, setShow] = useState(false);
+  
+    // const onChange = (event, selectedDate) => {
+    //   const currentDate = selectedDate || date;
+    //   setShow(Platform.OS === 'ios');
+    //   setDate(currentDate);
+    // };
+  
+    // const showMode = (currentMode) => {
+    //   setShow(true);
+    //   setMode(currentMode);
+    // };
+  
+    // const showDatepicker = () => {
+    //   showMode('date');
+    // };
+  
+    // const showTimepicker = () => {
+    //   showMode('time');
+    // };
+
+    const navigation = useNavigation();
+
+    React.useEffect(() => {
+    const reminderRef = database().ref('/reminders');
+    const onLoadingListener = reminderRef.on('value', snapshot =>{
+        setReminders([]);
+        snapshot.forEach(function(childSnapshot){
+            setReminders(reminders => [...reminders, childSnapshot.val()]);
+        });
+    });
+
+    return () => {
+        reminderRef.off('value', onLoadingListener);
+    }
+
+}, []);
+
+    return reminders.map((element) => {
+
+        
+        
+        return(
+            <Card key={element.reminderId}>
+          <Title>{element.reminderTitle}</Title>
+          <Paragraph>
+              {element.habitId}
+
+            {element.time}
+          </Paragraph>
+          <Card.Actions>
+
+            <Button onPress={deleteReminder(element.reminderId)}>Remove</Button>
+            <Button >Edit</Button>
+          </Card.Actions>
+        </Card>
+
+        
+        
+        );
+      });
+
+    
+    // return () => {
+    //     habitRef.off('value', onLoadingListener);
+    // }
+
+}
+
+export const deleteReminder = (reminderId, deleteConfirm) => {
+
+    database().ref('reminders/' + reminderId).remove().then(() => {
+    }).catch((err) =>{
+        console.log(err)
+    });
+
+}
+
+// export const progressBar = (habitId) => {
+
+// // var element;
+
+// //     database()
+// //   .ref('habits/' + habitId)
+// //   .once('value')
+// //   .then(snapshot => {
+// //     element = snapshot.val();
+// //   });
+
+// //     const [percentage, setPerc] = useState(0);
+
+// //   const [title, setTitle] = useState('Beginner Achievement');
+// //   React.useEffect(() => {
+// //     if(element.consPts <= 50){
+// //       setTitle('Beginner Achievement');
+// //       setPerc(element.consPts / 50);
+// //     }
+// //     if (element.consPts > 50 && element.consPts <= 100) {
+// //       setTitle('Amateur Achievement');
+// //       setPerc((element.consPts - 50) / 50);
+// //     }
+// //     if (element.consPts > 100 && element.consPts <= 200) {
+// //       setTitle('Pro Achievement');
+// //       setPerc((element.consPts - 100) / 100);
+// //     }
+// //   })
+
+// //   return(
+// //       <View>
+// //     <Title>{title}</Title>
+// //     <ProgressBar progress={percentage} color={Colors.blue800} style={{height:30}}/>
+// //     </View>
+
+// //   );
+
+// }
 
 export const deleteItem = (itemId, deleteConfirm) => {
 
