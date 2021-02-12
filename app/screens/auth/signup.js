@@ -10,7 +10,7 @@ import auth from '@react-native-firebase/auth';
 
 export default function SignUpScreen({navigation}) {
 
-  const [Name, onChangeName] = React.useState('');
+  const [name, onChangeName] = React.useState('');
   const [Surname, onChangeSurname] = React.useState('');
   const [email, onChangeEmail] = React.useState('');
   const [password, onChangePassword] = React.useState('');
@@ -26,7 +26,7 @@ export default function SignUpScreen({navigation}) {
             style={styles.textInput}
             placeholder={'First Name'}
             onChangeText={(text) => onChangeName(text)}
-            value={Name}
+            value={name}
           />
            <Text>Surname</Text>
           <TextInput
@@ -67,7 +67,7 @@ export default function SignUpScreen({navigation}) {
                 auth()
                   .createUserWithEmailAndPassword(email, password)
                   .then(data => {
-                      addUser(data.user.uid,'Patient', Name, Surname)
+                      addUser(data.user.uid,'Patient', name, Surname)
                       navigation.navigate('SignIn');
                   })
                   .catch(error => {
@@ -125,7 +125,7 @@ export const addUser = (userId, role, Name, Surname) => {
       let dataToSave = {
           userId: key,
           role: role,
-          Name: Name,
+          name: Name,
           surname: Surname
       };
       database().ref('UserRoles/' + key).update(dataToSave).then((snapshot)=>{

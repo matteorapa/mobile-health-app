@@ -4,6 +4,7 @@ import {AuthContext} from '../../auth';
 import {styles} from '../../styles/globals';
 import ThemeButton from '../../components/ThemeButton';
 import {logIn} from './AuthFunctionality';
+import database from '@react-native-firebase/database'
 
 export default function SignInScreen({navigation}) {
   const [email, onChangeEmail] = React.useState('');
@@ -19,6 +20,14 @@ export default function SignInScreen({navigation}) {
         setUserId(result);
         global.uid = result;
         signIn();
+        database().ref('/UserRoles/' + global.uid).once('value').then((snapshot) => {
+          var name = (snapshot.val().name);
+          global.name = name
+          var surname = (snapshot.val().surname);
+          global.surname = surname
+          var role = (snapshot.val().role);
+          global.role = role
+        });
       })
       .catch((error) => {
         console.log(error);
@@ -52,6 +61,7 @@ export default function SignInScreen({navigation}) {
           text={'Sign in'}
           onPressEvent={() => {
             PromiseReader(email, password);
+            // UserInfo();
           }}
         />
         <ThemeButton
