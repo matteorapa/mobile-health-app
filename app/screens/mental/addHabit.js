@@ -3,6 +3,7 @@ import React, {useState} from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {addHabit} from '../../DBFunctions';
+import {Picker} from '@react-native-picker/picker';
 
 export default function AddHabitScreen({navigation}) {
 
@@ -76,11 +77,26 @@ export default function AddHabitScreen({navigation}) {
         defaultValue={numPerD}
       />
 
-      <TextInput
-        placeholder="Category"
-        onChangeText={(category) => setCat(category)}
-        defaultValue={category}
+
+    <Picker
+        selectedValue={category}
+        style={{height: 50, width: 300}}
+        onValueChange={(itemValue, itemIndex) => {
+          setCat(itemValue);
+        }}>
+          <Picker.Item
+            label="Fitness"
+            value="Fitness"
       />
+        <Picker.Item
+            label="Health"
+            value="Health"
+      />
+        <Picker.Item
+            label="Fitness"
+            value="Fitness"
+      />
+      </Picker>
 
       {/* Add variable to store points */}
 

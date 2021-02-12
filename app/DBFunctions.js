@@ -8,6 +8,7 @@ import {
   Button,
   Card,
   Title,
+  Text,
   Paragraph,
   ProgressBar,
   Colors,
@@ -106,6 +107,7 @@ export const getHabit = () => {
   }, []);
 
   return habits.map((element) => {
+    
     return (
       <Card
         key={element.habitId}
@@ -116,7 +118,8 @@ export const getHabit = () => {
           });
         }}>
         <Title>{element.habitId}</Title>
-        <Paragraph>Description start date time</Paragraph>
+        <Text>{element.habitDesc}</Text>
+        <Text>{element.startDate}</Text>
 
         <Card.Actions>
           <Button
@@ -139,7 +142,7 @@ export const getHabit = () => {
               const currentDate = new Date();
 
               //date retrieved from db
-              const retrievedDate = new Date('2021-02-07');
+              const retrievedDate = new Date(element.date);
 
               const diff =
                 (currentDate - retrievedDate) / (1000 * 60 * 60 * 24);
@@ -347,11 +350,10 @@ export const getReminder = () => {
     return (
       <Card key={element.reminderId}>
         <Title>{element.reminderTitle}</Title>
-        <Paragraph>
+        <Text>
           {element.habitId}
-
-          {element.hours}
-        </Paragraph>
+        </Text>
+        <Text>{element.hours}:{element.minutes}</Text>
         <Card.Actions>
           <Button onPress={() => {deleteReminder(element.reminderId)}}>Remove</Button>
           <Button onPress={() => {
