@@ -91,8 +91,8 @@ export const getHabit = () => {
 
   const navigation = useNavigation();
 
-  const [boolean, setBool] = React.useState(false);
-  const [counter, setCounter] = React.useState(1);
+  var boolean = false;
+   var counter = 1;
 
   React.useEffect(() => {
     const habitRef = database().ref('/habits');
@@ -108,7 +108,40 @@ export const getHabit = () => {
     };
   }, []);
 
+ 
+
   return habits.map((element) => {
+
+
+        //  // number per day retrieved from db
+        //  const testCounter = 2;
+        //  const currentDate = new Date();
+        // //reward(element.consPts);
+        
+
+        //  //date retrieved from db
+        //  const retrievedDate = new Date(element.date);
+
+        //  const diff =
+        //    (currentDate - retrievedDate) / (1000 * 60 * 60 * 24);
+
+        //    console.log(diff);
+           
+
+
+        //  // checks if the current date is smaller the the retrieved date
+        //  // checks if the user pressed the button more than he should be pressing it
+
+        //  if (diff <= 1 || counter >= testCounter) {
+        //    boolean = true;
+        //    counter = 0;
+        //  }
+        //  if (diff > 1 && counter < testCounter) {
+        //    boolean = false;
+        //  }
+
+
+
     
     return (
       <Card
@@ -134,32 +167,12 @@ export const getHabit = () => {
                 element.category,
                 element.consPts + 10,
                 element.points + 10,
-                element.date,
+                currentDate,
                 element.graphData,
               );
-              //reward(element.consPts);
-              setCounter(counter + 1);
 
-              // number per day retrieved from db
-              const testCounter = 2;
-              const currentDate = new Date();
-
-              //date retrieved from db
-              const retrievedDate = new Date(element.date);
-
-              const diff =
-                (currentDate - retrievedDate) / (1000 * 60 * 60 * 24);
-
-              // checks if the current date is smaller the the retrieved date
-              // checks if the user pressed the button more than he should be pressing it
-
-              if (diff <= 1 || counter >= testCounter) {
-                setBool(true);
-                setCounter(0);
-              }
-              if (diff > 1 && counter < testCounter) {
-                setBool(false);
-              }
+              counter = counter + 1;
+              
             }}
             disabled={boolean}>
             Done

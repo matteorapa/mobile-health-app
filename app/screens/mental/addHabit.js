@@ -14,7 +14,7 @@ export default function AddHabitScreen({navigation}) {
   const [numPerD, setNPD] = useState('');
   const [category, setCat] = useState('');
 
-  const currentDate = new Date().toISOString();
+  //const currentDate2 = new Date('2012-04-23T00:00:00.000Z').toISOString();
 
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState('date');

@@ -55,15 +55,6 @@ const HabitRoute = () => {
   );
 };
 
-const ProgressRoute = (props) => {
-  
-  return (
-    <View>
-      
-    </View>
-  );
-};
-
 
 
 const initialLayout = {width: Dimensions.get('window').width};
@@ -76,7 +67,6 @@ export default function MindScreen() {
 
   const [routes] = React.useState([
     {key: 'habits', title: 'Habits'},
-    {key: 'progress', title: 'Progress'},
     {key: 'reminders', title: 'Reminders'},
   ]);
 
@@ -85,15 +75,6 @@ export default function MindScreen() {
       case 'habits':
         return (
           <HabitRoute
-            points={points}
-            setPoints={setPoints}
-            consPts={consPts}
-            setCPts={setCPts}
-          />
-        );
-      case 'progress':
-        return (
-          <ProgressRoute
             points={points}
             setPoints={setPoints}
             consPts={consPts}

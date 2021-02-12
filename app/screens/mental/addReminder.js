@@ -17,7 +17,6 @@ export default function AddReminderScreen({navigation}) {
   const [date, setDate] = useState(new Date());
   const [hours1, setHours] = useState();
   const [minutes1, setMinutes] = useState();
-  const [frequency, setFrequency] = useState('Daily');
 
   const [visible, setVisible] = useState(false);
 
