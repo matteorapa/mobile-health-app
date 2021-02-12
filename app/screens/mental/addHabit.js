@@ -1,24 +1,18 @@
-import {Text, View, Button, TextInput, Alert} from 'react-native';
+import {Text, View, Button, TextInput} from 'react-native';
 import React, {useState} from 'react';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {addHabit} from '../../DBFunctions';
 import {Picker} from '@react-native-picker/picker';
-
 import { DatePickerModal } from 'react-native-paper-dates'
+import ThemeButton from '../../components/ThemeButton'
 
 export default function AddHabitScreen({navigation}) {
 
   //component state for addHabit form
   const [title, setTitle] = useState('');
   const [description, setDesc] = useState('');
-  const [numPerW, setNPW] = useState('');
   const [numPerD, setNPD] = useState('');
   const [category, setCat] = useState('');
   const [date, setDate] = useState(new Date());
-
-  //const currentDate2 = new Date('2012-04-23T00:00:00.000Z').toISOString();
-
 
 // date picker modal 
 
@@ -61,7 +55,7 @@ export default function AddHabitScreen({navigation}) {
         animationType="slide" // optional, default is 'slide' on ios/android and 'none' on web
         locale={'en'} // optional, default is automically detected by your system
       />
-      <Button onPress={()=> setVisible(true) } title="Pick date"/>
+      <ThemeButton type='primary' onPress={()=> setVisible(true) } >Pick date</ThemeButton>
         
 
       <TextInput
@@ -100,12 +94,9 @@ export default function AddHabitScreen({navigation}) {
       />
       </Picker>
 
-      {/* Add variable to store points */}
-
       <Button
         title="Submit"
         onPress={() => {
-          //saveHabit(title,description,date.toDateString(),date.toTimeString(),numPerW,numPerD,category);
           {
             addHabit(
               title,

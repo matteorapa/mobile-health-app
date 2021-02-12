@@ -1,20 +1,14 @@
-import {Text, View, Button, TextInput, Alert} from 'react-native';
-import React, {useState, useCallback, useEffect} from 'react';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import {useNavigation} from '@react-navigation/native';
-
+import {Text, View, Button, TextInput} from 'react-native';
+import React, {useState, useCallback} from 'react';
 import {Picker} from '@react-native-picker/picker';
 import {TimePickerModal} from 'react-native-paper-dates';
 import {listHabitIds, addReminder} from '../../DBFunctions';
-import {set} from 'react-native-reanimated';
-
 
 export default function AddReminderScreen({navigation}) {
   //array with the list of habits saved to choose a habit
 
   const [state, setState] = React.useState('');
   const [title, setTitle] = useState('');
-  const [date, setDate] = useState(new Date());
   const [hours1, setHours] = useState();
   const [minutes1, setMinutes] = useState();
 

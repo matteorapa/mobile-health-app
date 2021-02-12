@@ -1,5 +1,5 @@
-import {Text, View, Dimensions, TextInput, Alert} from 'react-native';
-import React, {useState} from 'react';
+import {Text, View, Dimensions} from 'react-native';
+import React from 'react';
 import {Button} from 'react-native-paper';
 
 import ProgressComponent from '../../components/ProgressComponent';

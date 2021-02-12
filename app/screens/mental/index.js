@@ -2,7 +2,6 @@ import {
   Text,
   View,
   ScrollView,
-  Alert,
   Dimensions,
   StyleSheet,
 } from 'react-native';
@@ -10,19 +9,11 @@ import React, {useState} from 'react';
 
 import {useNavigation} from '@react-navigation/native';
 import {
-  Avatar,
   Button,
-  Card,
-  Title,
-  Paragraph,
-  ProgressBar,
-  Colors,
 } from 'react-native-paper';
 import ReminderRoute from './RemindersTab'
-import {TabView, SceneMap} from 'react-native-tab-view';
+import {TabView} from 'react-native-tab-view';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import moment from 'moment';
-
 import {COLORS, LAYOUT, TYPE} from '../../styles/theme';
 import {
   getHabit
@@ -31,16 +22,10 @@ import {
 
 const HabitRoute = () => {
   const navigation = useNavigation();
-
-  const [boolean, setBool] = useState(false);
-  const [counter, setCounter] = useState(1);
   return (
     <ScrollView>
       <Text>Mind Screen</Text>
-
       {getHabit()}
-
-
       <Button
         icon="plus"
         mode="contained"
