@@ -19,6 +19,7 @@ import DoctorSignUpScreen from './screens/auth/doctor_signup';
 import AddHabitScreen from './screens/mental/addHabit';
 import EditHabitScreen from './screens/mental/editHabit';
 import AddReminderScreen from './screens/mental/addReminder';
+import EditReminderScreen from './screens/mental/editReminder';
 import DetailsScreen from './screens/mental/habitDetails';
 import { initiateChannels } from './notifications';
 import {addItem, deleteItem, editItem} from './DBFunctions';
@@ -94,6 +95,11 @@ function MentalStack() {
         options={options}
       />     
       
+      <MentalStack.Screen
+        name="EditReminder"
+        component={EditReminderScreen}
+        options={options}
+      />    
       
     </MentalStack.Navigator>
   );

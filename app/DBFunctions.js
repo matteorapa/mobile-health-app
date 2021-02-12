@@ -292,8 +292,42 @@ export const addReminder = (
   });
 };
 
+export const editReminder = (
+  habitId,
+  reminderId,
+  reminderTitle,
+  hours,
+  minutes,
+) => {
+  return new Promise(function (resolve, reject) {
+    let key = reminderId;
+    console.log("key: ", key)
+    
+
+    let dataToSave = {
+      habitId: habitId,
+      reminderId: key,
+      reminderTitle: reminderTitle,
+      hours: hours,
+      minutes: minutes,
+    };
+    database()
+      .ref('reminders/' + key)
+      .update(dataToSave)
+      .then((snapshot) => {
+          console.log("added successfully")
+        resolve(snapshot);
+      })
+      .catch((err) => {
+        console.log("Error when adding reminder", err)
+        reject(err);
+      });
+  });
+};
+
 export const getReminder = () => {
   const [reminders, setReminders] = React.useState([]);
+  const navigation = useNavigation();
 
   React.useEffect(() => {
     const reminderRef = database().ref('/reminders');
@@ -319,8 +353,15 @@ export const getReminder = () => {
           {element.hours}
         </Paragraph>
         <Card.Actions>
-          <Button >Remove</Button>
-          <Button>Edit</Button>
+          <Button onPress={() => {deleteReminder(element.reminderId)}}>Remove</Button>
+          <Button onPress={() => {
+            navigation.navigate('Tasks', {
+              screen: 'EditReminder',
+              params: {
+                reminder: element,
+              },
+            });
+          }}>Edit</Button>
         </Card.Actions>
       </Card>
     );

@@ -29,15 +29,7 @@ export default function ReminderRoute(props){
     <ScrollView>
       <Text>Mind Screen</Text>
 
-      <Card>
-        <Title>Reminder Title</Title>
-        <Paragraph>time</Paragraph>
-        <Card.Actions>
-          <Button>Remove</Button>
-          <Button >Edit</Button>
-        </Card.Actions>
-      </Card>
-
+      
       {getReminder()}
 
 
