@@ -11,6 +11,7 @@ import { logOut } from './auth/AuthFunctionality'
 import RNRestart from 'react-native-restart'; 
 import database from '@react-native-firebase/database'
 import { addUser } from '../screens/auth/signup'
+import {styles} from '../styles/globals';
 
 export default function AccountScreen({navigation}) {
   const {signOut} = React.useContext(AuthContext);
@@ -22,11 +23,8 @@ export default function AccountScreen({navigation}) {
   const onToggleSwitch2 = () => setIsSwitchOn2(!isSwitchOn2);
   let accountImg = false;
 
-  var state = false
-
   return (
 
-    
     <View style={LAYOUT.main}>
       <View style={LAYOUT.container}>
         <Avatar.Image size={82} source={acc} />
@@ -41,17 +39,9 @@ export default function AccountScreen({navigation}) {
         text={'Edit'}
         icon={'edit'}
         onPressEvent={() => {
-
+          navigation.navigate('editAccount')
         }}/>
       
-
-      <ThemeButton
-        type={'secondary'}
-        text={'Sign out'}
-        onPressEvent={() => {
-          RNRestart.Restart();
-        }}
-      />
 
       <PaddedDivider />
 
@@ -74,7 +64,17 @@ export default function AccountScreen({navigation}) {
 
       <Text style={TYPE.subtitle2}>Guardian Settings</Text>
       <Text style={TYPE.caption}>Connect your reminder with a guardian to oversee your activity and missed reminders.</Text>
-      
+
+      <View style={styles.signup}>
+
+      <ThemeButton
+        type={'secondary'}
+        text={'Sign out'}
+        onPressEvent={() => {
+          RNRestart.Restart();
+        }}
+      />
+      </View>
     </View>
   );
 }

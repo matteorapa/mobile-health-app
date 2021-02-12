@@ -10,6 +10,7 @@ import RemindersScreen from './screens/index';
 import MindScreen from './screens/mental/index';
 import MedicationScreen from './screens/medication/index';
 import AccountScreen from './screens/account';
+import editAccount from './screens/editAccount';
 import AddMedicationScreen from './screens/medication/addMedication';
 import AddDoctorScreen from './screens/medication/addDoctor';
 import AddGuardianScreen from './screens/medication/addGuardian';
@@ -51,6 +52,28 @@ function MedicationStack() {
   );
 }
 
+function AccountStack() {
+  const AccountStack = createStackNavigator();
+  const options = {
+    headerShown: false,
+  };
+
+  return (
+    <AccountStack.Navigator>
+      <AccountStack.Screen
+        name="Account Screen"
+        component={AccountScreen}
+        options={options}
+      />
+      <AccountStack.Screen
+        name="editAccount"
+        component={editAccount}
+        options={options}
+      />
+    </AccountStack.Navigator>
+  );
+}
+
 function AppTabStack() {
   const AppTabStack = createBottomTabNavigator();
   return (
@@ -81,7 +104,7 @@ function AppTabStack() {
       }}/>
 
       {/* Tab for user account and preferences */}
-      <AppTabStack.Screen name="Account" component={AccountScreen} options={{
+      <AppTabStack.Screen name="Account" component={AccountStack} options={{
         tabBarLabel: 'Profile',
         tabBarIcon: ({ color, size }) => (
           <Icon name="face" color={color} size={size} />

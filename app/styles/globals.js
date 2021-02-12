@@ -13,6 +13,12 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     marginTop: 12,
   },
+  subheading: {
+    fontSize: 15,
+    alignSelf: 'center',
+    marginBottom: 24,
+    marginTop: 0,
+  },
   box: {
     flex: 1,
     justifyContent: 'center',
