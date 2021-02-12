@@ -40,7 +40,7 @@ const HabitRoute = () => {
 
       {getHabit()}
 
-      {/* add FAB button from react native paper */}
+
       <Button
         icon="plus"
         mode="contained"
@@ -114,17 +114,7 @@ export default function MindScreen() {
   );
 }
 
-export function reward(consPoints) {
-  if (consPoints == 50) {
-    Alert.alert('Reward', 'beginner achievement');
-  }
-  if (consPoints == 100) {
-    Alert.alert('Reward', 'amateur achievement');
-  }
-  if (consPoints == 200) {
-    Alert.alert('Reward', 'pro achievement');
-  }
-}
+
 
 export function editTime() {
   const [date, setDate] = useState(new Date());

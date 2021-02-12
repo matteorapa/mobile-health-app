@@ -1,6 +1,11 @@
 import database from '@react-native-firebase/database';
 import 'react-native-get-random-values'
 import { nanoid } from 'nanoid'
+import {
+
+  Alert
+
+} from 'react-native';
 
 import * as React from 'react';
 import {
@@ -115,22 +120,22 @@ export const getHabit = () => {
 
         //  // number per day retrieved from db
         //  const testCounter = 2;
-        //  const currentDate = new Date();
+          const currentDate = new Date();
         // //reward(element.consPts);
         
 
-        //  //date retrieved from db
-        //  const retrievedDate = new Date(element.date);
+         //date retrieved from db
+         const retrievedDate = new Date(element.startDate);
 
-        //  const diff =
-        //    (currentDate - retrievedDate) / (1000 * 60 * 60 * 24);
+         const diff =
+           (currentDate - retrievedDate) / (1000 * 60 * 60 * 24);
 
-        //    console.log(diff);
+           
            
 
 
-        //  // checks if the current date is smaller the the retrieved date
-        //  // checks if the user pressed the button more than he should be pressing it
+         // checks if the current date is smaller the the retrieved date
+         // checks if the user pressed the button more than he should be pressing it
 
         //  if (diff <= 1 || counter >= testCounter) {
         //    boolean = true;
@@ -140,7 +145,13 @@ export const getHabit = () => {
         //    boolean = false;
         //  }
 
-
+         // disable buttons until start date
+         if (diff <= 1) {
+          boolean = true;
+        }
+        if (diff > 1) {
+          boolean = false;
+        }
 
     
     return (
@@ -172,6 +183,8 @@ export const getHabit = () => {
               );
 
               counter = counter + 1;
+
+              reward(element.consPts);
               
             }}
             disabled={boolean}>
@@ -204,8 +217,9 @@ export const getHabit = () => {
                   element.graphData,
                 );
               }
-              setBool(false);
-            }}>
+              
+            }}
+            disabled={boolean}>
             Fail
           </Button>
         </Card.Actions>
@@ -243,6 +257,18 @@ const setPoints = (
       graphData: graphData,
     });
 };
+
+const reward = (consPoints) =>  {
+  if (consPoints == 50) {
+    Alert.alert('Reward', 'beginner achievement');
+  }
+  if (consPoints == 100) {
+    Alert.alert('Reward', 'amateur achievement');
+  }
+  if (consPoints == 200) {
+    Alert.alert('Reward', 'pro achievement');
+  }
+}
 
 export const listHabitIds = () => {
   const [habits, setHabits] = React.useState([]);
