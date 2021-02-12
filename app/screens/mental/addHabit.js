@@ -114,6 +114,7 @@ export default function AddHabitScreen({navigation}) {
               0,
               0,
               currentDate,
+              [0, 0, 0, 0, 0, 0]
             );
           }
           navigation.navigate('Tasks', {

@@ -53,6 +53,7 @@ export const addHabit = (
   consPts,
   points,
   date,
+  graphData
 ) => {
   return new Promise(function (resolve, reject) {
     let key;
@@ -71,6 +72,7 @@ export const addHabit = (
       consPts: consPts,
       points: points,
       date: date,
+      graphData: graphData,
     };
     database()
       .ref('habits/' + key)
@@ -133,6 +135,7 @@ export const getHabit = () => {
                 element.consPts + 10,
                 element.points + 10,
                 element.date,
+                element.graphData,
               );
               //reward(element.consPts);
               setCounter(counter + 1);
@@ -173,6 +176,7 @@ export const getHabit = () => {
                   0,
                   0,
                   element.date,
+                  element.graphData,
                 );
               } else {
                 setPoints(
@@ -184,6 +188,7 @@ export const getHabit = () => {
                   0,
                   element.points - 5,
                   element.date,
+                  element.graphData,
                 );
               }
               setBool(false);
@@ -209,6 +214,7 @@ const setPoints = (
   consPts,
   points,
   date,
+  graphData
 ) => {
   database()
     .ref('/habits/' + key)
@@ -221,6 +227,7 @@ const setPoints = (
       consPts: consPts,
       points: points,
       date: date,
+      graphData: graphData,
     });
 };
 

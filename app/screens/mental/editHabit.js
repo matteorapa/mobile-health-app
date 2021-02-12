@@ -87,7 +87,7 @@ export default function EditHabitScreen({navigation, route}) {
         onPress={() => {
 
           //edit using db function
-          addHabit(title, description, date.toISOString(), numPerD, category, habit.consPts, habit.points, habit.date);
+          addHabit(title, description, date.toISOString(), numPerD, category, habit.consPts, habit.points, habit.date, habit.graphData);
           navigation.navigate('Tasks', {
             screen: 'Index',
           });
