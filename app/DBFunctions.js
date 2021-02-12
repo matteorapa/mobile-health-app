@@ -93,6 +93,9 @@ export const editDoctor = (doctorPhone, editConfirm) => {
 
 export const ReadDoctor = ({navigation}) => {
     const [doctors, setDoctors] = useState([]);
+    const specialitiesOfDoctors = ['Allergy and Immunology', 'Anesthesiology', 'Dermatology', 'Diagnostic Radiology', 'Emergency Medicine', 'Family Medicine',
+                                  'Internal Medicine', 'Medical Genetics', 'Neurology', 'Nuclear Medicine', 'Obstetrics and Gynecology', 'Ophthalmology', 'Pathology',
+                                  'Pediatrics', 'Physical Medicine and Rehabilitation', 'Preventive Medicine', 'Psychiatry', 'Radiation Oncology', 'Surgery', 'Urology'];
 
     React.useEffect(() => {
         const doctorsRef = database().ref('/doctors');
@@ -114,7 +117,7 @@ export const ReadDoctor = ({navigation}) => {
         <View key={element.doctorPhone}>
             <List.Item
                 title={element.doctorName}
-                description={element.doctorSpeciality}
+                description={specialitiesOfDoctors[element.doctorSpeciality]}
                 left={() => <Icon name="face" size={30} />}
                 onPress={() => {
                     navigation.navigate('Medication', {
@@ -138,7 +141,7 @@ export const ReadDoctor = ({navigation}) => {
 };
 
 
-export const addMedication = (medicationName, medicationType, medicationDosage, medicationDosageMetric, medicationReason, medicationDaily, medicationDailyDosesNumber, medicationTimer, medicationStartDate, medicationEndDate, medicationInstructions) => {
+export const addMedication = (medicationName, medicationType, medicationDosage, medicationDosageMetric, medicationReason, medicationDaily, medicationDailyDosesNumber, medicationTimerArray, medicationStartDate, medicationEndDate, medicationInstructions) => {
     return new Promise(function(resolve,reject){
         let key;
         if (medicationName != null) {
@@ -156,17 +159,33 @@ export const addMedication = (medicationName, medicationType, medicationDosage, 
             medicationReason: medicationReason,
             medicationDaily: medicationDaily,
             medicationDailyDosesNumber: medicationDailyDosesNumber,
-            medicationTimer: medicationTimer,
+            medicationTimerArray: medicationTimerArray,
             medicationStartDate: medicationStartDate,
             medicationEndDate: medicationEndDate,
             medicationInstructions: medicationInstructions,
         };
+        
         database().ref('medication/' + key).update(dataToSave).then((snapshot)=>{
             resolve(snapshot)
         }).catch(err => {
             reject(err);
         });
 
+        { if(medicationDaily == 0) {
+            let dataToSaveNotifRemind = {
+                medicationName:key,
+                medicationName: medicationName,
+                medicationStartDate: medicationStartDate,
+                medicationEndDate: medicationEndDate,
+                medicationTimerArray: medicationTimerArray,
+            };
+            
+            database().ref('notificationReminders/' + key).update(dataToSaveNotifRemind).then((snapshot)=>{
+                resolve(snapshot)
+            }).catch(err => {
+                reject(err);
+            });
+        }}
     });
 };
 
@@ -198,6 +217,7 @@ export const editMedication = (medicationName, editConfirm) => {
 
 export const ReadMedication = ({navigation}) => {
     const [medications, setMedications] = useState([]);
+    const metricsOfDosage = ['ml', 'mg', 'g', 'Pills'];
 
     React.useEffect(() => {
         const medicationsRef = database().ref('/medication');
@@ -217,10 +237,9 @@ export const ReadMedication = ({navigation}) => {
 
     const listMedication = medications.map((element) =>
         <View key={element.medicationName}>
-            {/* {() => {const medicationDosageWithMetric = element.medicationDosage + " " + element.medicationDosageMetric}} */}
             <List.Item
                 title={element.medicationName}
-                description={element.medicationDosage + " " + element.medicationDosageMetric}
+                description={element.medicationDosage + " " + metricsOfDosage[element.medicationDosageMetric]}
                 left={() => <Image source={require('./screens/medication/drugs.png')} style={{width: 25, height: 25}} />}
                 onPress={() => {
                     navigation.navigate('Medication', {

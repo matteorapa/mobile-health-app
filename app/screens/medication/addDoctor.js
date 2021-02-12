@@ -21,20 +21,23 @@ function submitForm (docName, docSpeciality, docPhonePrefix, docPhone, docEmail,
   //cb();
 }
 
-export default function AddMedicationScreen( {navigation} ) {
+export default function AddDoctorScreen({route, navigation}) {
+  {console.log("Route ", route.params)}
+  const {loadedDoctor} = route.params;
+
   const specialitiesOfDoctors = ['Allergy and Immunology', 'Anesthesiology', 'Dermatology', 'Diagnostic Radiology', 'Emergency Medicine', 'Family Medicine',
                                   'Internal Medicine', 'Medical Genetics', 'Neurology', 'Nuclear Medicine', 'Obstetrics and Gynecology', 'Ophthalmology', 'Pathology',
                                   'Pediatrics', 'Physical Medicine and Rehabilitation', 'Preventive Medicine', 'Psychiatry', 'Radiation Oncology', 'Surgery', 'Urology'];
-  
-  const [doctorName, onChangeDoctorName] = React.useState('');
-  const [doctorSpeciality, onChangeDoctorSpeciality] = React.useState(specialitiesOfDoctors[0]);
-  const [doctorPhonePrefix, onChangeDoctorPhonePrefix] = React.useState('+356');
-  const [doctorPhone, onChangeDoctorPhone] = React.useState('');
-  const [doctorEmail, onChangeDoctorEmail] = React.useState('');
+
+  const [doctorName, onChangeDoctorName] = useState((loadedDoctor == '') ? '' : loadedDoctor.doctorName);
+  const [doctorSpeciality, onChangeDoctorSpeciality] = useState((loadedDoctor == '') ? specialitiesOfDoctors[0] : loadedDoctor.doctorSpeciality);
+  const [doctorPhonePrefix, onChangeDoctorPhonePrefix] = useState((loadedDoctor == '') ? '+356' : loadedDoctor.doctorPhonePrefix);
+  const [doctorPhone, onChangeDoctorPhone] = useState((loadedDoctor == '') ? '' : loadedDoctor.doctorPhone);
+  const [doctorEmail, onChangeDoctorEmail] = useState((loadedDoctor == '') ? '' : loadedDoctor.doctorEmail);
 
   const [countryPickerVisible, setCountryPickerVisible] = useState(false);
   const [dataCountries, setDataCountries] = useState(Countries);
-  const [countryCode, setCountryCode] = useState('+356');
+  const [countryCode, setCountryCode] = useState(doctorPhonePrefix);
   const [countryPlaceholder, setCountryPlaceholder] = useState('9999 9999');
   const [countryFlagCode, setCountryFlagCode] = useState(require('./images/mt.png'));
 
@@ -104,13 +107,16 @@ export default function AddMedicationScreen( {navigation} ) {
   }
 
   return (
-    <AddMedDocForm initialValues={{
-      doctName: '',
-      doctSpeciality: specialitiesOfDoctors[0],
-      doctPhonePrefix: '+356',
-      doctPhone: '',
-      doctEmail: '',
-    }}>
+    <AddMedDocForm 
+      navigation = {navigation}
+      initialValues={{
+        doctName: doctorName,
+        doctSpeciality: doctorSpeciality,
+        doctPhonePrefix: doctorPhonePrefix,
+        doctPhone: doctorPhone,
+        doctEmail: doctorEmail,
+      }
+    }>
 
 
       <AddMedDocForm.Step>
@@ -122,7 +128,7 @@ export default function AddMedicationScreen( {navigation} ) {
             placeholder={'Doctor`s Name'}
             onChangeText={ function(text) {{onChangeValue('doctName', text)}; {onChangeDoctorName(text)}} }
             value={values.doctName}
-            autoFocus={true}
+            autoFocus={(loadedDoctor == '') ? true : false}
             autoCapitalize={'words'}
           />
         </View>
@@ -136,7 +142,7 @@ export default function AddMedicationScreen( {navigation} ) {
           <Picker
             style={{width:'80%'}}
             selectedValue={values.doctSpeciality}
-            onValueChange={ function(data) {{onChangeValue('doctSpeciality', data)}; {onChangeDoctorSpeciality(specialitiesOfDoctors[data])}} }
+            onValueChange={ function(data) {{onChangeValue('doctSpeciality', data)}; {onChangeDoctorSpeciality(data)}} }
             value={values.doctSpeciality}
           >
             {specialitiesOfDoctors.map((item, index) => {
@@ -186,7 +192,7 @@ export default function AddMedicationScreen( {navigation} ) {
             onChangeText={ function(text) {{onChangeValue('doctEmail', text)}; {onChangeDoctorEmail(text)}} }
             keyboardType={'email-address'}
             value={values.doctEmail}
-            autoFocus={true}
+            autoFocus={(loadedDoctor == '') ? true : false}
             autoCapitalize={'none'}
           />
         </View>
@@ -195,16 +201,42 @@ export default function AddMedicationScreen( {navigation} ) {
 
       <View>
         <Text>Doctor Name:        {doctorName}</Text>
-        <Text>Doctor Speciality:  {doctorSpeciality}</Text>
+        <Text>Doctor Speciality:  {specialitiesOfDoctors[doctorSpeciality]}</Text>
         <Text>Doctor Phone:       ({doctorPhonePrefix}) {doctorPhone}</Text>
         <Text>Doctor Email:         {doctorEmail}</Text>
-        <Button
-          title={'Submit'}
-          onPress={() => {
-            {submitForm(doctorName, doctorSpeciality, doctorPhonePrefix, doctorPhone, doctorEmail)}
-            navigation.navigate('Medication', {
-              screen: 'Index'
-            });
+        
+        <View style={styles.navButtonsForm}>
+          <ThemeButton
+            type={"secondary"}
+            icon={'edit'}
+            text={'Edit'}
+            onPressEvent={() => {
+              navigation.goBack(
+                navigation.navigate('Medication', {
+                screen: 'AddDoctor',
+                params: {loadedDoctor: {doctorName, doctorSpeciality, doctorPhonePrefix, doctorPhone, doctorEmail}}
+              })
+              );
+            }}
+          />
+          <ThemeButton  
+            type={"secondary"}
+            icon={'done'}
+            text={'Submit'}
+            onPressEvent={() => {
+              {submitForm(doctorName, doctorSpeciality, doctorPhonePrefix, doctorPhone, doctorEmail)}
+              navigation.navigate('Medication', {
+                screen: 'Index'
+              });
+            }}
+          />
+        </View>
+
+        <ThemeButton
+          type={"secondary"}
+          text={"Back"}
+          onPressEvent={() => {
+              navigation.goBack();
           }}
         />
       </View>

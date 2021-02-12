@@ -3,6 +3,8 @@ import { Text, TextInput, TextField, View , Button, TextInputComponent, FlatList
 import { styles } from '../../styles/globals';
 import ThemeButton from '../../components/ThemeButton';
 import {COLORS, LAYOUT, TYPE} from '../../styles/theme';
+import { addDoctor, addMedication } from '../../DBFunctions';
+
 
 class Step extends Component {
     state = {}
@@ -11,6 +13,7 @@ class Step extends Component {
             <View>
                 {this.props.children({
                     onChangeValue: this.props.onChangeValue,
+                    navigation: this.props.navigation,
                     values: this.props.values
                 })}
 
@@ -29,7 +32,7 @@ class Step extends Component {
                         />
                     )}
                     
-                    {this.props.isLast ? (
+                    {/* {this.props.isLast ? (
                         <ThemeButton
                             type={'muted'}
                             text={"Preview"}
@@ -41,7 +44,12 @@ class Step extends Component {
                             text={"Next"}
                             onPressEvent={this.props.nextStep}
                         />
-                    )}
+                    )} */}
+                    <ThemeButton
+                        type={'muted'}
+                        text={"Next"}
+                        onPressEvent={this.props.nextStep}
+                    />
                 </View>
             </View>
 
@@ -55,17 +63,18 @@ class AddMedDocForm extends Component {
 
     state = {
         index: 0,
+        navigation: {...this.props.navigation},
         values: {
             ...this.props.initialValues
         }
     };
 
     _nextStep = () => {
-        if (this.state.index !== this.props.children.length - 1){
-            this.setState(prevState => ({
-                index: prevState.index + 1,
-            }));
-        }
+        //if (this.state.index !== this.props.children.length - 1){
+                this.setState(prevState => ({
+                    index: prevState.index + 1,
+                }));
+        //}
     };
     
     _prevStep = () => {
@@ -85,20 +94,29 @@ class AddMedDocForm extends Component {
         }));
     };
 
-    _onPreview = () => {
-        //console.log(JSON.stringify(this.state.values));
-        console.log(this.state.values);
-    };
+    // _onPreview = () => {
+    //     if (this.state.index !== this.props.children.length - 1){
+    //         this.setState(prevState => ({
+    //             index: prevState.index + 1,
+    //         }));
+    //     }
+    //     console.log("Preview: ", this.state.values);
+        
+    //     // this.state.navigation.navigate('Medication', {
+    //     //     screen: 'Index'
+    //     // });
+    // };
     
     _onBack = () => {
         console.log('Go to Medication Main Screen');
+        this.state.navigation.goBack();
     };
 
-    _onChangeTimersNumber = (value) => {
-        this.setState(prevState => ({
-            index: prevState.index + (value - 1),
-        }));
-    };
+    // _onChangeTimersNumber = (value) => {
+    //     this.setState(prevState => ({
+    //         index: prevState.index + (value - 1),
+    //     }));
+    // };
 
     render() {
         return (
@@ -114,8 +132,8 @@ class AddMedDocForm extends Component {
                             onChangeValue: this._onChangeValue,
                             values: this.state.values,
                             onBack: this._onBack,
-                            onPreview: this._onPreview,
-                            onChangeTimersNumber: this._onChangeTimersNumber,
+                            // onPreview: this._onPreview,
+                            // onChangeTimersNumber: this._onChangeTimersNumber,
                         })
                     }
                     return null;

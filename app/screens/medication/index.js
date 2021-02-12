@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Text, View, Button, Image, StyleSheet} from 'react-native';
+import {Text, View, Button, Image, StyleSheet, ScrollView} from 'react-native';
 import { Header } from 'react-native/Libraries/NewAppScreen';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {FAB, List} from 'react-native-paper';
@@ -8,7 +8,7 @@ import ThemeButton from '../../components/ThemeButton';
 import {COLORS, LAYOUT, TYPE} from '../../styles/theme';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-import { ReadDoctor, ReadMedication, readMedication } from '../../DBFunctions';
+import { ReadDoctor, ReadMedication } from '../../DBFunctions';
 
 export default function MedicationScreen({navigation}) {
   const [myDoctors, setMyDoctors] = useState([]);
@@ -38,7 +38,9 @@ export default function MedicationScreen({navigation}) {
   return (
     <View style={LAYOUT.main}>
 
-      <ReadMedication navigation = {navigation} />
+      <ScrollView style={{height: '40%'}}>
+        <ReadMedication navigation = {navigation} />
+      </ScrollView>
 
       <ThemeButton
         icon={'add'}
@@ -52,7 +54,9 @@ export default function MedicationScreen({navigation}) {
         }}
       />
 
-      <ReadDoctor navigation = {navigation} />
+      <ScrollView style={{height: '40%'}}>
+        <ReadDoctor navigation = {navigation} />
+      </ScrollView>
 
       <ThemeButton
         icon={'add'}
@@ -60,7 +64,8 @@ export default function MedicationScreen({navigation}) {
         accessibilityLabel="Add doctor to list"
         onPressEvent={() => {
           navigation.navigate('Medication', {
-            screen: 'AddDoctor'
+            screen: 'AddDoctor',
+            params: {loadedDoctor: ''}
           });
         }}
       />
