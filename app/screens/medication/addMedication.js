@@ -29,7 +29,7 @@ export default function AddMedicationScreen ({route, navigation}) {
   const {loadedMedication} = route.params;
 
   const typeOfMedication = ['Liquid Solution', 'Pill/Tablet', 'Capsule', 'Tropical (cream/ointment)', 'Drops', 'Inhaler', 'Injection', 'Patches', 'Other'];
-  const metricsOfDosage = ['ml', 'mg', 'g', 'Pills'];
+  const metricsOfDosage = ['ml', 'mg', 'g', 'Pills/Tablets', 'Capsule', 'Drops', 'Patches', 'N/A'];
   const dailyDosageOptions = ['Yes', 'No'];
 
   const [medicationName, onChangeMedicationName] = useState((loadedMedication == '') ? '' : loadedMedication.medicationName);
@@ -39,8 +39,7 @@ export default function AddMedicationScreen ({route, navigation}) {
   const [medicationReason, onChangeMedicationReason] = useState((loadedMedication == '') ? '' : loadedMedication.medicationReason);
   const [medicationDaily, onChangeMedicationDaily] = useState((loadedMedication == '') ? dailyDosageOptions[0] : loadedMedication.medicationDaily);
   const [medicationDailyDosesNumber, onChangeMedicationDailyDosesNumber] = useState((loadedMedication == '') ? '' : loadedMedication.medicationDailyDosesNumber);
-  const [timerArray, setTimerArray] = useState((loadedMedication == '') ? [] : loadedMedication.timerArray);
-  //const [medicationTime1, onChangeMedicationTime1] = useState((loadedMedication == '') ? new Date() : new Date(loadedMedication.medicationTimer));
+  const [timerArray, setTimerArray] = useState((loadedMedication == '') ? [] : loadedMedication.medicationTimerArray);
   const [medicationStartDate, onChangeMedicationStartDate] = useState((loadedMedication == '') ? new Date() : new Date(loadedMedication.medicationStartDate));
   const [medicationEndDate, onChangeMedicationEndDate] = useState((loadedMedication == '') ? new Date() : new Date(loadedMedication.medicationEndDate));
   const [medicationInstructions, onChangeMedicationInstructions] = useState((loadedMedication == '') ? '' : loadedMedication.medicationInstructions);
@@ -52,14 +51,14 @@ export default function AddMedicationScreen ({route, navigation}) {
 
   const [timersToInclude, onChangeTimersToInclude] = useState([]);
   
-  // const insertTimer = (hours, minutes) => {
-  //   setTimerArray([...timerArray, {hours: hours, minutes: minutes}]);
-  //   console.log('saving', hours, minutes, 'in array', timerArray);
-  // }
-
-  const insertTimer = (timerToInsert) => {
-    setTimerArray([...timerArray, timerToInsert]);
+  const insertTimer = (hours, minutes) => {
+    setTimerArray([...timerArray, {hour: hours, minute: minutes}]);
+    console.log('saving', hours, minutes, 'in array', timerArray);
   }
+
+  // const insertTimer = (timerToInsert) => {
+  //   setTimerArray([...timerArray, timerToInsert]);
+  // }
 
   function range(start, end) {
     return Array(end - start + 1).fill().map((_, idx) => start + idx);
@@ -74,16 +73,13 @@ export default function AddMedicationScreen ({route, navigation}) {
   const onDismiss = React.useCallback(() => {
     setVisible(false)
   }, [setVisible])
-
   const onConfirm = React.useCallback(
     ({ hours, minutes }) => {
       setVisible(false);
-      console.log({ hours, minutes });
-
-      insertTimer(hours, minutes) //{onChangeValue('medicTimerArray', { hours, minutes })}; 
+      console.log('onConfirm Hours, minutes', { hours, minutes });
+      insertTimer(hours, minutes)
     },
     [setVisible, insertTimer]
-
   );
 
   const [visibleDate, setVisibleDate] = React.useState(false)
@@ -92,8 +88,10 @@ export default function AddMedicationScreen ({route, navigation}) {
   }, [setVisibleDate])
   const onChangeDate = React.useCallback(({ startDate, endDate }) => {
     setVisibleDate(false)
-    console.log({ startDate, endDate })
-  }, [])
+    // console.log('onConfirmDate start, end', { startDate, endDate })
+    onChangeMedicationStartDate(startDate)
+    onChangeMedicationEndDate(endDate)
+  }, [setVisibleDate, onChangeMedicationStartDate, onChangeMedicationEndDate])
   
   return (
         <AddMedDocForm 
@@ -229,23 +227,24 @@ export default function AddMedicationScreen ({route, navigation}) {
                     {({ onChangeValue, onChangeTimersNumber, values }) => (
                       <View key={timerNumber}>
                         <Text>Dose Number {timerNumber}</Text>
-{/* 
+
                         <TimePickerModal
                           visible={visible}
                           hours={12} // default: current hours
                           minutes={14} // default: current minutes
                           onDismiss={onDismiss}
                           onConfirm={onConfirm}
+                          // onConfirm={(hours, minutes) => {setVisible(false); {insertTimer(hours, minutes)}}}
                           label="Select time" // optional, default 'Select time'
                           cancelLabel="Cancel" // optional, default: 'Cancel'
                           confirmLabel="Ok" // optional, default: 'Ok'
                           animationType="fade" // optional, default is 'none'
                           locale={'en'} // optional, default is automically detected by your system
                         />
-                        <Button onPress={()=> setVisible(true)} title="Pick time" /> */}
+                        <Button onPress={()=> setVisible(true)} title="Set time of notification" />
 
 
-                        <TouchableOpacity style={styles.button} onPress={function(){
+                        {/* <TouchableOpacity style={styles.button} onPress={function(){
                           onChangeTimeVisible(true);
                         } }>
                           <Text>TimerIcon</Text>
@@ -262,7 +261,7 @@ export default function AddMedicationScreen ({route, navigation}) {
                           placeholder={'Time - hh:mm'}
                           value={Moment(values.medicTimerArray[timerNumber]).utcOffset(0, true).format("HH:mm")}
                           keyboardType={'phone-pad'}
-                        />
+                        /> */}
                       </View>
                     )}
                   </AddMedDocForm.Step>
@@ -274,27 +273,27 @@ export default function AddMedicationScreen ({route, navigation}) {
             {({ onChangeValue, values }) => (
             <View>
               <Text>Medication Date</Text>
-            {/* <>
-              <DatePickerModal
-                mode="range"
-                visible={visibleDate}
-                onDismiss={onDismissDate}
-                startDate={undefined}
-                endDate={undefined}
-                onConfirm={onChangeDate}
-                saveLabel="Save" // optional
-                label="Select period" // optional
-                startLabel="From" // optional
-                endLabel="To" // optional
-                animationType="slide" // optional, default is slide on ios/android and none on web
-                locale={'en'} // optional, default is automically detected by your system
-              />
-              <Button onPress={()=> setVisibleDate(true)} title="Pick range"/>
-            </> */}
+              <>
+                <DatePickerModal
+                  mode="range"
+                  visible={visibleDate}
+                  onDismiss={onDismissDate}
+                  startDate={undefined}
+                  endDate={undefined}
+                  onConfirm={onChangeDate}
+                  saveLabel="Save" // optional
+                  label="Select period" // optional
+                  startLabel="From" // optional
+                  endLabel="To" // optional
+                  animationType="slide" // optional, default is slide on ios/android and none on web
+                  locale={'en'} // optional, default is automically detected by your system
+                />
+                <Button onPress={()=> setVisibleDate(true)} title="Pick range"/>
+              </>
 
 
 
-              <TouchableOpacity style={styles.button} onPress={function(){
+              {/* <TouchableOpacity style={styles.button} onPress={function(){
                 onChangeCalendarStart(true);
               } }>
               <Text>CalendarIcon</Text>
@@ -311,13 +310,13 @@ export default function AddMedicationScreen ({route, navigation}) {
                 placeholder={'Start Date - dd/mm/yyyy'}
                 //value={medicationStartDate.toDateString()}
                 value={Moment(medicationStartDate.toString()).format("DD/MM/YYYY")}
-              />
+              /> */}
             </View>
             )}
           </AddMedDocForm.Step>
 
 
-          <AddMedDocForm.Step>
+          {/* <AddMedDocForm.Step>
             {({ onChangeValue, values }) => (
             <View>
               <Text>Medication End Date</Text>
@@ -341,7 +340,7 @@ export default function AddMedicationScreen ({route, navigation}) {
               />
             </View>
             )}
-          </AddMedDocForm.Step>
+          </AddMedDocForm.Step> */}
 
           <AddMedDocForm.Step>
             {({ onChangeValue, values }) => (
@@ -367,7 +366,7 @@ export default function AddMedicationScreen ({route, navigation}) {
             <Text>Medication Daily Doses:  {medicationDailyDosesNumber}</Text>
             {timerArray.map((element, index) =>
               {return(
-                <Text key={index}>Medication Timer {index+1}:         {element}</Text>
+                <Text key={index}>Medication Timer {index+1}:         {element.hour}:{element.minute}</Text>
               )}
             )}
             <Text>Medication Start Date:     {medicationStartDate.toDateString()}</Text>

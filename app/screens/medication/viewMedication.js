@@ -12,21 +12,25 @@ export default function ViewMedication({route, navigation}) {
 
     const {medication} = route.params;
     const typeOfMedication = ['Liquid Solution', 'Pill/Tablet', 'Capsule', 'Tropical (cream/ointment)', 'Drops', 'Inhaler', 'Injection', 'Patches', 'Other'];
-    const metricsOfDosage = ['ml', 'mg', 'g', 'Pills'];
+    const metricsOfDosage = ['ml', 'mg', 'g', 'Pills/Tablets', 'Capsule', 'Drops', 'Patches', 'N/A'];
     const dailyDosageOptions = ['Yes', 'No'];
 
     return(
         <View>
-            <Text>{medication.medicationName}</Text>
-            <Text>{typeOfMedication[medication.medicationType]}</Text>
-            <Text>{medication.medicationDosage} {metricsOfDosage[medication.medicationDosageMetric]}</Text>
-            <Text>{medication.medicationReason}</Text>
-            <Text>{dailyDosageOptions[medication.medicationDaily]}</Text>
-            <Text>{medication.medicationDailyDosesNumber}</Text>
-            <Text>{medication.medicationTimer}</Text>
-            <Text>{medication.medicationStartDate}</Text>
-            <Text>{medication.medicationEndDate}</Text>
-            <Text>{medication.medicationInstructions}</Text>
+            <Text>Medication Name:            {medication.medicationName}</Text>
+            <Text>Medication Type:              {typeOfMedication[medication.medicationType]}</Text>
+            <Text>Medication Dosage:         {medication.medicationDosage} {metricsOfDosage[medication.medicationDosageMetric]}</Text>
+            <Text>Medication Reason:         {medication.medicationReason}</Text>
+            <Text>Medication Daily:              {dailyDosageOptions[medication.medicationDaily]}</Text>
+            <Text>Medication Daily Doses:  {medication.medicationDailyDosesNumber}</Text>
+            {medication.medicationTimerArray.map((element, index) =>
+              {return(
+                <Text key={index}>Medication Timer {index+1}:         {element.hour}:{element.minute}</Text>
+              )}
+            )}
+            <Text>Medication Start Date:     {medication.medicationStartDate}</Text>
+            <Text>Medication End Date:       {medication.medicationEndDate}</Text>
+            <Text>Medication Instructions:  {medication.medicationInstructions}</Text>
 
             <View style={styles.navButtonsForm}>
                 <ThemeButton

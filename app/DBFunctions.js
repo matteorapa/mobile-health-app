@@ -217,7 +217,7 @@ export const editMedication = (medicationName, editConfirm) => {
 
 export const ReadMedication = ({navigation}) => {
     const [medications, setMedications] = useState([]);
-    const metricsOfDosage = ['ml', 'mg', 'g', 'Pills'];
+    const metricsOfDosage = ['ml', 'mg', 'g', 'Pills/Tablets', 'Capsule', 'Drops', 'Patches', 'N/A'];
 
     React.useEffect(() => {
         const medicationsRef = database().ref('/medication');
