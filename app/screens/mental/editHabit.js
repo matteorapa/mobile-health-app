@@ -2,6 +2,8 @@ import {Text, View, Button, TextInput, Alert} from 'react-native';
 import React, {useState} from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {addHabit, deleteItem, editItem, deleteHabit} from '../../DBFunctions';
+import { DatePickerModal } from 'react-native-paper-dates'
+import {Picker} from '@react-native-picker/picker';
 
 //to do
 //placeholders, date and time set as current values
@@ -16,27 +18,18 @@ export default function EditHabitScreen({navigation, route}) {
   const [numPerD, setNPD] = useState(habit.numPerD);
   const [category, setCat] = useState(habit.category);
   const [date, setDate] = useState(new Date(habit.startDate));
-  const [mode, setMode] = useState('date');
-  const [show, setShow] = useState(false);
 
-  const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setShow(Platform.OS === 'ios');
-    setDate(currentDate);
-  };
 
-  const showMode = (currentMode) => {
-    setShow(true);
-    setMode(currentMode);
-  };
 
-  const showDatepicker = () => {
-    showMode('date');
-  };
+  const [visible, setVisible] = React.useState(false)
+  const onDismiss = React.useCallback(() => {
+    setVisible(false)
+  }, [setVisible])
 
-  const showTimepicker = () => {
-    showMode('time');
-  };
+  const onChange = React.useCallback(({ date }) => {
+    setVisible(false)
+    setDate( date )
+  }, [setVisible, setDate])
 
   return (
     <View>
@@ -55,20 +48,18 @@ export default function EditHabitScreen({navigation, route}) {
         defaultValue={description}
       />
 
-      <Text>{date.toDateString()}</Text>
-      <Button title="Start Date" onPress={showDatepicker}></Button>
-
-
-      {show && (
-        <DateTimePicker
-          testID="dateTimePicker"
-          value={date}
-          mode={mode}
-          is24Hour={true}
-          display="default"
-          onChange={onChange}
-        />
-      )}
+      <DatePickerModal
+        mode="single"
+        visible={visible}
+        onDismiss={onDismiss}
+        date={date}
+        onConfirm={onChange}
+        saveLabel="Save" // optional
+        label="Select date" // optional
+        animationType="slide" // optional, default is 'slide' on ios/android and 'none' on web
+        locale={'en'} // optional, default is automically detected by your system
+      />
+      <Button onPress={()=> setVisible(true) } title="Pick date"/>
 
       <TextInput
         placeholder="Number per day"
@@ -76,11 +67,33 @@ export default function EditHabitScreen({navigation, route}) {
         defaultValue={numPerD}
       />
 
-      <TextInput
-        placeholder="Category"
-        onChangeText={(category) => setCat(category)}
-        defaultValue={category}
+<Picker
+        selectedValue={category}
+        style={{height: 50, width: 300}}
+        onValueChange={(itemValue, itemIndex) => {
+          setCat(itemValue);
+        }}>
+          <Picker.Item
+            label="Workout"
+            value="Workout"
       />
+        <Picker.Item
+            label="Physical Health"
+            value="Physical Health"
+      />
+        <Picker.Item
+            label="Mental Health"
+            value="Mental Health"
+      />
+      <Picker.Item
+            label="Daily Routines"
+            value="Daily Routines"
+      />
+      <Picker.Item
+            label="Pet"
+            value="Pet"
+      />
+      </Picker>
 
       <Button
         title="Save Changes"

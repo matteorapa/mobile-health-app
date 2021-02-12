@@ -5,6 +5,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {addHabit} from '../../DBFunctions';
 import {Picker} from '@react-native-picker/picker';
 
+import { DatePickerModal } from 'react-native-paper-dates'
+
 export default function AddHabitScreen({navigation}) {
 
   //component state for addHabit form
@@ -13,31 +15,24 @@ export default function AddHabitScreen({navigation}) {
   const [numPerW, setNPW] = useState('');
   const [numPerD, setNPD] = useState('');
   const [category, setCat] = useState('');
+  const [date, setDate] = useState(new Date());
 
   //const currentDate2 = new Date('2012-04-23T00:00:00.000Z').toISOString();
 
-  const [date, setDate] = useState(new Date());
-  const [mode, setMode] = useState('date');
-  const [show, setShow] = useState(false);
 
-  const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setShow(Platform.OS === 'ios');
-    setDate(currentDate);
-  };
+// date picker modal 
 
-  const showMode = (currentMode) => {
-    setShow(true);
-    setMode(currentMode);
-  };
+  const [visible, setVisible] = React.useState(false)
+  const onDismiss = React.useCallback(() => {
+    setVisible(false)
+  }, [setVisible])
 
-  const showDatepicker = () => {
-    showMode('date');
-  };
+  const onChange = React.useCallback(({ date }) => {
+    setVisible(false)
+    setDate( date )
+  }, [setVisible, setDate])
 
-  const showTimepicker = () => {
-    showMode('time');
-  };
+
 
   return (
     <View>
@@ -55,46 +50,53 @@ export default function AddHabitScreen({navigation}) {
         defaultValue={description}
       />
 
-      <Text>{date.toDateString()}</Text>
-      <Button title="Start Date" onPress={showDatepicker}></Button>
-      {/* <Text>{date.toTimeString()}</Text>
-      <Button title="Time" onPress={showTimepicker}></Button> */}
-
-      {show && (
-        <DateTimePicker
-          testID="dateTimePicker"
-          value={date}
-          mode={mode}
-          is24Hour={true}
-          display="default"
-          onChange={onChange}
-        />
-      )}
+      <DatePickerModal
+        mode="single"
+        visible={visible}
+        onDismiss={onDismiss}
+        date={date}
+        onConfirm={onChange}
+        saveLabel="Save" // optional
+        label="Select date" // optional
+        animationType="slide" // optional, default is 'slide' on ios/android and 'none' on web
+        locale={'en'} // optional, default is automically detected by your system
+      />
+      <Button onPress={()=> setVisible(true) } title="Pick date"/>
+        
 
       <TextInput
         placeholder="Number per day"
         onChangeText={(numPerD) => setNPD(numPerD)}
         defaultValue={numPerD}
+        keyboardType={'numeric'}
       />
 
 
-    <Picker
+<Picker
         selectedValue={category}
         style={{height: 50, width: 300}}
         onValueChange={(itemValue, itemIndex) => {
           setCat(itemValue);
         }}>
           <Picker.Item
-            label="Fitness"
-            value="Fitness"
+            label="Workout"
+            value="Workout"
       />
         <Picker.Item
-            label="Health"
-            value="Health"
+            label="Physical Health"
+            value="Physical Health"
       />
         <Picker.Item
-            label="Fitness"
-            value="Fitness"
+            label="Mental Health"
+            value="Mental Health"
+      />
+      <Picker.Item
+            label="Daily Routines"
+            value="Daily Routines"
+      />
+      <Picker.Item
+            label="Pet"
+            value="Pet"
       />
       </Picker>
 
@@ -108,12 +110,12 @@ export default function AddHabitScreen({navigation}) {
             addHabit(
               title,
               description,
-              date.toISOString(),
+              date.toDateString(),
               numPerD,
               category,
               0,
               0,
-              currentDate,
+              null,
               [0, 0, 0, 0, 0, 0]
             );
           }
