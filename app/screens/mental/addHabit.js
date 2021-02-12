@@ -55,7 +55,7 @@ export default function AddHabitScreen({navigation}) {
         animationType="slide" // optional, default is 'slide' on ios/android and 'none' on web
         locale={'en'} // optional, default is automically detected by your system
       />
-      <ThemeButton type='primary' onPress={()=> setVisible(true) } >Pick date</ThemeButton>
+      <Button onPress={()=> setVisible(true) } title="Pick Time" />
         
 
       <TextInput
