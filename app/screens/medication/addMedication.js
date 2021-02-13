@@ -11,6 +11,7 @@ import { addMedication } from '../../DBFunctions';
 
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import Moment from 'moment';
+import { onChange } from 'react-native-reanimated';
 
 function submitForm (medName, medType, medDosage, medDosageMetric, medReason,
   medDaily, medDailyDosesNumber, medTimersArray, medStartDate, medEndDate, medInstructions){
@@ -25,13 +26,14 @@ function submitForm (medName, medType, medDosage, medDosageMetric, medReason,
 }
 
 export default function AddMedicationScreen ({route, navigation}) {
-  {console.log("Route ", route.params)}
+  //{console.log("Route ", route.params)}
   const {loadedMedication} = route.params;
 
-  const typeOfMedication = ['Liquid Solution', 'Pill/Tablet', 'Capsule', 'Tropical (cream/ointment)', 'Drops', 'Inhaler', 'Injection', 'Patches', 'Other'];
-  const metricsOfDosage = ['ml', 'mg', 'g', 'Pills/Tablets', 'Capsule', 'Drops', 'Patches', 'N/A'];
+  const typeOfMedication = ['Liquid Solution', 'Pill/Tablet', 'Capsule', 'Tropical (cream/ointment)', 'Drops', 'Inhaler', 'Injection', 'Patches', 'Sachet', 'Other'];
+  const metricsOfDosage = ['ml', 'mg', 'g', 'Pills/Tablets', 'Capsule', 'Drops', 'Patches', 'Sachet', 'N/A'];
   const dailyDosageOptions = ['Yes', 'No'];
 
+  //const timerArrayEditShow = (loadedMedication != '') ? medicationDaily.medicationTimerArray : null;
   const [medicationName, onChangeMedicationName] = useState((loadedMedication == '') ? '' : loadedMedication.medicationName);
   const [medicationType, onChangeMedicationType] = useState((loadedMedication == '') ? typeOfMedication[0] : loadedMedication.medicationType);
   const [medicationDosage, onChangeMedicationDosage] = useState((loadedMedication == '') ? '' : loadedMedication.medicationDosage);
@@ -39,7 +41,10 @@ export default function AddMedicationScreen ({route, navigation}) {
   const [medicationReason, onChangeMedicationReason] = useState((loadedMedication == '') ? '' : loadedMedication.medicationReason);
   const [medicationDaily, onChangeMedicationDaily] = useState((loadedMedication == '') ? dailyDosageOptions[0] : loadedMedication.medicationDaily);
   const [medicationDailyDosesNumber, onChangeMedicationDailyDosesNumber] = useState((loadedMedication == '') ? '' : loadedMedication.medicationDailyDosesNumber);
+  const [timersToInclude, onChangeTimersToInclude] = useState((loadedMedication == '') ? [1] : (range(1, loadedMedication.medicationDailyDosesNumber)) );
   const [timerArray, setTimerArray] = useState((loadedMedication == '') ? [] : loadedMedication.medicationTimerArray);
+  //onst [timerArrayEdit, setTimerArrayEdit] = useState([]); //useState((loadedMedication == '') ? [] : null);
+  //const [timerArray, setTimerArray] = useState([]);
   const [medicationStartDate, onChangeMedicationStartDate] = useState((loadedMedication == '') ? new Date() : new Date(loadedMedication.medicationStartDate));
   const [medicationEndDate, onChangeMedicationEndDate] = useState((loadedMedication == '') ? new Date() : new Date(loadedMedication.medicationEndDate));
   const [medicationInstructions, onChangeMedicationInstructions] = useState((loadedMedication == '') ? '' : loadedMedication.medicationInstructions);
@@ -48,17 +53,14 @@ export default function AddMedicationScreen ({route, navigation}) {
   const [calendarEndVisible, onChangeCalendarEnd] = useState(false);
 
   const [timeVisible, onChangeTimeVisible] = useState(false);
+  //var tempTimerNumber = 0;
+  //const [tempTimerNumber, setTempTimerNumber] = useState(1);
 
-  const [timersToInclude, onChangeTimersToInclude] = useState([]);
-  
   const insertTimer = (hours, minutes) => {
-    setTimerArray([...timerArray, {hour: hours, minute: minutes}]);
-    console.log('saving', hours, minutes, 'in array', timerArray);
+    // {console.log('insertTimer method', hours, ':', minutes)}
+    // {(loadedMedication == '') ? setTimerArray([...timerArray, {hour: hours, minute: minutes}]) : setTimerArrayEdit([...timerArrayEdit, {hour: hours, minute: minutes}])};
+    setTimerArray([...timerArray, {hour: hours, minute: minutes}])
   }
-
-  // const insertTimer = (timerToInsert) => {
-  //   setTimerArray([...timerArray, timerToInsert]);
-  // }
 
   function range(start, end) {
     return Array(end - start + 1).fill().map((_, idx) => start + idx);
@@ -76,8 +78,7 @@ export default function AddMedicationScreen ({route, navigation}) {
   const onConfirm = React.useCallback(
     ({ hours, minutes }) => {
       setVisible(false);
-      console.log('onConfirm Hours, minutes', { hours, minutes });
-      insertTimer(hours, minutes)
+      insertTimer(hours, minutes);
     },
     [setVisible, insertTimer]
   );
@@ -158,7 +159,7 @@ export default function AddMedicationScreen ({route, navigation}) {
                   autoFocus={(loadedMedication == '') ? true : false}
                 />
                 <Picker
-                  style={{width:'30%'}}
+                  style={{width:'40%'}}
                   selectedValue={values.medicDosageMetric}
                   onValueChange={ function(data) {{onChangeValue('medicDosageMetric', data)}; {onChangeMedicationDosageMetric(data)}} }
                   value={values.medicDosageMetric}>
@@ -220,22 +221,29 @@ export default function AddMedicationScreen ({route, navigation}) {
           </AddMedDocForm.Step>
           
           
-              {timersToInclude.map((timerNumber) => {
+              {timersToInclude.map((timerNumber, index) => {
+                        // {tempTimerNumber = index}
+                        // {console.log('temp: ', tempTimerNumber, ' index: ', index)}
                 // console.log(timersToInclude);
                 return (
                   <AddMedDocForm.Step>
                     {({ onChangeValue, onChangeTimersNumber, values }) => (
                       <View key={timerNumber}>
                         <Text>Dose Number {timerNumber}</Text>
+                        <TextInput
+                          style={styles.textInput}
+                          placeholder={'Time - hh:mm'}
+                          value={Moment(timerArray[timerNumber-1]).format("HH:mm")}
+                          keyboardType={'phone-pad'}
+                        />
 
                         <TimePickerModal
                           visible={visible}
-                          hours={12} // default: current hours
-                          minutes={14} // default: current minutes
-                          onDismiss={onDismiss}
+                          hours= '10' //{(loadedMedication == '') ? '10' : (timerArray[timerNumber-1].hours)} // default: current hours
+                          minutes= '00' //{(loadedMedication == '') ? '00' : (timerArray[timerNumber-1].minute)} // default: current minutes
+                          onDismiss= {onDismiss} //{(loadedMedication == '') ? onDismiss : onConfirm}
                           onConfirm={onConfirm}
-                          // onConfirm={(hours, minutes) => {setVisible(false); {insertTimer(hours, minutes)}}}
-                          label="Select time" // optional, default 'Select time'
+                          label={"Select Timer Number " + timerNumber.toString()} // optional, default 'Select time'
                           cancelLabel="Cancel" // optional, default: 'Cancel'
                           confirmLabel="Ok" // optional, default: 'Ok'
                           animationType="fade" // optional, default is 'none'
@@ -243,25 +251,6 @@ export default function AddMedicationScreen ({route, navigation}) {
                         />
                         <Button onPress={()=> setVisible(true)} title="Set time of notification" />
 
-
-                        {/* <TouchableOpacity style={styles.button} onPress={function(){
-                          onChangeTimeVisible(true);
-                        } }>
-                          <Text>TimerIcon</Text>
-                        </TouchableOpacity>
-                        <DateTimePicker
-                          mode={'time'}
-                          is24Hour={true}
-                          isVisible={timeVisible}
-                          onConfirm={ function(data){ {onChangeTimeVisible(false)}; {onChangeValue('medicTimerArray', data)}; {insertTimer(data.toString())};} }
-                          onCancel={ function(){onChangeTimeVisible(false)} }
-                        />
-                        <TextInput
-                          style={styles.textInput}
-                          placeholder={'Time - hh:mm'}
-                          value={Moment(values.medicTimerArray[timerNumber]).utcOffset(0, true).format("HH:mm")}
-                          keyboardType={'phone-pad'}
-                        /> */}
                       </View>
                     )}
                   </AddMedDocForm.Step>
@@ -272,14 +261,20 @@ export default function AddMedicationScreen ({route, navigation}) {
           <AddMedDocForm.Step>
             {({ onChangeValue, values }) => (
             <View>
-              <Text>Medication Date</Text>
+              <Text>Medication Duration Dates</Text>
+              <TextInput
+                style={styles.textInput}
+                placeholder={'Start Date - End Date'}
+                value={Moment(medicationStartDate.toString()).format("DD/MM/YYYY") + ' - ' + Moment(medicationEndDate.toString()).format("DD/MM/YYYY")}
+              />
+
               <>
                 <DatePickerModal
                   mode="range"
                   visible={visibleDate}
                   onDismiss={onDismissDate}
-                  startDate={undefined}
-                  endDate={undefined}
+                  startDate={(loadedMedication == '') ? undefined : medicationStartDate}
+                  endDate={(loadedMedication == '') ? undefined : medicationEndDate}
                   onConfirm={onChangeDate}
                   saveLabel="Save" // optional
                   label="Select period" // optional
@@ -290,57 +285,9 @@ export default function AddMedicationScreen ({route, navigation}) {
                 />
                 <Button onPress={()=> setVisibleDate(true)} title="Pick range"/>
               </>
-
-
-
-              {/* <TouchableOpacity style={styles.button} onPress={function(){
-                onChangeCalendarStart(true);
-              } }>
-              <Text>CalendarIcon</Text>
-              </TouchableOpacity>
-              <DateTimePicker
-                value={Date}
-                mode={'date'}
-                isVisible={calendarStartVisible}
-                onConfirm={ function(data){{onChangeMedicationStartDate(data)}; {onChangeCalendarStart(false)}} }
-                onCancel={function(){onChangeCalendarStart(false)}}
-              />
-              <TextInput
-                style={styles.textInput}
-                placeholder={'Start Date - dd/mm/yyyy'}
-                //value={medicationStartDate.toDateString()}
-                value={Moment(medicationStartDate.toString()).format("DD/MM/YYYY")}
-              /> */}
             </View>
             )}
           </AddMedDocForm.Step>
-
-
-          {/* <AddMedDocForm.Step>
-            {({ onChangeValue, values }) => (
-            <View>
-              <Text>Medication End Date</Text>
-              <TouchableOpacity style={styles.button} onPress={function(){
-                onChangeCalendarEnd(true);
-              } }>
-              <Text>CalendarIcon</Text>
-              </TouchableOpacity>
-              <DateTimePicker
-                value={Date}
-                mode={'date'}
-                isVisible={calendarEndVisible}
-                onConfirm={ function(data){{onChangeMedicationEndDate(data)}; {onChangeCalendarEnd(false)}} }
-                onCancel={function(){onChangeCalendarEnd(false)}}
-              />
-              <TextInput
-                style={styles.textInput}
-                placeholder={'End Date - dd/mm/yyyy'}
-                //value={medicationEndDate.toDateString()}
-                value={Moment(medicationEndDate.toString()).format("DD/MM/YYYY")}
-              />
-            </View>
-            )}
-          </AddMedDocForm.Step> */}
 
           <AddMedDocForm.Step>
             {({ onChangeValue, values }) => (
@@ -369,10 +316,23 @@ export default function AddMedicationScreen ({route, navigation}) {
                 <Text key={index}>Medication Timer {index+1}:         {element.hour}:{element.minute}</Text>
               )}
             )}
+            {/* {(loadedMedication == '' ? 
+              timerArray.map((element, index) =>
+                {return(
+                  <Text key={index}>Medication Timer {index+1}:         {element.hour}:{element.minute}</Text>
+                )}
+              )
+              :
+              timerArrayEdit.map((element, index) =>
+                {return(
+                  <Text key={index}>Medication Timer {index+1}:         {element.hour}:{element.minute}</Text>
+                )}
+              )
+            )} */}
             <Text>Medication Start Date:     {medicationStartDate.toDateString()}</Text>
             <Text>Medication End Date:       {medicationEndDate.toDateString()}</Text>
             <Text>Medication Instructions:  {medicationInstructions}</Text>
-            {console.log('addMed: ', timerArray)}
+            {/* {console.log('addMed: ', timerArray)} */}
 
             <View style={styles.navButtonsForm}>
               <ThemeButton
@@ -393,6 +353,7 @@ export default function AddMedicationScreen ({route, navigation}) {
                 icon={'done'}
                 text={'Submit'}
                 onPressEvent={() => {
+                  // {setTimerArray(timerArrayEdit)}
                   {submitForm(medicationName, medicationType, medicationDosage, medicationDosageMetric, medicationReason, medicationDaily, medicationDailyDosesNumber, timerArray, medicationStartDate.toDateString(), medicationEndDate.toDateString(), medicationInstructions)}
                   navigation.navigate('Medication', {
                     screen: 'Index'
@@ -403,7 +364,7 @@ export default function AddMedicationScreen ({route, navigation}) {
 
             <ThemeButton
                 type={"secondary"}
-                text={"Back"}
+                text={"Cancel"}
                 onPressEvent={() => {
                     navigation.goBack();
                 }}

@@ -32,19 +32,6 @@ class Step extends Component {
                         />
                     )}
                     
-                    {/* {this.props.isLast ? (
-                        <ThemeButton
-                            type={'muted'}
-                            text={"Preview"}
-                            onPressEvent={() => {this.props.onPreview}}
-                        />
-                    ) : (
-                        <ThemeButton
-                            type={'muted'}
-                            text={"Next"}
-                            onPressEvent={this.props.nextStep}
-                        />
-                    )} */}
                     <ThemeButton
                         type={'muted'}
                         text={"Next"}
@@ -70,11 +57,9 @@ class AddMedDocForm extends Component {
     };
 
     _nextStep = () => {
-        //if (this.state.index !== this.props.children.length - 1){
-                this.setState(prevState => ({
-                    index: prevState.index + 1,
-                }));
-        //}
+        this.setState(prevState => ({
+            index: prevState.index + 1,
+        }));
     };
     
     _prevStep = () => {
@@ -93,30 +78,11 @@ class AddMedDocForm extends Component {
             },
         }));
     };
-
-    // _onPreview = () => {
-    //     if (this.state.index !== this.props.children.length - 1){
-    //         this.setState(prevState => ({
-    //             index: prevState.index + 1,
-    //         }));
-    //     }
-    //     console.log("Preview: ", this.state.values);
-        
-    //     // this.state.navigation.navigate('Medication', {
-    //     //     screen: 'Index'
-    //     // });
-    // };
     
     _onBack = () => {
         console.log('Go to Medication Main Screen');
         this.state.navigation.goBack();
     };
-
-    // _onChangeTimersNumber = (value) => {
-    //     this.setState(prevState => ({
-    //         index: prevState.index + (value - 1),
-    //     }));
-    // };
 
     render() {
         return (
@@ -132,8 +98,6 @@ class AddMedDocForm extends Component {
                             onChangeValue: this._onChangeValue,
                             values: this.state.values,
                             onBack: this._onBack,
-                            // onPreview: this._onPreview,
-                            // onChangeTimersNumber: this._onChangeTimersNumber,
                         })
                     }
                     return null;

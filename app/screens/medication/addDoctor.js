@@ -234,7 +234,7 @@ export default function AddDoctorScreen({route, navigation}) {
 
         <ThemeButton
           type={"secondary"}
-          text={"Back"}
+          text={"Cancel"}
           onPressEvent={() => {
               navigation.goBack();
           }}
