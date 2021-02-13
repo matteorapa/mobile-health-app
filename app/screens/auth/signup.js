@@ -61,8 +61,12 @@ export default function SignUpScreen({navigation}) {
             title="Sign Up"
             accessibilityLabel="Sign-up button with email and password as values"
             onPress={() => {
+              
+              if( name == '' || Surname == '' || email == '' || password == '' || VerifyPassword == ''){
+                Alert.alert('Sign Up Failed','Do not leave empty fields', [{text: 'Try Again', onPress: () => navigation.navigate('SignUp')}]);
+              } else {
               if (VerifyPassword != password){
-                console.log('Passwords do not match');
+                Alert.alert('Sign Up Failed','Passwords do not match', [{text: 'Try Again', onPress: () => navigation.navigate('SignUp')}]);
               } else {
                 auth()
                   .createUserWithEmailAndPassword(email, password)
@@ -84,6 +88,8 @@ export default function SignUpScreen({navigation}) {
                       console.error(error);
                   });
               }
+            }
+              
             }}
           />
           <Text

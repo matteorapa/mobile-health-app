@@ -60,8 +60,11 @@ export default function SignInScreen({navigation}) {
           accessibilityLabel="Sign-in button for email and password relogin"
           text={'Sign in'}
           onPressEvent={() => {
+            if( email == '' || password == '' ){
+              Alert.alert('Sign In Failed','Do not leave empty fields', [{text: 'Try Again', onPress: () => navigation.navigate('SignIn')}]);
+            } else {
             PromiseReader(email, password);
-            // UserInfo();
+            }
           }}
         />
         <ThemeButton
