@@ -1,4 +1,5 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
+import { COLORS } from './theme'
 
 const styles = StyleSheet.create({
   container: {
@@ -19,13 +20,13 @@ const styles = StyleSheet.create({
     paddingTop: 64
   },
   link: {
-    color: 'slategrey',
+    color: COLORS.primaryDark,
     padding: 6,
     alignSelf: 'center',
   },
   textInput: {
     height: 40,
-    borderColor: 'lightslategrey',
+    borderColor: COLORS.primaryLight,
     borderBottomWidth: 1,
     marginTop: 8,
     marginBottom: 16,
@@ -45,6 +46,32 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     padding: 16,
   },
+  surface: {
+    padding: 16,
+    marginTop: 8,
+    marginBottom: 8,
+    borderRadius: 6,
+    elevation: 4,
+  },
+  card: {
+    marginTop: 8,
+    marginBottom: 8,
+  },
+  emptyState: {
+    display: 'flex',
+    width: 250,
+    height: 250,
+    resizeMode: "cover",
+
+  },
+  emptyStateContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    height: '100%'
+  }
 });
 
-export {styles};
+export { styles };

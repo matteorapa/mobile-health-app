@@ -4,6 +4,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {AuthContext} from './auth';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { COLORS } from './styles/theme'
 
 import RemindersScreen from './screens/index';
 import MindScreen from './screens/mental/index';
@@ -16,6 +17,14 @@ import SignInScreen from './screens/auth/signin';
 import SignUpScreen from './screens/auth/signup';
 import DoctorSignUpScreen from './screens/auth/doctor_signup';
 import AddHabitScreen from './screens/mental/addHabit';
+import EditHabitScreen from './screens/mental/editHabit';
+import AddReminderScreen from './screens/mental/addReminder';
+import EditReminderScreen from './screens/mental/editReminder';
+import DetailsScreen from './screens/mental/habitDetails';
+import { initiateChannels } from './notifications';
+import {addItem, deleteItem, editItem} from './DBFunctions';
+import { Button, Text } from 'react-native'
+import {DefaultTheme, Provider} from 'react-native-paper';
 
 function MedicationStack() {
   const MedicationStack = createStackNavigator();
@@ -49,12 +58,32 @@ function MedicationStack() {
   );
 }
 
- 
 function MentalStack() {
   const MentalStack = createStackNavigator();
+
   const options = {
     headerShown: false,
   };
+
+  const optionsEmbedded = {
+    headerShown: true,
+    title: 'Add your habit',
+  }
+
+  const optionsEditHabit = {
+    headerShown: true,
+    title: 'Edit your habit',
+  }
+
+  const optionsAddReminder = {
+    headerShown: true,
+    title: 'Add your reminder',
+  }
+
+  const optionsEditReminder = {
+    headerShown: true,
+    title: 'Edit your reminder',
+  }
  
   return (
     <MentalStack.Navigator>
@@ -67,9 +96,35 @@ function MentalStack() {
       <MentalStack.Screen
         name="AddHabit"
         component={AddHabitScreen}
-        options={options}
+        options={optionsEmbedded}
       />
+
+      <MentalStack.Screen
+        name="EditHabit"
+        component={EditHabitScreen}
+        options={optionsEditHabit}
+      />      
+
+      <MentalStack.Screen
+        name="AddReminder"
+        component={AddReminderScreen}
+        options={optionsAddReminder}
+      />     
+
+      <MentalStack.Screen
+        name="Details"
+        component={DetailsScreen}
+        options={({ route }) => ({ 
+          title: route.params.name
+        })}
+      />     
+
       
+      <MentalStack.Screen
+        name="EditReminder"
+        component={EditReminderScreen}
+        options={optionsEditReminder}
+      />    
       
     </MentalStack.Navigator>
   );
@@ -148,6 +203,12 @@ export default function App() {
   const [refreshToken, setRefreshToken] = React.useState(null);
   const [isLoading, setIsLoading] = React.useState(true);
 
+  const [itemId, setItemId] = React.useState();
+  const [itemName, setItemName] = React.useState('');
+  const [items, setItems] = React.useState([]);
+
+  addItem('test2', 'test');
+
   const authContext = React.useMemo(() => {
     return {
       signIn: () => {
@@ -168,11 +229,36 @@ export default function App() {
     };
   }, []);
 
+  const MyTheme = {
+    dark: false,
+    colors: {
+      primary: COLORS.primary,
+      background: 'rgb(242, 242, 242)',
+      card: 'rgb(255, 255, 255)',
+      border: 'rgb(199, 199, 204)',
+      notification: 'rgb(255, 69, 58)',
+    },
+  };
+
+  initiateChannels()
+
+  const theme = {
+    ...DefaultTheme,
+    roundness: 2,
+    colors: {
+      ...DefaultTheme.colors,
+      primary: COLORS.primary,
+      accent: COLORS.secondaryDark,
+    },
+  };
+
   return (
+    <Provider theme={theme}>
     <AuthContext.Provider value={authContext}>
-      <NavigationContainer>
+      <NavigationContainer theme={MyTheme}>
         {accessToken ? <AppTabStack /> : <AuthStack />}
       </NavigationContainer>
     </AuthContext.Provider>
+    </Provider>
   );
 }
