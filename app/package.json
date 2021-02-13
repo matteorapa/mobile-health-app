@@ -3,9 +3,9 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "android": "react-native run-android",
+    "android": "react-native run-android  --verbose",
     "ios": "react-native run-ios",
-    "start": "react-native start",
+    "start": "react-native start --reset-cache",
     "test": "jest",
     "lint": "eslint ."
   },
@@ -40,9 +40,7 @@
     "react-native-charts": "^3.0.0",
     "react-native-gesture-handler": "^1.8.0",
     "react-native-get-random-values": "^1.5.1",
-    "react-native-international-number-input": "0.0.6",
     "react-native-localize": "^2.0.1",
-    "react-native-numeric-input": "^1.8.3",
     "react-native-paper": "^4.7.1",
     "react-native-paper-dates": "^0.2.15",
     "react-native-paper-tabs": "^0.4.0",

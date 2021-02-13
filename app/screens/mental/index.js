@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import {Text, View, ScrollView, Dimensions, StyleSheet} from 'react-native';
 import React, {useState} from 'react';
 import { useRoute } from '@react-navigation/native';
@@ -9,6 +10,16 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import {COLORS, LAYOUT, TYPE} from '../../styles/theme';
 import {getHabit} from '../../DBFunctions';
 
+=======
+import { Text, View, Button,ScrollView,  } from 'react-native';
+import React, {useState} from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+ 
+ 
+ 
+export default function MindScreen( {navigation} ) {
+>>>>>>> origin/master
 
 const HabitRoute = () => {
   const navigation = useNavigation();
@@ -19,6 +30,7 @@ const HabitRoute = () => {
   const onDismissSnackBar = () => setVisible(false);
 
 
+<<<<<<< HEAD
   const route = useRoute();
 
   // console.log(route.params)
@@ -200,18 +212,32 @@ export function editTime() {
 
       <Button
         title="Submit"
+=======
+    return (
+      <ScrollView>
+        <Text>Mind Screen</Text>
+        <Button
+        title = "Add Habit"
+>>>>>>> origin/master
         onPress={() => {
           //saveHabit(title,description,date.toDateString(),date.toTimeString(),numPerW,numPerD,category);
           navigation.navigate('Tasks', {
             screen: 'Index',
           });
         }}
+<<<<<<< HEAD
       />
 
       <Button title="Go back" onPress={() => navigation.goBack()} />
     </View>
   );
 }
+=======
+        />
+      </ScrollView>
+    );
+  }
+>>>>>>> origin/master
 
 const styles = StyleSheet.create({
   scene: {

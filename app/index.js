@@ -2,6 +2,7 @@
  * @format
  */
 
+<<<<<<< HEAD
 // on top of your index.android.js file
 
 import 'intl';
@@ -100,6 +101,8 @@ PushNotification.configure({
     requestPermissions: Platform.OS === 'ios',
   });
 
+=======
+>>>>>>> origin/master
 import {AppRegistry} from 'react-native';
 import App from './App';
 import {name as appName} from './app.json';
