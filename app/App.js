@@ -23,8 +23,10 @@ import EditReminderScreen from './screens/mental/editReminder';
 import DetailsScreen from './screens/mental/habitDetails';
 import { initiateChannels } from './notifications';
 import {addItem, deleteItem, editItem} from './DBFunctions';
-import { Button, Text } from 'react-native'
+import { Button, Text } from 'react-native';
 import {DefaultTheme, Provider} from 'react-native-paper';
+import ViewMedication from './screens/medication/viewMedication';
+import ViewDoctor from './screens/medication/viewDoctor';
 
 function MedicationStack() {
   const MedicationStack = createStackNavigator();
@@ -52,6 +54,16 @@ function MedicationStack() {
       <MedicationStack.Screen
         name="AddGuardian"
         component={AddGuardianScreen}
+        options={options}
+      />
+      <MedicationStack.Screen
+        name="ViewMedication"
+        component={ViewMedication}
+        options={options}
+      />
+      <MedicationStack.Screen
+        name="ViewDoctor"
+        component={ViewDoctor}
         options={options}
       />
     </MedicationStack.Navigator>
