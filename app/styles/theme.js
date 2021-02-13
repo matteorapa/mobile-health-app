@@ -46,7 +46,15 @@ export const LAYOUT = StyleSheet.create({
     alignItems: 'center'
   },
   main: {
-    padding: 12
+    padding: 12,
+    height: "100%"
+  },
+  mainCenter: {
+    padding: 12,
+    height: "100%",
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center'
   },
   inner: {
     paddingLeft: 32

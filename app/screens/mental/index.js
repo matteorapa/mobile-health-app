@@ -1,57 +1,73 @@
-import {
-  Text,
-  View,
-  ScrollView,
-  Dimensions,
-  StyleSheet,
-} from 'react-native';
+import {Text, View, ScrollView, Dimensions, StyleSheet} from 'react-native';
 import React, {useState} from 'react';
-
+import { useRoute } from '@react-navigation/native';
 import {useNavigation} from '@react-navigation/native';
-import {
-  Button,
-} from 'react-native-paper';
-import ReminderRoute from './RemindersTab'
-import {TabView} from 'react-native-tab-view';
+import {Button, FAB, Snackbar} from 'react-native-paper';
+import ReminderRoute from './RemindersTab';
+import {TabView, TabBar} from 'react-native-tab-view';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {COLORS, LAYOUT, TYPE} from '../../styles/theme';
-import {
-  getHabit
-} from '../../DBFunctions';
+import {getHabit} from '../../DBFunctions';
 
 
 const HabitRoute = () => {
   const navigation = useNavigation();
+  const [visible, setVisible] = React.useState(false);
+  const [show, setShow] = React.useState(true);
+  const [snackbarText, setSnackbarText] = React.useState('');
+  const onToggleSnackBar = () => setVisible(!visible);
+  const onDismissSnackBar = () => setVisible(false);
+
+
+  const route = useRoute();
+
+  // console.log(route.params)
+
+  React.useEffect(()=>{
+    if(route.params !== undefined){
+        const {snackbar} = route.params;
+        setSnackbarText(snackbar)
+        setVisible(true)
+    }
+  }),[]
+
   return (
-    <ScrollView>
-      <Text>Mind Screen</Text>
-      {getHabit()}
-      <Button
+    <View style={LAYOUT.main}>
+
+      <Text style={TYPE.h1}>Your Habits</Text>
+      
+      <ScrollView>{getHabit()}</ScrollView>
+      <FAB
+        style={styles.fab}
         icon="plus"
-        mode="contained"
-        onPress={() => {
+        color={'#FFF'}
+        onPress={() =>
           navigation.navigate('Tasks', {
             screen: 'AddHabit',
-          });
-        }}>
-        Add Habit
-      </Button>
-    </ScrollView>
+          })
+        }
+        label="ADD HABIT"
+        accessibilityLabel="Add a new habit to list."
+        animated={true}
+      />
+      <Snackbar
+        visible={visible}
+        onDismiss={onDismissSnackBar}>
+        {snackbarText}
+      </Snackbar>
+
+    </View>
   );
 };
 
 
-
-const initialLayout = {width: Dimensions.get('window').width};
-
 export default function MindScreen() {
   const [points, setPoints] = useState(0);
   const [consPts, setCPts] = useState(0);
-
   const [index, setIndex] = React.useState(0);
 
   const [routes] = React.useState([
-    {key: 'habits', title: 'Habits'},
+    {key: 'habits', title: 'Habits', icon: "plus"},
     {key: 'reminders', title: 'Reminders'},
   ]);
 
@@ -94,12 +110,17 @@ export default function MindScreen() {
       navigationState={{index, routes}}
       renderScene={renderScene}
       onIndexChange={setIndex}
-      initialLayout={initialLayout}
+      initialLayout={{width: Dimensions.get('window').width}}
+      renderTabBar={(props)=>
+        <TabBar
+          {...props}
+          indicatorStyle={styles.indicator}
+          style={styles.tabbar}
+        />
+      }
     />
   );
 }
-
-
 
 export function editTime() {
   const [date, setDate] = useState(new Date());
@@ -195,5 +216,19 @@ export function editTime() {
 const styles = StyleSheet.create({
   scene: {
     flex: 1,
+  },
+  fab: {
+    position: 'absolute',
+    right: 16,
+    bottom: 16,
+  },
+  screen: {
+    height: '100%',
+  },
+  tabbar: {
+    backgroundColor: COLORS.primary,
+  },
+  indicator: {
+    backgroundColor: COLORS.secondary,
   },
 });

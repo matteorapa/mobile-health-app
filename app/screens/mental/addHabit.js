@@ -1,17 +1,20 @@
-import {Text, View, Button, TextInput} from 'react-native';
+import {Text, View, Button, TextInput, StyleSheet} from 'react-native';
+import {Surface} from 'react-native-paper'
 import React, {useState} from 'react';
 import {addHabit} from '../../DBFunctions';
 import {Picker} from '@react-native-picker/picker';
 import { DatePickerModal } from 'react-native-paper-dates'
 import ThemeButton from '../../components/ThemeButton'
+import {COLORS, LAYOUT, TYPE} from '../../styles/theme';
+import { styles } from '../../styles/globals';
 
 export default function AddHabitScreen({navigation}) {
 
   //component state for addHabit form
   const [title, setTitle] = useState('');
   const [description, setDesc] = useState('');
-  const [numPerD, setNPD] = useState('');
-  const [category, setCat] = useState('');
+  const [numPerD, setNPD] = useState('1');
+  const [category, setCat] = useState('Workout');
   const [date, setDate] = useState(new Date());
 
 // date picker modal 
@@ -29,46 +32,39 @@ export default function AddHabitScreen({navigation}) {
 
 
   return (
-    <View>
-      <Text>Add Habit Screen</Text>
-
+    <View style={LAYOUT.mainCenter}>
+      <Surface style={styles.surface}>
+      <Text>Habit's Name</Text>
       <TextInput
-        placeholder="Title"
+        placeholder="Brisk walk in the forest."
         onChangeText={(title) => setTitle(title)}
         defaultValue={title}
+        style={styles.textInput}
       />
-
+      
+      <Text>Describe your habit</Text>
       <TextInput
         placeholder="Description"
         onChangeText={(description) => setDesc(description)}
         defaultValue={description}
+        style={styles.textInput}
       />
 
-      <DatePickerModal
-        mode="single"
-        visible={visible}
-        onDismiss={onDismiss}
-        date={date}
-        onConfirm={onChange}
-        saveLabel="Save" // optional
-        label="Select date" // optional
-        animationType="slide" // optional, default is 'slide' on ios/android and 'none' on web
-        locale={'en'} // optional, default is automically detected by your system
-      />
-      <Button onPress={()=> setVisible(true) } title="Pick Time" />
+    
         
-
+        <Text>Frequency per day</Text>
       <TextInput
-        placeholder="Number per day"
+        placeholder=""
         onChangeText={(numPerD) => setNPD(numPerD)}
         defaultValue={numPerD}
-        keyboardType={'numeric'}
+        keyboardType="numeric"
+        style={styles.textInput}
       />
-
-
-<Picker
+    
+    <Text>Select category</Text>
+      <Picker
         selectedValue={category}
-        style={{height: 50, width: 300}}
+        style={{height: 50, width: '100%'}}
         onValueChange={(itemValue, itemIndex) => {
           setCat(itemValue);
         }}>
@@ -94,29 +90,57 @@ export default function AddHabitScreen({navigation}) {
       />
       </Picker>
 
-      <Button
-        title="Submit"
-        onPress={() => {
-          {
-            addHabit(
-              title,
-              description,
-              date.toDateString(),
-              numPerD,
-              category,
-              0,
-              0,
-              null,
-              [0, 0, 0, 0, 0, 0]
-            );
-          }
-          navigation.navigate('Tasks', {
-            screen: 'Index',
-          });
-        }}
-      />
+      <Text>Selected date: {date.toLocaleDateString() }</Text>
+      <ThemeButton
+          accessibilityLabel="Pick the date of your habit."
+          text="Pick Date"
+          type="secondary"
+          onPressEvent={()=> setVisible(true)}
+        />
 
-      <Button title="Go back" onPress={() => navigation.goBack()} />
+       <DatePickerModal
+        mode="single"
+        visible={visible}
+        onDismiss={onDismiss}
+        date={date}
+        onConfirm={onChange}
+        saveLabel="Save" // optional
+        label="Select date" // optional
+        animationType="slide" // optional, default is 'slide' on ios/android and 'none' on web
+        locale={'en'} // optional, default is automically detected by your system
+      />
+      </Surface>
+      
+      
+
+        <ThemeButton
+          accessibilityLabel="Submit your new habit."
+          text="ADD HABIT"
+          onPressEvent={() => {
+            {
+              addHabit(
+                title,
+                description,
+                date.toDateString(),
+                numPerD,
+                category,
+                0,
+                0,
+                null,
+                [0, 0, 0, 0, 0, 0]
+              );
+            }
+            navigation.navigate('Tasks', {
+              screen: 'Index',
+              params: {
+                snackbar: "Added your habit."
+              }
+            });
+          }}
+        />
+      
+
+     
     </View>
   );
 }

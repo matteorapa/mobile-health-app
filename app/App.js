@@ -23,6 +23,8 @@ import EditReminderScreen from './screens/mental/editReminder';
 import DetailsScreen from './screens/mental/habitDetails';
 import { initiateChannels } from './notifications';
 import {addItem, deleteItem, editItem} from './DBFunctions';
+import { Button, Text } from 'react-native'
+import {DefaultTheme, Provider} from 'react-native-paper';
 
 function MedicationStack() {
   const MedicationStack = createStackNavigator();
@@ -56,12 +58,32 @@ function MedicationStack() {
   );
 }
 
- 
 function MentalStack() {
   const MentalStack = createStackNavigator();
+
   const options = {
     headerShown: false,
   };
+
+  const optionsEmbedded = {
+    headerShown: true,
+    title: 'Add your habit',
+  }
+
+  const optionsEditHabit = {
+    headerShown: true,
+    title: 'Edit your habit',
+  }
+
+  const optionsAddReminder = {
+    headerShown: true,
+    title: 'Add your reminder',
+  }
+
+  const optionsEditReminder = {
+    headerShown: true,
+    title: 'Edit your reminder',
+  }
  
   return (
     <MentalStack.Navigator>
@@ -74,31 +96,34 @@ function MentalStack() {
       <MentalStack.Screen
         name="AddHabit"
         component={AddHabitScreen}
-        options={options}
+        options={optionsEmbedded}
       />
 
       <MentalStack.Screen
         name="EditHabit"
         component={EditHabitScreen}
-        options={options}
+        options={optionsEditHabit}
       />      
 
       <MentalStack.Screen
         name="AddReminder"
         component={AddReminderScreen}
-        options={options}
+        options={optionsAddReminder}
       />     
 
       <MentalStack.Screen
         name="Details"
         component={DetailsScreen}
-        options={options}
+        options={({ route }) => ({ 
+          title: route.params.name
+        })}
       />     
+
       
       <MentalStack.Screen
         name="EditReminder"
         component={EditReminderScreen}
-        options={options}
+        options={optionsEditReminder}
       />    
       
     </MentalStack.Navigator>
@@ -217,11 +242,23 @@ export default function App() {
 
   initiateChannels()
 
+  const theme = {
+    ...DefaultTheme,
+    roundness: 2,
+    colors: {
+      ...DefaultTheme.colors,
+      primary: COLORS.primary,
+      accent: COLORS.secondaryDark,
+    },
+  };
+
   return (
+    <Provider theme={theme}>
     <AuthContext.Provider value={authContext}>
       <NavigationContainer theme={MyTheme}>
         {accessToken ? <AppTabStack /> : <AuthStack />}
       </NavigationContainer>
     </AuthContext.Provider>
+    </Provider>
   );
 }

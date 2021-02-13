@@ -1,21 +1,26 @@
-import {Text, View, Dimensions} from 'react-native';
-import React from 'react';
+import {Text, View, Dimensions, ScrollView} from 'react-native';
+import * as React from 'react';
 import {Button} from 'react-native-paper';
+import {COLORS, LAYOUT, TYPE} from '../../styles/theme';
 
 import ProgressComponent from '../../components/ProgressComponent';
-
+import ThemeButton from '../../components/ThemeButton';
 import {addHabit, deleteHabit} from '../../DBFunctions';
 import {LineChart, Grid} from 'react-native-chart-kit';
+import {Divider, DataTable, Portal, Dialog, Provider, Paragraph} from 'react-native-paper';
+import PaddedDivider from '../../components/PaddedDivider';
 
 export default function DetailsScreen({navigation, route}) {
+  
+
   //obtaining data from route send from index screen
   const {habit} = route.params;
   let data = [0, 0, 0, 0, 0, 0];
   let counter = 0;
-
   const currentMonth = new Date().getMonth() + 1;
-
-  // React.useEffect(() => {
+  const [visible, setVisible] = React.useState(false)
+  const hideDialog = () => setVisible(false);
+  
 
   habit.graphData.map((element) => {
     data[counter] = element;
@@ -54,10 +59,7 @@ export default function DetailsScreen({navigation, route}) {
   );
 
   return (
-    <View>
-      <Text>Details Screen {habit.habitId}</Text>
-      <ProgressComponent habit={habit} />
-
+    <ScrollView style={LAYOUT.main}>
       <LineChart
         data={{
           labels: ['Jan', 'Mar', 'May', 'Jul', 'Sep', 'Nov'],
@@ -67,15 +69,15 @@ export default function DetailsScreen({navigation, route}) {
             },
           ],
         }}
-        width={Dimensions.get('window').width} // from react-native
-        height={220}
+        width={Dimensions.get('window').width - 24}
+        height={180}
         yAxisLabel=""
         yAxisSuffix="pts"
         yAxisInterval={1} // optional, defaults to 1
         chartConfig={{
-          backgroundColor: '#0963F0',
-          backgroundGradientFrom: '#3579F3',
-          backgroundGradientTo: '#3579F3',
+          backgroundColor: COLORS.primaryLight,
+          backgroundGradientFrom: COLORS.primaryLight,
+          backgroundGradientTo: COLORS.primaryLight,
           decimalPlaces: 0, // optional, defaults to 2dp
           color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
           labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
@@ -84,8 +86,8 @@ export default function DetailsScreen({navigation, route}) {
           },
           propsForDots: {
             r: '6',
-            strokeWidth: '2',
-            stroke: '#ffa726',
+            strokeWidth: '3',
+            stroke: COLORS.primaryDark,
           },
         }}
         bezier
@@ -95,39 +97,79 @@ export default function DetailsScreen({navigation, route}) {
         }}
       />
 
-      <Text>Description: {habit.habitDesc}</Text>
-      <Text>Start Date: {habit.startDate}</Text>
-      <Text>Number Per Day: {habit.numPerD}</Text>
-      <Text>Category: {habit.category}</Text>
-      <Text>Consecutive Points: {habit.consPts}</Text>
-      <Text>Points: {habit.points}</Text>
+      <DataTable>
+        <DataTable.Row>
+          <DataTable.Cell>Points</DataTable.Cell>
+          <DataTable.Cell numeric>{habit.points}</DataTable.Cell>
+        </DataTable.Row>
+        <DataTable.Row>
+          <DataTable.Cell>Consecutive Points</DataTable.Cell>
+          <DataTable.Cell numeric>{habit.consPts}</DataTable.Cell>
+        </DataTable.Row>
+        <DataTable.Row>
+          <DataTable.Cell>Start date</DataTable.Cell>
+          <DataTable.Cell numeric>
+            {new Date(habit.startDate).toLocaleString()}
+          </DataTable.Cell>
+        </DataTable.Row>
 
-      <Button
-        mode="contained"
-        onPress={() => {
+        <DataTable.Row>
+          <DataTable.Cell>Frequency</DataTable.Cell>
+          <DataTable.Cell numeric>{habit.numPerD}</DataTable.Cell>
+        </DataTable.Row>
+
+        <DataTable.Row>
+          <DataTable.Cell>Category</DataTable.Cell>
+          <DataTable.Cell numeric>{habit.category}</DataTable.Cell>
+        </DataTable.Row>
+        <DataTable.Row>
+          <DataTable.Cell>Description</DataTable.Cell>
+          <DataTable.Cell numeric>{habit.habitDesc}</DataTable.Cell>
+        </DataTable.Row>
+      </DataTable>
+
+      <PaddedDivider />
+      <ProgressComponent habit={habit} />
+
+      <ThemeButton
+        accessibilityLabel="Edit this habit."
+        text="EDIT"
+        type="secondary"
+        onPressEvent={() => {
           navigation.navigate('Tasks', {
             screen: 'EditHabit',
             params: {
               habit: habit,
             },
           });
-        }}>
-        Edit
-      </Button>
+        }}
+      />
 
-      <Button
-        mode="contained"
-        onPress={() => {
-          deleteHabit(habit.habitId);
-          navigation.navigate('Tasks', {
-            screen: 'Index',
-          });
-        }}>
-        Delete
-      </Button>
-      <Button mode="contained" onPress={() => navigation.goBack()}>
-        Go Back
-      </Button>
-    </View>
+      <ThemeButton
+        accessibilityLabel="Delete this habit."
+        text="DELETE"
+        type="muted"
+        onPressEvent={()=>{
+          setVisible(true)
+        }}
+      />
+      <PaddedDivider />
+      
+        <Dialog visible={visible} onDismiss={hideDialog}>
+          <Dialog.Content>
+            <Paragraph>Do you want to permanently delete the habit {habit.habitId}?</Paragraph>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={() => setVisible(false)}>Cancel</Button>
+            <Button onPress={() => {
+              deleteHabit(habit.habitId);
+              navigation.navigate('Tasks', {
+                screen: 'Index',
+              });
+              }}>DELETE</Button>
+          </Dialog.Actions>
+        </Dialog>
+      
+    </ScrollView>
   );
 }

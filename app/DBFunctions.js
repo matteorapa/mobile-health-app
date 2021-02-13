@@ -1,11 +1,11 @@
 import database from '@react-native-firebase/database';
-import 'react-native-get-random-values'
-import { nanoid } from 'nanoid'
-import {
-
-  Alert
-
-} from 'react-native';
+import 'react-native-get-random-values';
+import {nanoid} from 'nanoid';
+import {Alert} from 'react-native';
+import {styles} from './styles/globals'
+import {View, Image} from 'react-native'
+import love from './assets/images/love.png'
+import music from './assets/images/music.png'
 
 import * as React from 'react';
 import {
@@ -17,12 +17,11 @@ import {
   Paragraph,
   ProgressBar,
   Colors,
+  Chip
 } from 'react-native-paper';
-import {NavigationContainer, useNavigation} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {Picker} from '@react-native-picker/picker';
-import DateTimePicker from '@react-native-community/datetimepicker';
-//import reward from './screens/mental/index';
-import {View} from 'react-native';
+import PaddedDivider from './components/PaddedDivider';
 
 export const addItem = (itemId, itemName) => {
   return new Promise(function (resolve, reject) {
@@ -58,7 +57,7 @@ export const addHabit = (
   consPts,
   points,
   date,
-  graphData
+  graphData,
 ) => {
   return new Promise(function (resolve, reject) {
     let key;
@@ -97,7 +96,7 @@ export const getHabit = () => {
   const navigation = useNavigation();
 
   var boolean = false;
-   var counter = 1;
+  var counter = 1;
 
   React.useEffect(() => {
     const habitRef = database().ref('/habits');
@@ -112,60 +111,40 @@ export const getHabit = () => {
       habitRef.off('value', onLoadingListener);
     };
   }, []);
-
- 
-
+  if(habits.length > 0){
   return habits.map((element) => {
+    const currentDate = new Date();
 
+    //date retrieved from db
+    const retrievedDate = new Date(element.startDate);
 
-        //  // number per day retrieved from db
-        //  const testCounter = 2;
-          const currentDate = new Date();
-        // //reward(element.consPts);
-        
+    const diff = (currentDate - retrievedDate) / (1000 * 60 * 60 * 24);
 
-         //date retrieved from db
-         const retrievedDate = new Date(element.startDate);
+    if (diff <= 1) {
+      boolean = true;
+    }
+    if (diff > 1) {
+      boolean = false;
+    }
 
-         const diff =
-           (currentDate - retrievedDate) / (1000 * 60 * 60 * 24);
-
-           
-           
-
-
-         // checks if the current date is smaller the the retrieved date
-         // checks if the user pressed the button more than he should be pressing it
-
-        //  if (diff <= 1 || counter >= testCounter) {
-        //    boolean = true;
-        //    counter = 0;
-        //  }
-        //  if (diff > 1 && counter < testCounter) {
-        //    boolean = false;
-        //  }
-
-         // disable buttons until start date
-         if (diff <= 1) {
-          boolean = true;
-        }
-        if (diff > 1) {
-          boolean = false;
-        }
-
-    
     return (
       <Card
+        style={styles.card}
         key={element.habitId}
         onPress={() => {
           navigation.navigate('Tasks', {
-            params: {habit: element},
             screen: 'Details',
+            params: {
+              habit: element,
+              name: element.habitId,
+            },
           });
         }}>
-        <Title>{element.habitId}</Title>
-        <Text>{element.habitDesc}</Text>
-        <Text>{element.startDate}</Text>
+        <Card.Content>
+          <Title>{element.habitId}</Title>
+          <Paragraph>{element.habitDesc}</Paragraph>
+          <Text>Available on {retrievedDate.toLocaleDateString()}</Text>
+        </Card.Content>
 
         <Card.Actions>
           <Button
@@ -185,11 +164,11 @@ export const getHabit = () => {
               counter = counter + 1;
 
               reward(element.consPts);
-              
             }}
             disabled={boolean}>
             Done
           </Button>
+
           <Button
             onPress={() => {
               if (element.points < 0 || element.points == 0) {
@@ -217,19 +196,29 @@ export const getHabit = () => {
                   element.graphData,
                 );
               }
-              
             }}
             disabled={boolean}>
-            Fail
+            Missed
           </Button>
         </Card.Actions>
       </Card>
     );
   });
+} else {
+  return(
+    <View style={styles.emptyStateContainer}>
+      <PaddedDivider />
+      <PaddedDivider />
+      <PaddedDivider />
+      <PaddedDivider />
+      <Image source={music} style={styles.emptyState}/>
+      <Text>You do not yet have any habits. Add some habits to create meaningful reminders.</Text>
+      <PaddedDivider />
+      <PaddedDivider />
+    </View>) 
+}
 
-  // return () => {
-  //     habitRef.off('value', onLoadingListener);
-  // }
+  
 };
 
 const setPoints = (
@@ -241,7 +230,7 @@ const setPoints = (
   consPts,
   points,
   date,
-  graphData
+  graphData,
 ) => {
   database()
     .ref('/habits/' + key)
@@ -258,7 +247,7 @@ const setPoints = (
     });
 };
 
-const reward = (consPoints) =>  {
+const reward = (consPoints) => {
   if (consPoints == 50) {
     Alert.alert('Reward', 'beginner achievement');
   }
@@ -268,7 +257,7 @@ const reward = (consPoints) =>  {
   if (consPoints == 200) {
     Alert.alert('Reward', 'pro achievement');
   }
-}
+};
 
 export const listHabitIds = () => {
   const [habits, setHabits] = React.useState([]);
@@ -309,16 +298,10 @@ export const deleteHabit = (habitId, deleteConfirm) => {
     });
 };
 
-export const addReminder = (
-  habitId,
-  reminderTitle,
-  hours,
-  minutes,
-) => {
+export const addReminder = (habitId, reminderTitle, hours, minutes) => {
   return new Promise(function (resolve, reject) {
     let key = nanoid();
-    console.log("key: ", key)
-    
+    console.log('key: ', key);
 
     let dataToSave = {
       habitId: habitId,
@@ -331,11 +314,11 @@ export const addReminder = (
       .ref('reminders/' + key)
       .update(dataToSave)
       .then((snapshot) => {
-          console.log("added successfully")
+        console.log('added successfully');
         resolve(snapshot);
       })
       .catch((err) => {
-        console.log("Error when adding reminder", err)
+        console.log('Error when adding reminder', err);
         reject(err);
       });
   });
@@ -350,8 +333,7 @@ export const editReminder = (
 ) => {
   return new Promise(function (resolve, reject) {
     let key = reminderId;
-    console.log("key: ", key)
-    
+    console.log('key: ', key);
 
     let dataToSave = {
       habitId: habitId,
@@ -364,11 +346,11 @@ export const editReminder = (
       .ref('reminders/' + key)
       .update(dataToSave)
       .then((snapshot) => {
-          console.log("added successfully")
+        console.log('added successfully');
         resolve(snapshot);
       })
       .catch((err) => {
-        console.log("Error when adding reminder", err)
+        console.log('Error when adding reminder', err);
         reject(err);
       });
   });
@@ -392,30 +374,56 @@ export const getReminder = () => {
     };
   }, []);
 
-  return reminders.map((element) => {
-    return (
-      <Card key={element.reminderId}>
-        <Title>{element.reminderTitle}</Title>
-        <Text>
-          {element.habitId}
-        </Text>
-        <Text>{element.hours}:{element.minutes}</Text>
-        <Card.Actions>
-          <Button onPress={() => {deleteReminder(element.reminderId)}}>Remove</Button>
-          <Button onPress={() => {
-            navigation.navigate('Tasks', {
-              screen: 'EditReminder',
-              params: {
-                reminder: element,
-              },
-            });
-          }}>Edit</Button>
-        </Card.Actions>
-      </Card>
-    );
-  });
+  //when there is no reminders
+  if(reminders.length > 0){
+    return reminders.map((element) => {
+      return (
+        <Card key={element.reminderId} style={styles.card}>
+          
+          <Card.Content>
+          <Title>{element.reminderTitle}</Title>
+          <Chip icon="information">{element.habitId}</Chip>
+          <Text>
+            {element.hours}:{element.minutes}
+          </Text>
+          </Card.Content>
+          <Card.Actions>
+            <Button
+              onPress={() => {
+                deleteReminder(element.reminderId);
+              }}>
+              Remove
+            </Button>
+            <Button
+              onPress={() => {
+                navigation.navigate('Tasks', {
+                  screen: 'EditReminder',
+                  params: {
+                    reminder: element,
+                  },
+                });
+              }}>
+              Edit
+            </Button>
+          </Card.Actions>
+        </Card>
+      );
+    });
+  } else {
+    return(
+    <View style={styles.emptyStateContainer}>
+      <PaddedDivider />
+      <PaddedDivider />
+      <PaddedDivider />
+      <PaddedDivider />
+      <Image source={love} style={styles.emptyState}/>
+      <Text>You do not yet have any reminders. Create a reminder to remember to take care of yourself.</Text>
+      <PaddedDivider />
+      <PaddedDivider />
+    </View>) 
 
-
+  }
+  
 };
 
 export const deleteReminder = (reminderId, deleteConfirm) => {

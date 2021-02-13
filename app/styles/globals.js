@@ -46,6 +46,32 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     padding: 16,
   },
+  surface: {
+    padding: 16,
+    marginTop: 8,
+    marginBottom: 8,
+    borderRadius: 6,
+    elevation: 4,
+  },
+  card: {
+    marginTop: 8,
+    marginBottom: 8,
+  },
+  emptyState: {
+    display: 'flex',
+    width: 250,
+    height: 250,
+    resizeMode: "cover",
+
+  },
+  emptyStateContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    height: '100%'
+  }
 });
 
 export { styles };

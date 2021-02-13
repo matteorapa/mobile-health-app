@@ -3,14 +3,18 @@ import React, {useState, useCallback} from 'react';
 import {Picker} from '@react-native-picker/picker';
 import {TimePickerModal} from 'react-native-paper-dates';
 import {listHabitIds, addReminder} from '../../DBFunctions';
+import {COLORS, LAYOUT, TYPE} from '../../styles/theme';
+import ThemeButton from '../../components/ThemeButton';
+import {Surface} from 'react-native-paper';
+import { styles } from '../../styles/globals'
 
 export default function AddReminderScreen({navigation}) {
   //array with the list of habits saved to choose a habit
 
   const [state, setState] = React.useState('');
   const [title, setTitle] = useState('');
-  const [hours1, setHours] = useState();
-  const [minutes1, setMinutes] = useState();
+  const [hours1, setHours] = useState('12');
+  const [minutes1, setMinutes] = useState('00');
 
   const [visible, setVisible] = useState(false);
 
@@ -21,57 +25,64 @@ export default function AddReminderScreen({navigation}) {
   const onConfirm = useCallback(
     ({hours, minutes}) => {
       setVisible(false);
-      setHours(hours);
-      setMinutes(minutes);
+      console.log(hours)
+      console.log(minutes)
+
+      setHours(hours.toString());
+      setMinutes(minutes.toString());
     },
     [setVisible],
   );
 
   return (
-    <View>
-      <Text>Add Reminder Screen</Text>
-      {/* dropdown to select habit for reminders */}
-      <Picker
-        selectedValue={state}
-        style={{height: 50, width: 300}}
-        onValueChange={(itemValue, itemIndex) => {
-          setState(itemValue);
-        }}>
+    <View style={LAYOUT.mainCenter}>
+      <Surface style={styles.surface}>
+        {/* dropdown to select habit for reminders */}
+        <Text>Select habit</Text>
+        <Picker
+          selectedValue={state}
+          style={{height: 50, width: '100%'}}
+          onValueChange={(itemValue, itemIndex) => {
+            setState(itemValue);
+          }}>
           {listHabitIds()}
+        </Picker>
+        <Text>Reminder title</Text>
+        <TextInput
+          placeholder="Your reminder's title"
+          onChangeText={(title) => setTitle(title)}
+          defaultValue={title}
+          style={styles.textInput}
+        />
 
-      </Picker>
-  
-      <TextInput
-        placeholder="Title"
-        onChangeText={(title) => setTitle(title)}
-        defaultValue={title}
-      />
+        <Text>Selected time: {hours1}:{minutes1}</Text>
 
-      <Text>{hours1}</Text>
+        <TimePickerModal
+          visible={visible}
+          onDismiss={onDismiss}
+          onConfirm={onConfirm}
+          hours={12} // default: current hours
+          minutes={30} // default: current minutes
+        />
 
-      <TimePickerModal
-        visible={visible}
-        onDismiss={onDismiss}
-        onConfirm={onConfirm}
-        hours={12} // default: current hours
-        minutes={14} // default: current minutes
-      />
-      <Button onPress={() => setVisible(true)} title={'Pick Time'}></Button>
+        <ThemeButton
+          accessibilityLabel="Pick the time of your reminder."
+          text="Pick Time"
+          type="secondary"
+          onPressEvent={() => setVisible(true)}
+        />
+      </Surface>
 
-      <Button
-        title="Submit"
-        onPress={() => {
-          console.log("habit: ",state)
-          console.log("title: ",title)
-            console.log("hour: ",hours1)
-            console.log("minutes: ",minutes1)
-            {addReminder(state, title, hours1, minutes1);}
-          
+      <ThemeButton
+        accessibilityLabel="Press button to create your remidner."
+        text="ADD REMINDER"
+        onPressEvent={() => {
+          {
+            addReminder(state, title, hours1, minutes1);
+          }
           navigation.goBack();
         }}
       />
-
-      <Button title="Go back" onPress={() => navigation.goBack()} />
     </View>
   );
 }

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import {StyleSheet, View, Text} from 'react-native';
-import {Title, ProgressBar, Colors} from 'react-native-paper';
+import {Title, ProgressBar} from 'react-native-paper';
+import {COLORS, LAYOUT, TYPE} from '../styles/theme';
 
 export default function ProgressComponent( {habit} ) {
   
@@ -26,15 +27,14 @@ export default function ProgressComponent( {habit} ) {
 
   return (
     <View>
-      <Text>Progress screen</Text>
 
       <Title>{title}</Title>
       <ProgressBar
         progress={percentage}
-        color={Colors.blue800}
-        style={{height: 30}}
+        color={COLORS.primaryLight}
+        style={{height: 20}}
       />
-      <Text>{points}/50 points</Text>
+      <Text>{points}/50 Points</Text>
     </View>
   );
 }

@@ -6,7 +6,7 @@ export default function PaddedDivider() {
     return(
     
     <View style={STYLE.divider}>
-        <Divider />
+        {/* <Divider /> */}
     </View>
     
     )
@@ -15,6 +15,6 @@ export default function PaddedDivider() {
 const STYLE = StyleSheet.create({
     divider: {
         marginTop: 12,
-        marginBottom: 16,
+        marginBottom: 12,
     }
 })

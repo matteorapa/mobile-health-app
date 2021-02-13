@@ -2,15 +2,13 @@ import {getReminder} from '../../DBFunctions';
 import React, {useState} from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {Picker} from '@react-native-picker/picker';
-import {Text, View, ScrollView} from 'react-native';
+import {Text, View, ScrollView, StyleSheet} from 'react-native';
+import {COLORS, LAYOUT, TYPE} from '../../styles/theme';
 import {
-    Avatar,
     Button,
-    Card,
     Title,
     Paragraph,
-    ProgressBar,
-    Colors,
+    FAB
   } from 'react-native-paper';
 
 import {useNavigation} from '@react-navigation/native';
@@ -26,25 +24,35 @@ export default function ReminderRoute(props){
 
 
   return (
-    <ScrollView>
-      <Text>Mind Screen</Text>
+    <View style={LAYOUT.main}>
+    <ScrollView >
+      <Text style={TYPE.h1}>Your Reminders</Text>
 
-      
       {getReminder()}
-
-
-     
-
-      <Button
-        icon="plus"
-        mode="contained"
-        onPress={() => {
-          navigation.navigate('Tasks', {
-            screen: 'AddReminder',
-          });
-        }}>
-        Add Reminder
-      </Button>
+      
     </ScrollView>
+    <FAB
+    style={styles.fab}
+    icon="plus"
+    color={'#FFF'}
+    onPress={() =>
+      navigation.navigate('Tasks', {
+        screen: 'AddReminder',
+      })
+    }
+    label="ADD REMINDER"
+    accessibilityLabel="Add a new reminder to list."
+    animated={true}
+  />
+  </View>
   );
 };
+
+const styles = StyleSheet.create({
+  
+  fab: {
+    position: 'absolute',
+    right: 16,
+    bottom: 16,
+  }
+});
