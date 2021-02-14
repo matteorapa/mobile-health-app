@@ -253,26 +253,26 @@ function AuthStack() {
 }
 
 export default function App() {
-  const [signedIn, setSignedIn] = React.useState(true);
-
-  // const [itemId, setItemId] = React.useState();
-  // const [itemName, setItemName] = React.useState('');
-  // const [items, setItems] = React.useState([]);
-
-  addItem('test2', 'test');
+  const [accessToken, setAccessToken] = React.useState(false);
+  const [refreshToken, setRefreshToken] = React.useState(null);
+  const [isLoading, setIsLoading] = React.useState(true);
 
   const authContext = React.useMemo(() => {
     return {
       signIn: () => {
-        setSignedIn(true);
+        setIsLoading(false);
+        setAccessToken(true);
+        setRefreshToken('gert');
       },
       signUp: () => {
-        
-        setSignedIn(false);
+        setIsLoading(false);
+        setAccessToken('gert');
+        setRefreshToken('gert');
       },
       signOut: () => {
-        setSignedIn(false);
-        
+        setIsLoading(false);
+        setAccessToken(false);
+        setRefreshToken(null);
       },
     };
   }, []);
@@ -304,7 +304,7 @@ export default function App() {
     <Provider theme={theme}>
       <AuthContext.Provider value={authContext}>
         <NavigationContainer theme={MyTheme}>
-          {signedIn ? <AppTabStack /> : <AuthStack />}
+          {accessToken ? <AppTabStack /> : <AuthStack />}
         </NavigationContainer>
       </AuthContext.Provider>
     </Provider>
