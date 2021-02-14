@@ -729,12 +729,6 @@ export const ReadMedication = ({navigation}) => {
         ' ' +
         metricsOfDosage[element.medicationDosageMetric]
       }
-      // left={() => (
-      //   <Image
-      //     source={require('./screens/medication/drugs.png')}
-      //     style={{width: 25, height: 25}}
-      //   />
-      // )}
       onPress={() => {
         navigation.navigate('Medication', {
           screen: 'ViewMedication',
@@ -750,9 +744,9 @@ export const ReadMedication = ({navigation}) => {
 
   return (
     <View>
-      {/* <Text>{medications.length}</Text> */}
+      <Text>{medications.length}</Text>
       {listMedication}
-      {/* <Text>{listMedication.length}</Text> */}
+     
     </View>
   );
 };

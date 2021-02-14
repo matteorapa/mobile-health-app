@@ -5,7 +5,7 @@ import {AuthContext} from '../auth';
 import ThemeButton from '../components/ThemeButton';
 import PaddedDivider from '../components/PaddedDivider';
 import {LAYOUT, TYPE} from '../styles/theme';
-import acc from './profile.jpg';
+import acc from '../assets/images/profile.jpg';
 import RNRestart from 'react-native-restart';
 import {styles} from '../styles/globals';
 

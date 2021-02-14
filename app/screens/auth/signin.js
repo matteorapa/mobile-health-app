@@ -43,7 +43,7 @@ export default function SignInScreen({navigation}) {
   return (
     <View style={styles.container}>
       <View style={styles.box}>
-        <Image style={styles.tinyLogo} source={require('./mascot.png')} />
+        <Image style={styles.tinyLogo} source={require('../../assets/images/mascot.png')} />
         <Text style={styles.heading}>Sign In</Text>
         <Text>Email Address</Text>
         <TextInput
