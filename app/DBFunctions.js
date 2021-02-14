@@ -545,28 +545,30 @@ export const ReadDoctor = ({navigation}) => {
   }, []);
 
   const listDoctors = doctors.map((element) => (
-    <View key={element.doctorPhone}>
+    
       <List.Item
+        key={element.doctorPhone}
         title={element.doctorName}
         description={specialitiesOfDoctors[element.doctorSpeciality]}
-        left={() => <Icon name="face" size={30} />}
+        // left={() => <Icon name="face" size={30} />}
         onPress={() => {
           navigation.navigate('Medication', {
             screen: 'ViewDoctor',
-            params: {doctor: element},
+            params: {
+              doctor: element,
+              name: element.doctorName
+            },
           });
         }}
       />
-    </View>
   ));
 
   return (
-    <List.Section>
-      <List.Subheader>Your Doctors</List.Subheader>
+    <View>
       {/* <Text>{doctors.length}</Text> */}
       {listDoctors}
       {/* <Text>{listDoctors.length}</Text> */}
-    </List.Section>
+    </View>
   );
 };
 
@@ -695,36 +697,39 @@ export const ReadMedication = ({navigation}) => {
     }, []);
 
   const listMedication = medications.map((element) => (
-    <View key={element.medicationName}>
+    
       <List.Item
+      key={element.medicationName}
         title={element.medicationName}
         description={
           element.medicationDosage +
           ' ' +
           metricsOfDosage[element.medicationDosageMetric]
         }
-        left={() => (
-          <Image
-            source={require('./screens/medication/drugs.png')}
-            style={{width: 25, height: 25}}
-          />
-        )}
+        // left={() => (
+        //   <Image
+        //     source={require('./screens/medication/drugs.png')}
+        //     style={{width: 25, height: 25}}
+        //   />
+        // )}
         onPress={() => {
           navigation.navigate('Medication', {
             screen: 'ViewMedication',
-            params: {medication: element},
+            params: {
+              medication: element,
+              name: element.medicationName
+            },
           });
         }}
       />
-    </View>
   ));
 
+
   return (
-    <List.Section>
-      <List.Subheader>Your Medications</List.Subheader>
+    <View>
       {/* <Text>{medications.length}</Text> */}
       {listMedication}
       {/* <Text>{listMedication.length}</Text> */}
-    </List.Section>
+    </View>
   );
 };

@@ -1,8 +1,11 @@
 import React from 'react';
-import {Text, View} from 'react-native';
+import {Text, View, ScrollView} from 'react-native';
 import {styles} from '../../styles/globals';
 import ThemeButton from '../../components/ThemeButton';
 import {deleteMedication} from '../../DBFunctions';
+import {DataTable, Paragraph, Dialog, Button} from 'react-native-paper';
+import {LAYOUT} from '../../styles/theme';
+import PaddedDivider from '../../components/PaddedDivider';
 
 export default function ViewMedication({route, navigation}) {
   const {medication} = route.params;
@@ -29,35 +32,21 @@ export default function ViewMedication({route, navigation}) {
   ];
   const dailyDosageOptions = ['Yes', 'No'];
 
-  return (
-    <View>
-      <Text>Medication Name: {medication.medicationName}</Text>
-      <Text>
-        Medication Type: {typeOfMedication[medication.medicationType]}
-      </Text>
-      <Text>
-        Medication Dosage: {medication.medicationDosage}{' '}
-        {metricsOfDosage[medication.medicationDosageMetric]}
-      </Text>
-      <Text>Medication Reason: {medication.medicationReason}</Text>
-      <Text>
-        Medication Daily: {dailyDosageOptions[medication.medicationDaily]}
-      </Text>
-      <Text>
-        Medication Daily Doses: {medication.medicationDailyDosesNumber}
-      </Text>
-      {medication.medicationTimerArray.map((element, index) => {
-        return (
-          <Text key={index}>
-            Medication Timer {index + 1}: {element.hour}:{element.minute}
-          </Text>
-        );
-      })}
-      <Text>Medication Start Date: {medication.medicationStartDate}</Text>
-      <Text>Medication End Date: {medication.medicationEndDate}</Text>
-      <Text>Medication Instructions: {medication.medicationInstructions}</Text>
+  const [visible, setVisible] = React.useState(false);
+  const hideDialog = () => setVisible(false);
 
+  return (
+    <ScrollView style={LAYOUT.main}>
       <View style={styles.navButtonsForm}>
+        
+        <ThemeButton
+          type={'secondary'}
+          icon={'delete'}
+          text={'Delete'}
+          onPressEvent={() => {
+            setVisible(true);
+          }}
+        />
         <ThemeButton
           type={'secondary'}
           icon={'edit'}
@@ -69,28 +58,94 @@ export default function ViewMedication({route, navigation}) {
             });
           }}
         />
-        <ThemeButton
-          type={'secondary'}
-          icon={'delete'}
-          text={'Delete'}
-          onPressEvent={() => {
-            deleteMedication(medication.medicationName);
-            navigation.navigate('Medication', {
-              screen: 'Index',
-            });
-          }}
-        />
       </View>
+      <DataTable>
+        <DataTable.Row>
+          <DataTable.Cell>Medication's name</DataTable.Cell>
+          <DataTable.Cell numeric>{medication.medicationName}</DataTable.Cell>
+        </DataTable.Row>
+        
 
-      <ThemeButton
-        type={'secondary'}
-        text={'Back'}
-        onPressEvent={() => {
-          navigation.navigate('Medication', {
-            screen: 'Index',
-          });
-        }}
-      />
-    </View>
+        <DataTable.Row>
+          <DataTable.Cell>Type</DataTable.Cell>
+          <DataTable.Cell numeric>{typeOfMedication[medication.medicationType]}</DataTable.Cell>
+        </DataTable.Row>
+
+        <DataTable.Row>
+          <DataTable.Cell>Dosage amount</DataTable.Cell>
+          <DataTable.Cell numeric>{medication.medicationDosage}</DataTable.Cell>
+        </DataTable.Row>
+
+        <DataTable.Row>
+          <DataTable.Cell>Purpose of Medication</DataTable.Cell>
+          <DataTable.Cell numeric>{medication.medicationReason}</DataTable.Cell>
+        </DataTable.Row>
+
+        <DataTable.Row>
+          <DataTable.Cell>Taken Daily</DataTable.Cell>
+          <DataTable.Cell numeric>{dailyDosageOptions[medication.medicationDaily]}</DataTable.Cell>
+        </DataTable.Row>
+
+        <DataTable.Row>
+          <DataTable.Cell>Number of daily doses</DataTable.Cell>
+          <DataTable.Cell numeric>{medication.medicationDailyDosesNumber}</DataTable.Cell>
+        </DataTable.Row>
+
+        <DataTable.Row>
+          <DataTable.Cell>Start date</DataTable.Cell>
+          <DataTable.Cell numeric>{medication.medicationStartDate}</DataTable.Cell>
+        </DataTable.Row>
+
+        <DataTable.Row>
+          <DataTable.Cell>End date</DataTable.Cell>
+          <DataTable.Cell numeric>{medication.medicationEndDate}</DataTable.Cell>
+        </DataTable.Row>
+
+        <DataTable.Header>
+          <DataTable.Title>
+            Dosage
+          </DataTable.Title>
+          <DataTable.Title numeric>
+            Time
+          </DataTable.Title>
+        </DataTable.Header>
+      
+      {medication.medicationTimerArray.map((element, index) => {
+        return (
+          <DataTable.Row key={index}>
+            <DataTable.Cell>Dose {index + 1}</DataTable.Cell>
+            <DataTable.Cell numeric>{element.hour}:{element.minute}</DataTable.Cell>
+          </DataTable.Row>
+        )
+      })}
+      
+      </DataTable>
+      <PaddedDivider />
+      <Text>Instructions: {medication.medicationInstructions}</Text>
+      <PaddedDivider />
+      <PaddedDivider />
+
+      <Dialog visible={visible} onDismiss={hideDialog}>
+        <Dialog.Content>
+          <Paragraph>
+            Do you want to permanently delete the medication {medication.medicationName}?
+          </Paragraph>
+        </Dialog.Content>
+        <Dialog.Actions>
+          <Button onPress={() => setVisible(false)}>Cancel</Button>
+          <Button
+            onPress={() => {
+              deleteMedication(medication.medicationName);
+              navigation.navigate('Medication', {
+                screen: 'Index',
+              });
+            }}>
+            DELETE
+          </Button>
+        </Dialog.Actions>
+      </Dialog>
+
+      
+    </ScrollView>
   );
 }

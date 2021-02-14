@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
-import {View} from 'react-native';
+import {View, Text} from 'react-native';
 import {styles} from '../../styles/globals';
 import ThemeButton from '../../components/ThemeButton';
+import PaddedDivider from '../../components/PaddedDivider';
 
 class Step extends Component {
   state = {};
@@ -13,14 +14,11 @@ class Step extends Component {
           navigation: this.props.navigation,
           values: this.props.values,
         })}
+        <PaddedDivider />
 
-        <View style={styles.navButtonsForm}>
+        <View style={styles.navBackNext}>
           {this.props.isFirst ? (
-            <ThemeButton
-              type={'muted'}
-              text={'Back'}
-              onPressEvent={this.props.onBack} //go to main screen
-            />
+            <Text>{' '}</Text>
           ) : (
             <ThemeButton
               type={'muted'}

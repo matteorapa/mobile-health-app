@@ -12,7 +12,6 @@ import AccountScreen from './screens/account';
 import editAccount from './screens/editAccount';
 import AddMedicationScreen from './screens/medication/addMedication';
 import AddDoctorScreen from './screens/medication/addDoctor';
-import AddGuardianScreen from './screens/medication/addGuardian';
 import SignInScreen from './screens/auth/signin';
 import SignUpScreen from './screens/auth/signup';
 import DoctorSignUpScreen from './screens/auth/doctor_signup';
@@ -33,6 +32,17 @@ function MedicationStack() {
     headerShown: false,
   };
 
+  const optionsAddMedication = {
+    headerShown: true,
+    title: 'Add your medication',
+  };
+
+  const optionsAddDoctor = {
+    headerShown: true,
+    title: 'Add your doctor',
+  };
+
+
   return (
     <MedicationStack.Navigator>
       <MedicationStack.Screen
@@ -43,27 +53,27 @@ function MedicationStack() {
       <MedicationStack.Screen
         name="AddMedication"
         component={AddMedicationScreen}
-        options={options}
+        options={optionsAddMedication}
       />
       <MedicationStack.Screen
         name="AddDoctor"
         component={AddDoctorScreen}
-        options={options}
+        options={optionsAddDoctor}
       />
-      <MedicationStack.Screen
-        name="AddGuardian"
-        component={AddGuardianScreen}
-        options={options}
-      />
+      
       <MedicationStack.Screen
         name="ViewMedication"
         component={ViewMedication}
-        options={options}
+        options={({route}) => ({
+          title: route.params.name,
+        })}
       />
       <MedicationStack.Screen
         name="ViewDoctor"
         component={ViewDoctor}
-        options={options}
+        options={({route}) => ({
+          title: route.params.name,
+        })}
       />
     </MedicationStack.Navigator>
   );

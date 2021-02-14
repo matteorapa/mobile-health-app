@@ -1,67 +1,91 @@
 import React, {useState} from 'react';
-import {View, ScrollView} from 'react-native';
+import {View, ScrollView, Text} from 'react-native';
 import ThemeButton from '../../components/ThemeButton';
 import {LAYOUT} from '../../styles/theme';
 import {ReadDoctor, ReadMedication} from '../../DBFunctions';
+import {FAB, List} from 'react-native-paper';
 
 export default function MedicationScreen({navigation}) {
+
   const [myDoctors, setMyDoctors] = useState([]);
-  // const [date, setDate] = useState(new Date());
-  // const [mode, setMode] = useState('date');
-  // const [show, setShow] = useState(false);
+  const [state, setState] = React.useState({ open: false });
+  const onStateChange = ({ open }) => setState({ open });
+  const { open } = state;
 
-  // const onChange = (event, selectedDate) => {
-  //   const currentDate = selectedDate || date;
-  //   setShow(Platform.OS === 'ios');
-  //   setDate(currentDate);
-  // };
+  const [expanded, setExpanded] = React.useState(true);
+  const handlePress = () => setExpanded(!expanded);
 
-  // const showMode = (currentMode) => {
-  //   setShow(true);
-  //   setMode(currentMode);
-  // };
-
-  // const showDatepicker = () => {
-  //   showMode('date');
-  // };
-
-  // const showTimepicker = () => {
-  //   showMode('time');
-  // };
+  const [expandedDoctor, setExpandedDoctor] = React.useState(true);
+  const handlePressDoctor = () => setExpandedDoctor(!expandedDoctor);
 
   return (
     <View style={LAYOUT.main}>
-      <ScrollView style={{height: '40%'}}>
+      
+      
+    <ScrollView>
+      <List.Accordion
+        title="Your Medications"
+        expanded={expanded}
+        onPress={handlePress}
+        left={props => <List.Icon {...props} icon="pill" />}>
         <ReadMedication navigation={navigation} />
-      </ScrollView>
+      </List.Accordion>
 
-      <ThemeButton
-        icon={'add'}
-        text={'Add Medication'}
-        accessibilityLabel="Add medication to list"
-        onPressEvent={() => {
-          navigation.navigate('Medication', {
-            screen: 'AddMedication',
-            params: {loadedMedication: ''},
-          });
-        }}
-      />
+      <List.Accordion
+        title="Your Doctors"
+        left={props => <List.Icon {...props} icon="clipboard-account" />}
+        expanded={expandedDoctor}
+        onPress={handlePressDoctor}>
+        <ReadDoctor navigation={navigation} />
+      </List.Accordion>
+
+    </ScrollView>
+
+      {/* <ScrollView style={{height: '60%'}}>
+        
+      </ScrollView>
 
       <ScrollView style={{height: '40%'}}>
         <ReadDoctor navigation={navigation} />
-      </ScrollView>
+      </ScrollView> */}
 
-      <ThemeButton
-        icon={'add'}
-        text={'Add Doctor'}
-        accessibilityLabel="Add doctor to list"
-        onPressEvent={() => {
-          navigation.navigate('Medication', {
-            screen: 'AddDoctor',
-            params: {loadedDoctor: ''},
-          });
-        }}
-      />
+
+      <FAB.Group
+          open={open}
+          icon={open ? 'plus' : 'plus'}
+          actions={[
+           
+            {
+              icon: 'clipboard-account',
+              label: 'Add Doctor',
+              accessibilityLabel: "Add doctor to list",
+              onPress: () => {
+                navigation.navigate('Medication', {
+                  screen: 'AddDoctor',
+                  params: {loadedDoctor: ''},
+                  })
+              }
+            },
+            {
+              icon: 'pill',
+              label: 'Add Medication',
+              accessibilityLabel: "Add medication to list",
+              onPress: () => {
+                navigation.navigate('Medication', {
+                  screen: 'AddMedication',
+                  params: {loadedMedication: ''},
+                });
+              },
+              small: false,
+            },
+          ]}
+          onStateChange={onStateChange}
+          onPress={() => {
+            if (open) {
+              // do something if the speed dial is open
+            }
+          }}
+        />
     </View>
   );
 }

@@ -1,4 +1,4 @@
-import {Text, TextInput, View, Button} from 'react-native';
+import {Text, TextInput, View, Button, ScrollView} from 'react-native';
 import React, {useState} from 'react';
 import {Picker} from '@react-native-picker/picker';
 import {TimePickerModal, DatePickerModal} from 'react-native-paper-dates';
@@ -7,6 +7,9 @@ import ThemeButton from '../../components/ThemeButton';
 import AddMedDocForm from './AddMedDocForm';
 import {addMedication} from '../../DBFunctions';
 import Moment from 'moment';
+import { COLORS, LAYOUT } from '../../styles/theme';
+import PaddedDivider from '../../components/PaddedDivider';
+import {DataTable} from 'react-native-paper';
 
 function submitForm(
   medName,
@@ -190,6 +193,7 @@ export default function AddMedicationScreen({route, navigation}) {
   );
 
   return (
+    <View style={LAYOUT.mainCenter}>
     <AddMedDocForm
       navigation={navigation}
       initialValues={{
@@ -208,10 +212,12 @@ export default function AddMedicationScreen({route, navigation}) {
       <AddMedDocForm.Step>
         {({onChangeValue, values}) => (
           <View>
+            <Text style={{ color: COLORS.primaryLight }}>Step 1 of 10</Text>
+            <PaddedDivider />
             <Text>Medication Name</Text>
             <TextInput
               style={styles.textInput}
-              placeholder={'Medication Name'}
+              placeholder="Your medication's name"
               onChangeText={function (text) {
                 onChangeValue('medicName', text);
                 onChangeMedicationName(text);
@@ -226,9 +232,10 @@ export default function AddMedicationScreen({route, navigation}) {
       <AddMedDocForm.Step>
         {({onChangeValue, values}) => (
           <View>
+            <Text style={{ color: COLORS.primaryLight }}>Step 2 of 10</Text>
+            <PaddedDivider />
             <Text>Medication Type</Text>
             <Picker
-              style={{width: '80%'}}
               selectedValue={values.medicType}
               onValueChange={function (data) {
                 onChangeValue('medicType', data);
@@ -246,11 +253,15 @@ export default function AddMedicationScreen({route, navigation}) {
       <AddMedDocForm.Step>
         {({onChangeValue, values}) => (
           <View>
+            <Text style={{ color: COLORS.primaryLight }}>Step 3 of 10</Text>
+            <PaddedDivider />
+            
             <Text>Medication Dosage</Text>
-            <View style={styles.navButtonsForm}>
+            <View style={styles.navBackNext}>
               <TextInput
-                style={(styles.textInput, {width: '40%'})}
-                placeholder={'Medication Dosage'}
+                
+                style={styles.textInput}
+                placeholder={'Amount of dose'}
                 onChangeText={function (text) {
                   onChangeValue('medicDosage', text);
                   onChangeMedicationDosage(text);
@@ -260,7 +271,7 @@ export default function AddMedicationScreen({route, navigation}) {
                 autoFocus={loadedMedication == '' ? true : false}
               />
               <Picker
-                style={{width: '40%'}}
+                style={{width: '60%'}}
                 selectedValue={values.medicDosageMetric}
                 onValueChange={function (data) {
                   onChangeValue('medicDosageMetric', data);
@@ -279,10 +290,12 @@ export default function AddMedicationScreen({route, navigation}) {
       <AddMedDocForm.Step>
         {({onChangeValue, values}) => (
           <View>
-            <Text>Medication Reason</Text>
+            <Text style={{ color: COLORS.primaryLight }}>Step 4 of 10</Text>
+            <PaddedDivider />
+            <Text>Purpose of medication</Text>
             <TextInput
               style={styles.textInput}
-              placeholder={'Medication Reason'}
+              placeholder={'e.g. Headache, Back pain, Blood pressure'}
               onChangeText={function (text) {
                 onChangeValue('medicReason', text);
                 onChangeMedicationReason(text);
@@ -297,9 +310,10 @@ export default function AddMedicationScreen({route, navigation}) {
       <AddMedDocForm.Step>
         {({onChangeValue, values}) => (
           <View>
+            <Text style={{ color: COLORS.primaryLight }}>Step 5 of 10</Text>
+            <PaddedDivider />
             <Text>Daily Medication?</Text>
             <Picker
-              style={{width: '30%'}}
               selectedValue={values.medicDaily}
               onValueChange={function (data) {
                 onChangeValue('medicDaily', data);
@@ -317,10 +331,12 @@ export default function AddMedicationScreen({route, navigation}) {
       <AddMedDocForm.Step>
         {({onChangeValue, onChangeTimersNumber, values}) => (
           <View>
-            <Text>Number of Doses to Take Each Day</Text>
+            <Text style={{ color: COLORS.primaryLight }}>Step 6 of 10</Text>
+            <PaddedDivider />
+            <Text>Number of daily doses</Text>
             <TextInput
               style={styles.textInput}
-              placeholder={'Number of Doses Each Day'}
+              placeholder={'Give a number, e.g. 3'}
               onChangeText={function (text) {
                 onChangeValue('medicDailyDosesNumber', text);
                 onChangeMedicationDailyDosesNumber(text);
@@ -342,7 +358,9 @@ export default function AddMedicationScreen({route, navigation}) {
           <AddMedDocForm.Step>
             {({onChangeValue, onChangeTimersNumber, values}) => (
               <View key={timerNumber}>
-                <Text>Dose Number {timerNumber}</Text>
+                <Text style={{ color: COLORS.primaryLight }}>Step 7 of 10</Text>
+            <PaddedDivider />
+                <Text>Pick time for dose #{timerNumber}</Text>
                 <TextInput
                   style={styles.textInput}
                   placeholder={'Time - hh:mm'}
@@ -356,16 +374,18 @@ export default function AddMedicationScreen({route, navigation}) {
                   minutes="00" //{(loadedMedication == '') ? '00' : (timerArray[timerNumber-1].minute)} // default: current minutes
                   onDismiss={onDismiss} //{(loadedMedication == '') ? onDismiss : onConfirm}
                   onConfirm={onConfirm}
-                  label={'Select Timer Number ' + timerNumber.toString()} // optional, default 'Select time'
+                  label={'NOTIFICATION TIME FOR DOSE #' + timerNumber.toString()} // optional, default 'Select time'
                   cancelLabel="Cancel" // optional, default: 'Cancel'
                   confirmLabel="Ok" // optional, default: 'Ok'
                   animationType="fade" // optional, default is 'none'
                   locale={'en'} // optional, default is automically detected by your system
                 />
-                <Button
-                  onPress={() => setVisible(true)}
-                  title="Set time of notification"
+                <ThemeButton
+                  accessibilityLabel="Press to selet time for dose."
+                  text="PICK TIME"
+                  onPressEvent={() => setVisible(true)}
                 />
+                
               </View>
             )}
           </AddMedDocForm.Step>
@@ -375,7 +395,9 @@ export default function AddMedicationScreen({route, navigation}) {
       <AddMedDocForm.Step>
         {({onChangeValue, values}) => (
           <View>
-            <Text>Medication Duration Dates</Text>
+            <Text style={{ color: COLORS.primaryLight }}>Step 8 of 10</Text>
+            <PaddedDivider />
+            <Text>Date range of medication</Text>
             <TextInput
               style={styles.textInput}
               placeholder={'Start Date - End Date'}
@@ -385,8 +407,6 @@ export default function AddMedicationScreen({route, navigation}) {
                 Moment(medicationEndDate.toString()).format('DD/MM/YYYY')
               }
             />
-
-            <>
               <DatePickerModal
                 mode="range"
                 visible={visibleDate}
@@ -397,14 +417,19 @@ export default function AddMedicationScreen({route, navigation}) {
                 endDate={loadedMedication == '' ? undefined : medicationEndDate}
                 onConfirm={onChangeDate}
                 saveLabel="Save" // optional
-                label="Select period" // optional
+                label="Select date range" // optional
                 startLabel="From" // optional
                 endLabel="To" // optional
                 animationType="slide" // optional, default is slide on ios/android and none on web
                 locale={'en'} // optional, default is automically detected by your system
               />
-              <Button onPress={() => setVisibleDate(true)} title="Pick range" />
-            </>
+             
+              <ThemeButton
+                  accessibilityLabel="Press to selet time for dose."
+                  text="PICK RANGE"
+                  onPressEvent={() => setVisibleDate(true)}
+                />
+            
           </View>
         )}
       </AddMedDocForm.Step>
@@ -412,10 +437,12 @@ export default function AddMedicationScreen({route, navigation}) {
       <AddMedDocForm.Step>
         {({onChangeValue, values}) => (
           <View>
+            <Text style={{ color: COLORS.primaryLight }}>Step 9 of 10</Text>
+            <PaddedDivider />
             <Text>Medication Instructions</Text>
             <TextInput
               style={styles.textInput}
-              placeholder={'Medication Instructions'}
+              placeholder={'Instructions for the proper use of the medicine'}
               onChangeText={function (text) {
                 onChangeValue('medicInstructions', text);
                 onChangeMedicationInstructions(text);
@@ -427,45 +454,12 @@ export default function AddMedicationScreen({route, navigation}) {
         )}
       </AddMedDocForm.Step>
 
-      <View>
-        <Text>Medication Name: {medicationName}</Text>
-        <Text>Medication Type: {typeOfMedication[medicationType]}</Text>
-        <Text>
-          Medication Dosage: {medicationDosage}{' '}
-          {metricsOfDosage[medicationDosageMetric]}
-        </Text>
-        <Text>Medication Reason: {medicationReason}</Text>
-        <Text>Medication Daily: {dailyDosageOptions[medicationDaily]}</Text>
-        <Text>Medication Daily Doses: {medicationDailyDosesNumber}</Text>
-        {timerArray.map((element, index) => {
-          return (
-            <Text key={index}>
-              Medication Timer {index + 1}: {element.hour}:{element.minute}
-            </Text>
-          );
-        })}
-        {/* {(loadedMedication == '' ?
-              timerArray.map((element, index) =>
-                {return(
-                  <Text key={index}>Medication Timer {index+1}:         {element.hour}:{element.minute}</Text>
-                )}
-              )
-              :
-              timerArrayEdit.map((element, index) =>
-                {return(
-                  <Text key={index}>Medication Timer {index+1}:         {element.hour}:{element.minute}</Text>
-                )}
-              )
-            )} */}
-        <Text>Medication Start Date: {medicationStartDate.toDateString()}</Text>
-        <Text>Medication End Date: {medicationEndDate.toDateString()}</Text>
-        <Text>Medication Instructions: {medicationInstructions}</Text>
-        {/* {console.log('addMed: ', timerArray)} */}
-
-        <View style={styles.navButtonsForm}>
+      <ScrollView>
+      <Text style={{ color: COLORS.primaryLight }}>Step 10 of 10</Text>
+      <PaddedDivider />
+      <View style={styles.navBackNext}>
           <ThemeButton
             type={'secondary'}
-            icon={'edit'}
             text={'Edit'}
             onPressEvent={() => {
               navigation.goBack(
@@ -491,9 +485,7 @@ export default function AddMedicationScreen({route, navigation}) {
             }}
           />
           <ThemeButton
-            type={'secondary'}
-            icon={'done'}
-            text={'Submit'}
+            text={'SUBMIT MEDICATION'}
             onPressEvent={() => {
               // {setTimerArray(timerArrayEdit)}
               {
@@ -516,16 +508,87 @@ export default function AddMedicationScreen({route, navigation}) {
               });
             }}
           />
-        </View>
+          </View>
 
-        <ThemeButton
-          type={'secondary'}
-          text={'Cancel'}
-          onPressEvent={() => {
-            navigation.goBack();
-          }}
-        />
-      </View>
+      <DataTable>
+      <DataTable.Row>
+          <DataTable.Cell>Medication's name</DataTable.Cell>
+          <DataTable.Cell numeric>{medicationName}</DataTable.Cell>
+        </DataTable.Row>
+        <DataTable.Row>
+          <DataTable.Cell>Type</DataTable.Cell>
+          <DataTable.Cell numeric>{typeOfMedication[medicationType]}</DataTable.Cell>
+        </DataTable.Row>
+        <DataTable.Row>
+          <DataTable.Cell>Dosage amount</DataTable.Cell>
+          <DataTable.Cell numeric>{metricsOfDosage[medicationDosageMetric]}</DataTable.Cell>
+        </DataTable.Row>
+        <DataTable.Row>
+          <DataTable.Cell>Purpose of medication</DataTable.Cell>
+          <DataTable.Cell numeric>{medicationReason}</DataTable.Cell>
+        </DataTable.Row>
+        <DataTable.Row>
+          <DataTable.Cell>Taken daily</DataTable.Cell>
+          <DataTable.Cell numeric>{dailyDosageOptions[medicationDaily]}</DataTable.Cell>
+        </DataTable.Row>
+        <DataTable.Row>
+          <DataTable.Cell>Number of daily doses</DataTable.Cell>
+          <DataTable.Cell numeric> {medicationDailyDosesNumber}</DataTable.Cell>
+        </DataTable.Row>
+        <DataTable.Header>
+          <DataTable.Title>
+            Daily Dosage
+          </DataTable.Title>
+          <DataTable.Title numeric>
+            Time
+          </DataTable.Title>
+        </DataTable.Header>
+
+      
+
+        {timerArray.map((element, index) => {
+          return (
+            <DataTable.Row key={index}>
+          <DataTable.Cell>Dose {index + 1}</DataTable.Cell>
+          <DataTable.Cell numeric>{element.hour}:{element.minute}</DataTable.Cell>
+        </DataTable.Row>
+            
+          );
+        })}
+        {/* {(loadedMedication == '' ?
+              timerArray.map((element, index) =>
+                {return(
+                  <Text key={index}>Medication Timer {index+1}:         {element.hour}:{element.minute}</Text>
+                )}
+              )
+              :
+              timerArrayEdit.map((element, index) =>
+                {return(
+                  <Text key={index}>Medication Timer {index+1}:         {element.hour}:{element.minute}</Text>
+                )}
+              )
+            )} */}
+
+          <DataTable.Row>
+          <DataTable.Cell>Start date</DataTable.Cell>
+          <DataTable.Cell numeric> {medicationStartDate.toLocaleDateString()}</DataTable.Cell>
+        </DataTable.Row>
+        <DataTable.Row>
+          <DataTable.Cell>End date</DataTable.Cell>
+          <DataTable.Cell numeric> {medicationEndDate.toLocaleDateString()}</DataTable.Cell>
+        </DataTable.Row>
+        <DataTable.Row>
+          <DataTable.Cell>Instructions</DataTable.Cell>
+          <DataTable.Cell numeric> {medicationInstructions}</DataTable.Cell>
+        </DataTable.Row>
+        </DataTable>
+        
+        {/* {console.log('addMed: ', timerArray)} */}
+
+       
+
+      </ScrollView>
     </AddMedDocForm>
-  );
+    </View>
+  )
 }

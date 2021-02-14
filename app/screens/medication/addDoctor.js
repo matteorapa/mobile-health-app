@@ -18,6 +18,9 @@ import {TextInputMask} from 'react-native-masked-text';
 import {countryFlags} from './countryFlags';
 import {addDoctor} from '../../DBFunctions';
 import ThemeButton from '../../components/ThemeButton';
+import { LAYOUT, COLORS } from '../../styles/theme';
+import PaddedDivider from '../../components/PaddedDivider';
+import {DataTable} from 'react-native-paper';
 
 function submitForm(
   docName,
@@ -173,6 +176,7 @@ export default function AddDoctorScreen({route, navigation}) {
   };
 
   return (
+    <View style={LAYOUT.mainCenter}>
     <AddMedDocForm
       navigation={navigation}
       initialValues={{
@@ -185,7 +189,9 @@ export default function AddDoctorScreen({route, navigation}) {
       <AddMedDocForm.Step>
         {({onChangeValue, values}) => (
           <View>
-            <Text>Doctor`s Name</Text>
+            <Text style={{ color: COLORS.primaryLight }}>Step 1 of 5</Text>
+            <PaddedDivider />
+            <Text>Doctor's Name</Text>
             <TextInput
               style={styles.textInput}
               placeholder={'Doctor`s Name'}
@@ -204,9 +210,10 @@ export default function AddDoctorScreen({route, navigation}) {
       <AddMedDocForm.Step>
         {({onChangeValue, values}) => (
           <View>
-            <Text>Doctor`s Speciality</Text>
+            <Text style={{ color: COLORS.primaryLight }}>Step 2 of 5</Text>
+            <PaddedDivider />
+            <Text>Doctor's Speciality</Text>
             <Picker
-              style={{width: '80%'}}
               selectedValue={values.doctSpeciality}
               onValueChange={function (data) {
                 onChangeValue('doctSpeciality', data);
@@ -224,7 +231,9 @@ export default function AddDoctorScreen({route, navigation}) {
       <AddMedDocForm.Step>
         {({onChangeValue, values}) => (
           <View>
-            <Text>Doctor`s Phone Number</Text>
+            <Text style={{ color: COLORS.primaryLight }}>Step 3 of 5</Text>
+            <PaddedDivider />
+            <Text>Doctor's Phone Number</Text>
 
             <View style={styles.phoneNumberInputs}>
               <TouchableOpacity
@@ -239,7 +248,7 @@ export default function AddDoctorScreen({route, navigation}) {
 
               <TextInputMask
                 type={'custom'}
-                style={{width: '50%', borderBottomColor: 'black'}}
+                style={{borderBottomColor: COLORS.primaryLight, borderBottomWidth: 1, width: 150}}
                 placeholder={countryPlaceholder}
                 options={{mask: countryPlaceholder}}
                 onChangeText={function (text) {
@@ -259,10 +268,12 @@ export default function AddDoctorScreen({route, navigation}) {
       <AddMedDocForm.Step>
         {({onChangeValue, values}) => (
           <View>
+            <Text style={{ color: COLORS.primaryLight }}>Step 4 of 5</Text>
+            <PaddedDivider />
             <Text>Doctor`s Email</Text>
             <TextInput
               style={styles.textInput}
-              placeholder={'Doctor`s Email'}
+              placeholder={"Doctor's Email"}
               onChangeText={function (text) {
                 onChangeValue('doctEmail', text);
                 onChangeDoctorEmail(text);
@@ -277,19 +288,11 @@ export default function AddDoctorScreen({route, navigation}) {
       </AddMedDocForm.Step>
 
       <View>
-        <Text>Doctor Name: {doctorName}</Text>
-        <Text>
-          Doctor Speciality: {specialitiesOfDoctors[doctorSpeciality]}
-        </Text>
-        <Text>
-          Doctor Phone: ({doctorPhonePrefix}) {doctorPhone}
-        </Text>
-        <Text>Doctor Email: {doctorEmail}</Text>
-
-        <View style={styles.navButtonsForm}>
+      <Text style={{ color: COLORS.primaryLight }}>Step 5 of 5</Text>
+            <PaddedDivider />
+            <View style={styles.navBackNext}>
           <ThemeButton
             type={'secondary'}
-            icon={'edit'}
             text={'Edit'}
             onPressEvent={() => {
               navigation.goBack(
@@ -309,9 +312,7 @@ export default function AddDoctorScreen({route, navigation}) {
             }}
           />
           <ThemeButton
-            type={'secondary'}
-            icon={'done'}
-            text={'Submit'}
+            text={'Submit doctor'}
             onPressEvent={() => {
               submitForm(
                 doctorName,
@@ -328,14 +329,28 @@ export default function AddDoctorScreen({route, navigation}) {
           />
         </View>
 
-        <ThemeButton
-          type={'secondary'}
-          text={'Cancel'}
-          onPressEvent={() => {
-            navigation.goBack();
-          }}
-        />
+        <DataTable>
+          <DataTable.Row>
+            <DataTable.Cell>Doctor's name</DataTable.Cell>
+            <DataTable.Cell numeric>{doctorName}</DataTable.Cell>
+          </DataTable.Row>
+          <DataTable.Row>
+            <DataTable.Cell>Doctor's speciality</DataTable.Cell>
+            <DataTable.Cell numeric>{specialitiesOfDoctors[doctorSpeciality]}</DataTable.Cell>
+          </DataTable.Row>
+          <DataTable.Row>
+            <DataTable.Cell>Doctor's phone number</DataTable.Cell>
+            <DataTable.Cell numeric>({doctorPhonePrefix}) {doctorPhone}</DataTable.Cell>
+          </DataTable.Row>
+          <DataTable.Row>
+            <DataTable.Cell>Doctor's email</DataTable.Cell>
+            <DataTable.Cell numeric>{doctorEmail}</DataTable.Cell>
+          </DataTable.Row>
+      </DataTable>
+
+
       </View>
     </AddMedDocForm>
+    </View>
   );
 }

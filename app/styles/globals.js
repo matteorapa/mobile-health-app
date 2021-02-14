@@ -74,7 +74,13 @@ const styles = StyleSheet.create({
 
   navButtonsForm: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    padding: 6
+  },
+  navBackNext: {
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   },
   phoneNumberInputs: {
     flexDirection: 'row',
@@ -82,6 +88,10 @@ const styles = StyleSheet.create({
   },
   testing: {
     flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignContent: 'center',
+    alignSelf: 'center',
+    alignItems: 'center'
   },
   countryPickerContainer: {
     paddingTop: 15,
