@@ -52,13 +52,15 @@ export const addHabit = (
   return new Promise(function (resolve, reject) {
     let key;
     if (habitId != null) {
-      key = habitId;
+      key = habitId + "," + uid;
     } else {
       key = database().ref().push().key; //reason for this part of code: if the key is not empty, i.e. already exist, this means that the record is being editted.
     }
 
     let dataToSave = {
-      habitId: key,
+      habitId: habitId,
+      habitUserId: uid,
+      habitUniqueId: key,
       habitDesc: habitDesc,
       startDate: startDate,
       numPerD: numPD,
@@ -93,7 +95,9 @@ export const getHabit = () => {
     const onLoadingListener = habitRef.on('value', (snapshot) => {
       setHabits([]);
       snapshot.forEach(function (childSnapshot) {
-        setHabits((habits) => [...habits, childSnapshot.val()]);
+        if(uid == childSnapshot.val().habitUserId){
+          setHabits((habits) => [...habits, childSnapshot.val()]);
+        }
       });
     });
 
@@ -120,7 +124,7 @@ export const getHabit = () => {
       return (
         <Card
           style={styles.card}
-          key={element.habitId}
+          key={element.habitUniqueId}
           onPress={() => {
             navigation.navigate('Tasks', {
               screen: 'Details',
@@ -215,7 +219,7 @@ export const getHabit = () => {
 }
 
 const setPoints = (
-  key,
+  habitId,
   habitDesc,
   startDate,
   numPD,
@@ -226,9 +230,11 @@ const setPoints = (
   graphData,
 ) => {
   database()
-    .ref('/habits/' + key)
+    .ref('/habits/' + habitId + "," + uid)
     .set({
-      habitId: key,
+      habitId: habitId,
+      habitUserId: uid,
+      habitUniqueId: habitId + "," + uid,
       habitDesc: habitDesc,
       startDate: startDate,
       numPerD: numPD,
@@ -261,7 +267,9 @@ export const listHabitIds = () => {
     const onLoadingListener = habitRef.on('value', (snapshot) => {
       setHabits([]);
       snapshot.forEach(function (childSnapshot) {
-        setHabits((habits) => [...habits, childSnapshot.val()]);
+        if(uid == childSnapshot.val().habitUserId){
+          setHabits((habits) => [...habits, childSnapshot.val()]);
+        }
       });
     });
 
@@ -283,7 +291,7 @@ export const listHabitIds = () => {
 
 export const deleteHabit = (habitId, deleteConfirm) => {
   database()
-    .ref('habits/' + habitId)
+    .ref('habits/' + habitId + "," + uid)
     .remove()
     .then(() => {})
     .catch((err) => {
@@ -293,12 +301,14 @@ export const deleteHabit = (habitId, deleteConfirm) => {
 
 export const addReminder = (habitId, reminderTitle, hours, minutes) => {
   return new Promise(function (resolve, reject) {
-    let key = nanoid();
-    console.log('key: ', key);
+    let reminderId = nanoid();
+    let key = reminderId + "," + uid;
 
     let dataToSave = {
       habitId: habitId,
-      reminderId: key,
+      reminderId: reminderId,
+      reminderUserId: uid,
+      reminderUniqueKey: key,
       reminderTitle: reminderTitle,
       hours: hours,
       minutes: minutes,
@@ -325,12 +335,14 @@ export const editReminder = (
   minutes,
 ) => {
   return new Promise(function (resolve, reject) {
-    let key = reminderId;
+    let key = reminderId + "," + uid;
     console.log('key: ', key);
 
     let dataToSave = {
       habitId: habitId,
-      reminderId: key,
+      reminderId: reminderId,
+      reminderUserId: uid,
+      reminderUniqueKey: key,
       reminderTitle: reminderTitle,
       hours: hours,
       minutes: minutes,
@@ -358,7 +370,9 @@ export const getReminder = () => {
     const onLoadingListener = reminderRef.on('value', (snapshot) => {
       setReminders([]);
       snapshot.forEach(function (childSnapshot) {
-        setReminders((reminders) => [...reminders, childSnapshot.val()]);
+        if(uid == childSnapshot.val().reminderUserId){
+          setReminders((reminders) => [...reminders, childSnapshot.val()]);
+        }
       });
     });
 
@@ -423,7 +437,7 @@ export const getReminder = () => {
 
 export const deleteReminder = (reminderId, deleteConfirm) => {
   database()
-    .ref('reminders/' + reminderId)
+    .ref('reminders/' + reminderId + "," + uid)
     .remove()
     .then(() => {})
     .catch((err) => {
