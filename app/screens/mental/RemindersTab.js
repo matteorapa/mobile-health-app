@@ -1,17 +1,24 @@
 import {getReminder} from '../../DBFunctions';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Text, View, ScrollView, StyleSheet} from 'react-native';
 import {LAYOUT, TYPE} from '../../styles/theme';
-import {FAB} from 'react-native-paper';
-
-import {useNavigation} from '@react-navigation/native';
+import {FAB, Snackbar} from 'react-native-paper';
+import {useNavigation, useRoute} from '@react-navigation/native';
 
 export default function ReminderRoute(props) {
   const navigation = useNavigation();
-  const [date, setDate] = useState(new Date());
-  const [mode, setMode] = useState('time');
-  const [show, setShow] = useState(false);
-  const [frequency, setFrequency] = useState('Daily');
+  const [visible, setVisible] = useState(false);
+  const [snackbarText, setSnackbarText] = useState('');
+  const onDismissSnackBar = () => setVisible(false);
+  const route = useRoute();
+
+  useEffect(() => {
+    if (route.params !== undefined) {
+      const {snackbar} = route.params;
+      setSnackbarText(snackbar);
+      setVisible(true);
+    }
+  },[route.params, setSnackbarText]);
 
   return (
     <View style={LAYOUT.main}>
@@ -19,6 +26,7 @@ export default function ReminderRoute(props) {
         <Text style={TYPE.h1}>Your Reminders</Text>
 
         {getReminder()}
+        
       </ScrollView>
       <FAB
         style={styles.fab}
@@ -33,6 +41,15 @@ export default function ReminderRoute(props) {
         accessibilityLabel="Add a new reminder to list."
         animated={true}
       />
+
+      <Snackbar visible={visible} onDismiss={onDismissSnackBar} action={{
+          label: 'DISMISS',
+          onPress: () => {
+            onDismissSnackBar()
+          },
+        }}>
+        {snackbarText}
+      </Snackbar>
     </View>
   );
 }

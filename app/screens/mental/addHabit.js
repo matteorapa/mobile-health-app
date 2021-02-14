@@ -114,7 +114,7 @@ export default function AddHabitScreen({navigation}) {
           navigation.navigate('Tasks', {
             screen: 'Index',
             params: {
-              snackbar: 'Added your habit.',
+              snackbar: "Added your habit " + title,
             },
           });
         }}

@@ -388,15 +388,19 @@ export const getReminder = () => {
         <Card key={element.reminderId} style={styles.card}>
           <Card.Content>
             <Title>{element.reminderTitle}</Title>
-            <Chip icon="information">{element.habitId}</Chip>
-            <Text>
-              {element.hours}:{element.minutes}
-            </Text>
+            <Text>{element.habitId}</Text>
+            <Text>{element.hours}:{element.minutes}</Text>
           </Card.Content>
           <Card.Actions>
             <Button
               onPress={() => {
                 deleteReminder(element.reminderId);
+                navigation.navigate('Tasks', {
+                  screen: 'Index',
+                  params: {
+                    snackbar: "Deleted your reminder " + element.reminderTitle
+                  },
+                });
               }}>
               Remove
             </Button>

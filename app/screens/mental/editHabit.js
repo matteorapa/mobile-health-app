@@ -115,6 +115,9 @@ export default function EditHabitScreen({navigation, route}) {
           );
           navigation.navigate('Tasks', {
             screen: 'Index',
+            params: {
+              snackbar: "Updated your habit " + title,
+            },
           });
         }}
       />
