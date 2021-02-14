@@ -472,13 +472,14 @@ export const addDoctor = (
   return new Promise(function (resolve, reject) {
     let key;
     if (doctorPhone != null) {
-      key = doctorPhone;
+      key = doctorPhone + ',' + uid;
     } else {
       key = database().ref().push().key; //reason for this part of code: if the key is not empty, i.e. already exist, this means that the record is being editted.
     }
 
     let dataToSave = {
-      doctorPhone: key,
+      doctorStoreId: key,
+      doctorUserId: uid,
       doctorName: doctorName,
       doctorSpeciality: doctorSpeciality,
       doctorPhonePrefix: doctorPhonePrefix,
@@ -499,7 +500,7 @@ export const addDoctor = (
 
 export const deleteDoctor = (doctorPhone, deleteConfirm) => {
   database()
-    .ref('doctors/' + doctorPhone)
+    .ref('doctors/' + doctorPhone + ',' + uid)
     .remove()
     .then(() => {
       console.log('Deleting doctor', doctorPhone);
@@ -510,7 +511,7 @@ export const deleteDoctor = (doctorPhone, deleteConfirm) => {
 };
 
 export const editDoctor = (doctorPhone, editConfirm) => {
-  setDoctorId(doctorPhone);
+  setDoctorId(doctorPhone + ',' + uid);
   setDoctorName(doctorName);
   setDoctorSpeciality(doctorSpeciality);
   setDoctorPhonePrefix(doctorPhonePrefix);
@@ -559,9 +560,9 @@ export const ReadDoctor = ({navigation}) => {
   }, []);
 
   const listDoctors = doctors.map((element) => (
-    
+    (element.doctorUserId == uid) ? 
       <List.Item
-        key={element.doctorPhone}
+        key={element.doctorStoreId}
         title={element.doctorName}
         description={specialitiesOfDoctors[element.doctorSpeciality]}
         // left={() => <Icon name="face" size={30} />}
@@ -575,6 +576,7 @@ export const ReadDoctor = ({navigation}) => {
           });
         }}
       />
+      : null
   ));
 
   return (
@@ -602,13 +604,14 @@ export const addMedication = (
   return new Promise(function (resolve, reject) {
     let key;
     if (medicationName != null) {
-      key = medicationName;
+      key = medicationName + ',' + uid;
     } else {
       key = database().ref().push().key; //reason for this part of code: if the key is not empty, i.e. already exist, this means that the record is being editted.
     }
 
     let dataToSave = {
-      medicationName: key,
+      medicationStoreId: key,
+      medicationUserId: uid,
       medicationName: medicationName,
       medicationType: medicationType,
       medicationDosage: medicationDosage,
@@ -635,7 +638,8 @@ export const addMedication = (
     {
       if (medicationDaily == 0) {
         let dataToSaveNotifRemind = {
-          medicationName: key,
+          medicationStoreId: key,
+          medicationUserId: uid,
           medicationName: medicationName,
           medicationStartDate: medicationStartDate,
           medicationEndDate: medicationEndDate,
@@ -658,7 +662,7 @@ export const addMedication = (
 
 export const deleteMedication = (medicationName, navigation, deleteConfirm) => {
   database()
-    .ref('medication/' + medicationName)
+    .ref('medication/' + medicationName + ',' + uid)
     .remove()
     .then(() => {})
     .catch((erro) => {
@@ -667,7 +671,7 @@ export const deleteMedication = (medicationName, navigation, deleteConfirm) => {
 };
 
 export const editMedication = (medicationName, editConfirm) => {
-  setMedicationId(medicationName);
+  setMedicationId(medicationName + ',' + uid);
   setMedicationName(medicationName);
   setMedicationType(medicationType);
   setMedicationDosage(medicationDosage);
@@ -711,9 +715,9 @@ export const ReadMedication = ({navigation}) => {
     }, []);
 
   const listMedication = medications.map((element) => (
-    
+    (element.medicationUserId == uid) ? 
       <List.Item
-      key={element.medicationName}
+      key={element.medicationStoreId}
         title={element.medicationName}
         description={
           element.medicationDosage +
@@ -736,6 +740,7 @@ export const ReadMedication = ({navigation}) => {
           });
         }}
       />
+      : null
   ));
 
 
