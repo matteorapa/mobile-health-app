@@ -691,6 +691,7 @@ export const editMedication = (medicationName, editConfirm) => {
 
 export const ReadMedication = ({navigation}) => {
   const [medications, setMedications] = useState([]);
+  const [pastMedications, setPastMedications] = useState([]);
   const metricsOfDosage = [
     'ml',
     'mg',
@@ -708,8 +709,12 @@ export const ReadMedication = ({navigation}) => {
     const onLoadingListener = medicationsRef.on('value', (snapshot) => {
       setMedications([]);
       snapshot.forEach(function (childSnapshot) {
-        if(childSnapshot.val().doctorUserId == uid){
-          setMedications((medications) => [...medications, childSnapshot.val()]);
+        if(childSnapshot.val().medicationUserId == uid){
+          if (new Date(childSnapshot.val().medicationEndDate) > new Date()) {
+            setMedications((medications) => [...medications, childSnapshot.val()]);
+          } else {
+            setPastMedications((pastMedications) => [...pastMedications, childSnapshot.val()]);
+          }
         }
       });
     });
@@ -722,7 +727,7 @@ export const ReadMedication = ({navigation}) => {
 
   const listMedication = medications.map((element) => (
     <List.Item
-    key={element.medicationStoreId}
+      key={element.medicationStoreId}
       title={element.medicationName}
       description={
         element.medicationDosage +
@@ -741,12 +746,30 @@ export const ReadMedication = ({navigation}) => {
     />
   ));
 
+  const listPastMedication = pastMedications.map((element) => (
+    <List.Item
+      key={element.medicationStoreId}
+      title={element.medicationName}
+      description={
+        'Medication ended on ' +
+        element.medicationEndDate
+      }
+      onPress={() => {
+        navigation.navigate('Medication', {
+          screen: 'ViewMedication',
+          params: {
+            medication: element,
+            name: element.medicationName
+          },
+        });
+      }}
+    />
+  ));
 
   return (
     <View>
-      <Text>{medications.length}</Text>
       {listMedication}
-     
+      {listPastMedication}
     </View>
   );
 };
