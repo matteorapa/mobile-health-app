@@ -25,6 +25,7 @@ import {addItem} from './DBFunctions';
 import {DefaultTheme, Provider} from 'react-native-paper';
 import ViewMedication from './screens/medication/viewMedication';
 import ViewDoctor from './screens/medication/viewDoctor';
+import OnboardingScreen from './screens/Onboarding';
 
 function MedicationStack() {
   const MedicationStack = createStackNavigator();
@@ -254,6 +255,17 @@ function AuthStack() {
 
 export default function App() {
   const [accessToken, setAccessToken] = React.useState(false);
+  const [showOnboarding, setShowOnboarding] = React.useState(false)
+
+  React.useEffect(()=>{
+    if(global.firstTime && global.uid){
+      console.log(global.firstTime)
+      console.log(global.uid)
+      console.log()
+        setShowOnboarding(true)
+    }
+  },[global.firstTime])
+
   const authContext = React.useMemo(() => {
     return {
       signIn: () => {
@@ -299,7 +311,8 @@ export default function App() {
     <Provider theme={theme}>
       <AuthContext.Provider value={authContext}>
         <NavigationContainer theme={MyTheme}>
-          {accessToken ? <AppTabStack /> : <AuthStack />}
+          {showOnboarding ? <OnboardingScreen update={setShowOnboarding} /> : <>{accessToken ? <AppTabStack /> : <AuthStack />}</>} 
+          
         </NavigationContainer>
       </AuthContext.Provider>
     </Provider>

@@ -52,6 +52,13 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     padding: 16,
   },
+  LargeLogo: {
+    height: 180,
+    width: 200,
+    resizeMode: 'cover',
+    alignSelf: 'center',
+    padding: 2,
+  },
   surface: {
     padding: 16,
     marginTop: 8,

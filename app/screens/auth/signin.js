@@ -10,8 +10,8 @@ export default function SignInScreen({navigation}) {
   const [email, onChangeEmail] = React.useState('');
   const [password, onChangePassword] = React.useState('');
   const [userId, setUserId] = React.useState('');
-
   const {signIn} = React.useContext(AuthContext);
+  
 
   const PromiseReader = (emailInput, passwordInput) => {
     var testChecker = logIn(emailInput, passwordInput);

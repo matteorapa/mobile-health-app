@@ -54,6 +54,12 @@ export const LAYOUT = StyleSheet.create({
     height: '100%',
     display: 'flex',
     flexDirection: 'column',
+    justifyContent: 'center'
+  },
+  mainOnboarding: {
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
     justifyContent: 'center',
   },
   inner: {
