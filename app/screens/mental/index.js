@@ -4,13 +4,11 @@ import {
   ScrollView,
   Dimensions,
   StyleSheet,
-  TextInput,
-  Platform,
 } from 'react-native';
 import React, {useState} from 'react';
 import {useRoute} from '@react-navigation/native';
 import {useNavigation} from '@react-navigation/native';
-import {Button, FAB, Snackbar} from 'react-native-paper';
+import {Snackbar, Button, FAB} from 'react-native-paper';
 import ReminderRoute from './RemindersTab';
 import {TabView, TabBar} from 'react-native-tab-view';
 import {COLORS, LAYOUT, TYPE} from '../../styles/theme';
@@ -20,12 +18,8 @@ const HabitRoute = () => {
   const navigation = useNavigation();
   const [visible, setVisible] = React.useState(false);
   const [snackbarText, setSnackbarText] = React.useState('');
-  //const onToggleSnackBar = () => setVisible(!visible);
   const onDismissSnackBar = () => setVisible(false);
-
   const route = useRoute();
-
-  // console.log(route.params)
 
   React.useEffect(() => {
     if (route.params !== undefined) {
@@ -53,7 +47,12 @@ const HabitRoute = () => {
         accessibilityLabel="Add a new habit to list."
         animated={true}
       />
-      <Snackbar visible={visible} onDismiss={onDismissSnackBar}>
+      <Snackbar visible={visible} onDismiss={onDismissSnackBar} action={{
+          label: 'DISMISS',
+          onPress: () => {
+            onDismissSnackBar()
+          },
+        }}>
         {snackbarText}
       </Snackbar>
     </View>

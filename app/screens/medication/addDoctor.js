@@ -324,6 +324,10 @@ export default function AddDoctorScreen({route, navigation}) {
 
               navigation.navigate('Medication', {
                 screen: 'Index',
+                params: {
+                  snackbar: "Added the doctor " + doctorName
+                }
+                
               });
             }}
           />

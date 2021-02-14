@@ -43,12 +43,14 @@ export default function SignInScreen({navigation}) {
   return (
     <View style={styles.container}>
       <View style={styles.box}>
-        <Image style={styles.tinyLogo} source={require('./mascot.png')} />
+        <Image style={styles.tinyLogo} source={require('../../assets/images/mascot.png')} />
         <Text style={styles.heading}>Sign In</Text>
         <Text>Email Address</Text>
         <TextInput
           style={styles.textInput}
           placeholder={'Email address'}
+          keyboardType={'email-address'}
+          autoCapitalize={'none'}
           onChangeText={(text) => onChangeEmail(text)}
           value={email}
         />
@@ -67,9 +69,9 @@ export default function SignInScreen({navigation}) {
           accessibilityLabel="Sign-in button for email and password relogin"
           onPressEvent={() => {
             if (email === '' || password === '') {
-              Alert.alert('Sign In Failed', 'Do not leave empty fields', [
+              Alert.alert('Sign In Failed', "Make sure you don't leave empty fields.", [
                 {
-                  text: 'Try Again',
+                  text: 'OK',
                   onPress: () => navigation.navigate('SignIn'),
                 },
               ]);

@@ -165,6 +165,9 @@ export default function DetailsScreen({navigation, route}) {
               deleteHabit(habit.habitId);
               navigation.navigate('Tasks', {
                 screen: 'Index',
+                params: {
+                  snackbar: "Deleted the habit " + habit.habitId,
+                },
               });
             }}>
             DELETE

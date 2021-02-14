@@ -138,6 +138,10 @@ export default function ViewMedication({route, navigation}) {
               deleteMedication(medication.medicationName);
               navigation.navigate('Medication', {
                 screen: 'Index',
+                params: {
+                  snackbar: "Deleted the medication " + medication.medicationName
+                }
+               
               });
             }}>
             DELETE

@@ -81,7 +81,13 @@ export default function EditReminderScreen({navigation, route}) {
         text="SAVE CHANGES"
         onPressEvent={() => {
           editReminder(state, reminder.reminderId, title, hours1, minutes1);
-          navigation.goBack();
+          // navigation.goBack();
+          navigation.navigate('Tasks', {
+            screen: 'Index',
+            params: {
+              snackbar: "Edited your reminder " + title
+            },
+          })
         }}
       />
     </View>

@@ -254,25 +254,20 @@ function AuthStack() {
 
 export default function App() {
   const [accessToken, setAccessToken] = React.useState(false);
-  const [refreshToken, setRefreshToken] = React.useState(null);
-  const [isLoading, setIsLoading] = React.useState(true);
-
   const authContext = React.useMemo(() => {
     return {
       signIn: () => {
-        setIsLoading(false);
+      
         setAccessToken(true);
-        setRefreshToken('gert');
+        
       },
       signUp: () => {
-        setIsLoading(false);
-        setAccessToken('gert');
-        setRefreshToken('gert');
+        
       },
       signOut: () => {
-        setIsLoading(false);
+       
         setAccessToken(false);
-        setRefreshToken(null);
+        
       },
     };
   }, []);

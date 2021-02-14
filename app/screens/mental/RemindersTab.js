@@ -1,17 +1,13 @@
 import {getReminder} from '../../DBFunctions';
-import React, {useState} from 'react';
+import React from 'react';
 import {Text, View, ScrollView, StyleSheet} from 'react-native';
 import {LAYOUT, TYPE} from '../../styles/theme';
 import {FAB} from 'react-native-paper';
-
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 
 export default function ReminderRoute(props) {
   const navigation = useNavigation();
-  const [date, setDate] = useState(new Date());
-  const [mode, setMode] = useState('time');
-  const [show, setShow] = useState(false);
-  const [frequency, setFrequency] = useState('Daily');
+  const route = useRoute();
 
   return (
     <View style={LAYOUT.main}>
@@ -19,6 +15,7 @@ export default function ReminderRoute(props) {
         <Text style={TYPE.h1}>Your Reminders</Text>
 
         {getReminder()}
+
       </ScrollView>
       <FAB
         style={styles.fab}
@@ -33,6 +30,7 @@ export default function ReminderRoute(props) {
         accessibilityLabel="Add a new reminder to list."
         animated={true}
       />
+
     </View>
   );
 }

@@ -16,6 +16,7 @@ export default function editAccount({navigation}) {
           <Text style={styles.subheading}>
             Relogging required to view changes!
           </Text>
+        
           <Text>Name</Text>
           <TextInput
             style={styles.textInput}

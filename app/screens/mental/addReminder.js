@@ -88,8 +88,14 @@ export default function AddReminderScreen({navigation}) {
             ]);
           }else{
           addReminder(state, title, hours1, minutes1);
-          navigation.goBack();
-          }
+          navigation.navigate('Tasks', {
+            screen: 'Index',
+            params: {
+              snackbar: "Added your reminder " + title
+            },
+          })
+        }
+   
         }}
       />
     </View>

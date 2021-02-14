@@ -388,15 +388,19 @@ export const getReminder = () => {
         <Card key={element.reminderId} style={styles.card}>
           <Card.Content>
             <Title>{element.reminderTitle}</Title>
-            <Chip icon="information">{element.habitId}</Chip>
-            <Text>
-              {element.hours}:{element.minutes}
-            </Text>
+            <Text>{element.habitId}</Text>
+            <Text>{element.hours}:{element.minutes}</Text>
           </Card.Content>
           <Card.Actions>
             <Button
               onPress={() => {
                 deleteReminder(element.reminderId);
+                navigation.navigate('Tasks', {
+                  screen: 'Index',
+                  params: {
+                    snackbar: "Deleted your reminder " + element.reminderTitle
+                  },
+                });
               }}>
               Remove
             </Button>
@@ -550,7 +554,9 @@ export const ReadDoctor = ({navigation}) => {
     const onLoadingListener = doctorsRef.on('value', (snapshot) => {
       setDoctors([]);
       snapshot.forEach(function (childSnapshot) {
-        setDoctors((doctors) => [...doctors, childSnapshot.val()]);
+        if(childSnapshot.val().doctorUserId == uid){
+          setDoctors((doctors) => [...doctors, childSnapshot.val()]);
+        }
       });
     });
 
@@ -560,23 +566,21 @@ export const ReadDoctor = ({navigation}) => {
   }, []);
 
   const listDoctors = doctors.map((element) => (
-    (element.doctorUserId == uid) ? 
-      <List.Item
-        key={element.doctorStoreId}
-        title={element.doctorName}
-        description={specialitiesOfDoctors[element.doctorSpeciality]}
-        // left={() => <Icon name="face" size={30} />}
-        onPress={() => {
-          navigation.navigate('Medication', {
-            screen: 'ViewDoctor',
-            params: {
-              doctor: element,
-              name: element.doctorName
-            },
-          });
-        }}
-      />
-      : null
+    <List.Item
+      key={element.doctorStoreId}
+      title={element.doctorName}
+      description={specialitiesOfDoctors[element.doctorSpeciality]}
+      // left={() => <Icon name="face" size={30} />}
+      onPress={() => {
+        navigation.navigate('Medication', {
+          screen: 'ViewDoctor',
+          params: {
+            doctor: element,
+            name: element.doctorName
+          },
+        });
+      }}
+    />
   ));
 
   return (
@@ -704,7 +708,9 @@ export const ReadMedication = ({navigation}) => {
     const onLoadingListener = medicationsRef.on('value', (snapshot) => {
       setMedications([]);
       snapshot.forEach(function (childSnapshot) {
-        setMedications((medications) => [...medications, childSnapshot.val()]);
+        if(childSnapshot.val().doctorUserId == uid){
+          setMedications((medications) => [...medications, childSnapshot.val()]);
+        }
       });
     });
 
@@ -715,40 +721,32 @@ export const ReadMedication = ({navigation}) => {
     }, []);
 
   const listMedication = medications.map((element) => (
-    (element.medicationUserId == uid) ? 
-      <List.Item
-      key={element.medicationStoreId}
-        title={element.medicationName}
-        description={
-          element.medicationDosage +
-          ' ' +
-          metricsOfDosage[element.medicationDosageMetric]
-        }
-        // left={() => (
-        //   <Image
-        //     source={require('./screens/medication/drugs.png')}
-        //     style={{width: 25, height: 25}}
-        //   />
-        // )}
-        onPress={() => {
-          navigation.navigate('Medication', {
-            screen: 'ViewMedication',
-            params: {
-              medication: element,
-              name: element.medicationName
-            },
-          });
-        }}
-      />
-      : null
+    <List.Item
+    key={element.medicationStoreId}
+      title={element.medicationName}
+      description={
+        element.medicationDosage +
+        ' ' +
+        metricsOfDosage[element.medicationDosageMetric]
+      }
+      onPress={() => {
+        navigation.navigate('Medication', {
+          screen: 'ViewMedication',
+          params: {
+            medication: element,
+            name: element.medicationName
+          },
+        });
+      }}
+    />
   ));
 
 
   return (
     <View>
-      {/* <Text>{medications.length}</Text> */}
+      <Text>{medications.length}</Text>
       {listMedication}
-      {/* <Text>{listMedication.length}</Text> */}
+     
     </View>
   );
 };

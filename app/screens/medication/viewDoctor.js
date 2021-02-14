@@ -114,6 +114,9 @@ export default function ViewDoctor({route, navigation}) {
               deleteDoctor(doctor.doctorPhone);
               navigation.navigate('Medication', {
                 screen: 'Index',
+                params: {
+                  snackbar: "Deleted the doctor " + doctor.doctorName
+                }
               });
             }}>
             DELETE
