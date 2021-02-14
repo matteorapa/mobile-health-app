@@ -46,6 +46,8 @@ export default function AccountScreen({navigation}) {
         Manage your reminder settings for the specific notifications you wish to
         recieve.
       </Text>
+      <PaddedDivider />
+      
       <View style={LAYOUT.flexed}>
         <Text style={TYPE.body1}>Water Reminder</Text>
         <Switch value={isSwitchOn} onValueChange={onToggleSwitch} />
@@ -60,12 +62,6 @@ export default function AccountScreen({navigation}) {
       </View>
 
       <PaddedDivider />
-
-      <Text style={TYPE.subtitle2}>Guardian Settings</Text>
-      <Text style={TYPE.caption}>
-        Connect your reminder with a guardian to oversee your activity and
-        missed reminders.
-      </Text>
 
       <View style={styles.signup}>
         <ThemeButton

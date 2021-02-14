@@ -21,7 +21,6 @@ import AddReminderScreen from './screens/mental/addReminder';
 import EditReminderScreen from './screens/mental/editReminder';
 import DetailsScreen from './screens/mental/habitDetails';
 import {initiateChannels} from './notifications';
-import {addItem} from './DBFunctions';
 import {DefaultTheme, Provider} from 'react-native-paper';
 import ViewMedication from './screens/medication/viewMedication';
 import ViewDoctor from './screens/medication/viewDoctor';
@@ -294,6 +293,8 @@ export default function App() {
       notification: 'rgb(255, 69, 58)',
     },
   };
+
+
 
   initiateChannels();
 
