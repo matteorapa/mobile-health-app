@@ -35,11 +35,19 @@ function MedicationStack() {
   const optionsAddMedication = {
     headerShown: true,
     title: 'Add your medication',
+    headerTintColor: COLORS.lightText,
+    headerStyle: {
+       backgroundColor: COLORS.primaryLight
+    }
   };
 
   const optionsAddDoctor = {
     headerShown: true,
     title: 'Add your doctor',
+    headerTintColor: COLORS.lightText,
+    headerStyle: {
+       backgroundColor: COLORS.primaryLight
+    }
   };
 
 
@@ -66,6 +74,10 @@ function MedicationStack() {
         component={ViewMedication}
         options={({route}) => ({
           title: route.params.name,
+          headerTintColor: COLORS.lightText,
+          headerStyle: {
+            backgroundColor: COLORS.primaryLight
+         }
         })}
       />
       <MedicationStack.Screen
@@ -73,6 +85,10 @@ function MedicationStack() {
         component={ViewDoctor}
         options={({route}) => ({
           title: route.params.name,
+          headerTintColor: COLORS.lightText,
+          headerStyle: {
+            backgroundColor: COLORS.primaryLight
+         }
         })}
       />
     </MedicationStack.Navigator>
@@ -89,21 +105,37 @@ function MentalStack() {
   const optionsEmbedded = {
     headerShown: true,
     title: 'Add your habit',
+    headerTintColor: COLORS.lightText,
+      headerStyle: {
+         backgroundColor: COLORS.primaryLight
+      }
   };
 
   const optionsEditHabit = {
     headerShown: true,
     title: 'Edit your habit',
+    headerTintColor: COLORS.lightText,
+    headerStyle: {
+       backgroundColor: COLORS.primaryLight
+    }
   };
 
   const optionsAddReminder = {
     headerShown: true,
     title: 'Add your reminder',
+    headerTintColor: COLORS.lightText,
+    headerStyle: {
+       backgroundColor: COLORS.primaryLight
+    }
   };
 
   const optionsEditReminder = {
     headerShown: true,
     title: 'Edit your reminder',
+    headerTintColor: COLORS.lightText,
+    headerStyle: {
+       backgroundColor: COLORS.primaryLight
+    }
   };
 
   return (
@@ -137,6 +169,10 @@ function MentalStack() {
         component={DetailsScreen}
         options={({route}) => ({
           title: route.params.name,
+          headerTintColor: COLORS.lightText,
+          headerStyle: {
+            backgroundColor: COLORS.primaryLight
+         }
         })}
       />
 
@@ -253,7 +289,7 @@ function AuthStack() {
 }
 
 export default function App() {
-  const [accessToken, setAccessToken] = React.useState(false);
+  const [isSignedIn, setIsSignedIn] = React.useState(false);
   const [showOnboarding, setShowOnboarding] = React.useState(false)
 
   React.useEffect(()=>{
@@ -269,7 +305,7 @@ export default function App() {
     return {
       signIn: () => {
       
-        setAccessToken(true);
+        setIsSignedIn(true);
         
       },
       signUp: () => {
@@ -277,7 +313,7 @@ export default function App() {
       },
       signOut: () => {
        
-        setAccessToken(false);
+        setIsSignedIn(false);
         
       },
     };
@@ -312,7 +348,7 @@ export default function App() {
     <Provider theme={theme}>
       <AuthContext.Provider value={authContext}>
         <NavigationContainer theme={MyTheme}>
-          {showOnboarding ? <OnboardingScreen update={setShowOnboarding} /> : <>{accessToken ? <AppTabStack /> : <AuthStack />}</>} 
+          {showOnboarding ? <OnboardingScreen update={setShowOnboarding} /> : <>{isSignedIn ? <AppTabStack /> : <AuthStack />}</>} 
           
         </NavigationContainer>
       </AuthContext.Provider>
