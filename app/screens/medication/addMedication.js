@@ -1,4 +1,4 @@
-import {Text, TextInput, View, Button, ScrollView} from 'react-native';
+import {Text, TextInput, View, Button, ScrollView, Alert} from 'react-native';
 import React, {useState} from 'react';
 import {Picker} from '@react-native-picker/picker';
 import {TimePickerModal, DatePickerModal} from 'react-native-paper-dates';
@@ -27,20 +27,20 @@ function submitForm(
   //check auth of form
 
   //submit to firebase table
-  console.log(
-    'submit ',
-    medName,
-    medType,
-    medDosage,
-    medDosageMetric,
-    medReason,
-    medDaily,
-    medDailyDosesNumber,
-    medTimersArray,
-    medStartDate,
-    medEndDate,
-    medInstructions,
-  );
+  // console.log(
+  //   'submit ',
+  //   medName,
+  //   medType,
+  //   medDosage,
+  //   medDosageMetric,
+  //   medReason,
+  //   medDaily,
+  //   medDailyDosesNumber,
+  //   medTimersArray,
+  //   medStartDate,
+  //   medEndDate,
+  //   medInstructions,
+  // );
 
   addMedication(
     medName,
@@ -111,11 +111,10 @@ export default function AddMedicationScreen({route, navigation}) {
       ? dailyDosageOptions[0]
       : loadedMedication.medicationDaily,
   );
-  const [
-    medicationDailyDosesNumber,
-    onChangeMedicationDailyDosesNumber,
-  ] = useState(
-    loadedMedication === '' ? '' : loadedMedication.medicationDailyDosesNumber,
+  const [medicationDailyDosesNumber, onChangeMedicationDailyDosesNumber] = useState(
+    loadedMedication === ''
+      ? ''
+      : loadedMedication.medicationDailyDosesNumber,
   );
   const [timersToInclude, onChangeTimersToInclude] = useState(
     loadedMedication === ''
@@ -123,7 +122,9 @@ export default function AddMedicationScreen({route, navigation}) {
       : range(1, loadedMedication.medicationDailyDosesNumber),
   );
   const [timerArray, setTimerArray] = useState(
-    loadedMedication === '' ? [] : loadedMedication.medicationTimerArray,
+    loadedMedication === ''
+      ? []
+      : loadedMedication.timerArray,
   );
   //onst [timerArrayEdit, setTimerArrayEdit] = useState([]); //useState((loadedMedication == '') ? [] : null);
   //const [timerArray, setTimerArray] = useState([]);
@@ -186,8 +187,8 @@ export default function AddMedicationScreen({route, navigation}) {
     ({startDate, endDate}) => {
       setVisibleDate(false);
       // console.log('onConfirmDate start, end', { startDate, endDate })
-      onChangeMedicationStartDate(startDate);
-      onChangeMedicationEndDate(endDate);
+      onChangeMedicationStartDate(startDate.toDateString());
+      onChangeMedicationEndDate(endDate.toDateString());
     },
     [setVisibleDate, onChangeMedicationStartDate, onChangeMedicationEndDate],
   );
@@ -402,9 +403,9 @@ export default function AddMedicationScreen({route, navigation}) {
               style={styles.textInput}
               placeholder={'Start Date - End Date'}
               value={
-                Moment(medicationStartDate.toString()).format('DD/MM/YYYY') +
+                Moment(medicationStartDate).format('DD/MM/YYYY') +
                 ' - ' +
-                Moment(medicationEndDate.toString()).format('DD/MM/YYYY')
+                Moment(medicationEndDate).format('DD/MM/YYYY')
               }
             />
               <DatePickerModal
@@ -457,6 +458,7 @@ export default function AddMedicationScreen({route, navigation}) {
       <ScrollView>
       <Text style={{ color: COLORS.primaryLight }}>Step 10 of 10</Text>
       <PaddedDivider />
+      
       <View style={styles.navBackNext}>
           <ThemeButton
             type={'secondary'}
@@ -487,6 +489,19 @@ export default function AddMedicationScreen({route, navigation}) {
           <ThemeButton
             text={'SUBMIT MEDICATION'}
             onPressEvent={() => {
+            if ( medicationName == '' ||
+                medicationDosage == '' ||
+                medicationReason == '' ||
+                medicationDailyDosesNumber == '' ||
+                medicationInstructions == '') {
+              
+                Alert.alert('Submit Failed', "Edit the form and make sure you don't leave empty fields.", [
+                  {
+                    text: 'OK',
+                  },
+                ])
+
+            } else {
               // {setTimerArray(timerArrayEdit)}
               {
                 submitForm(
@@ -498,8 +513,8 @@ export default function AddMedicationScreen({route, navigation}) {
                   medicationDaily,
                   medicationDailyDosesNumber,
                   timerArray,
-                  medicationStartDate.toDateString(),
-                  medicationEndDate.toDateString(),
+                  medicationStartDate,
+                  medicationEndDate,
                   medicationInstructions,
                 );
               }
@@ -510,9 +525,10 @@ export default function AddMedicationScreen({route, navigation}) {
                 }
                 
               });
+            }
             }}
           />
-          </View>
+      </View>
 
       <DataTable>
       <DataTable.Row>
@@ -525,7 +541,7 @@ export default function AddMedicationScreen({route, navigation}) {
         </DataTable.Row>
         <DataTable.Row>
           <DataTable.Cell>Dosage amount</DataTable.Cell>
-          <DataTable.Cell numeric>{metricsOfDosage[medicationDosageMetric]}</DataTable.Cell>
+          <DataTable.Cell numeric>{medicationDosage} {metricsOfDosage[medicationDosageMetric]}</DataTable.Cell>
         </DataTable.Row>
         <DataTable.Row>
           <DataTable.Cell>Purpose of medication</DataTable.Cell>
@@ -575,11 +591,11 @@ export default function AddMedicationScreen({route, navigation}) {
 
           <DataTable.Row>
           <DataTable.Cell>Start date</DataTable.Cell>
-          <DataTable.Cell numeric> {medicationStartDate.toLocaleDateString()}</DataTable.Cell>
+          <DataTable.Cell numeric> {medicationStartDate}</DataTable.Cell>
         </DataTable.Row>
         <DataTable.Row>
           <DataTable.Cell>End date</DataTable.Cell>
-          <DataTable.Cell numeric> {medicationEndDate.toLocaleDateString()}</DataTable.Cell>
+          <DataTable.Cell numeric> {medicationEndDate}</DataTable.Cell>
         </DataTable.Row>
         <DataTable.Row>
           <DataTable.Cell>Instructions</DataTable.Cell>
