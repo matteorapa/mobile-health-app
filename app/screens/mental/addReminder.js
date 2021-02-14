@@ -1,4 +1,4 @@
-import {Text, View, TextInput} from 'react-native';
+import {Text, View, TextInput, Alert} from 'react-native';
 import React, {useState, useCallback} from 'react';
 import {Picker} from '@react-native-picker/picker';
 import {TimePickerModal} from 'react-native-paper-dates';
@@ -79,6 +79,14 @@ export default function AddReminderScreen({navigation}) {
         accessibilityLabel="Press button to create your remidner."
         text="ADD REMINDER"
         onPressEvent={() => {
+          if (title == '' ){
+            Alert.alert('Failed to Add Reminder', 'Do not leave empty fields', [
+              {
+                text: 'Try Again',
+                onPress: () => navigation.navigate('AddReminder'),
+              },
+            ]);
+          }else{
           addReminder(state, title, hours1, minutes1);
           navigation.navigate('Tasks', {
             screen: 'Index',
@@ -86,6 +94,7 @@ export default function AddReminderScreen({navigation}) {
               snackbar: "Added your reminder " + title
             },
           })
+        }
    
         }}
       />

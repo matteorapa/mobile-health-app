@@ -1,4 +1,4 @@
-import {Text, View, TextInput} from 'react-native';
+import {Text, View, TextInput, Alert} from 'react-native';
 import {Surface} from 'react-native-paper';
 import React, {useState} from 'react';
 import {addHabit} from '../../DBFunctions';
@@ -98,6 +98,14 @@ export default function AddHabitScreen({navigation}) {
         accessibilityLabel="Submit your new habit."
         text="ADD HABIT"
         onPressEvent={() => {
+          if (title == '' || description == ''){
+            Alert.alert('Failed to Add Habit', 'Do not leave empty fields', [
+              {
+                text: 'Try Again',
+                onPress: () => navigation.navigate('AddHabit'),
+              },
+            ]);
+          }else{
           {
             addHabit(
               title,
@@ -118,6 +126,7 @@ export default function AddHabitScreen({navigation}) {
             },
           });
         }}
+      }
       />
     </View>
   );

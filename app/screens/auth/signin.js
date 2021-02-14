@@ -49,6 +49,8 @@ export default function SignInScreen({navigation}) {
         <TextInput
           style={styles.textInput}
           placeholder={'Email address'}
+          keyboardType={'email-address'}
+          autoCapitalize={'none'}
           onChangeText={(text) => onChangeEmail(text)}
           value={email}
         />
