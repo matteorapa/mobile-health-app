@@ -2,7 +2,8 @@ import React, {useState} from 'react';
 import {View, ScrollView, Text} from 'react-native';
 import {LAYOUT} from '../../styles/theme';
 import {ReadDoctor, ReadMedication} from '../../DBFunctions';
-import {FAB, List} from 'react-native-paper';
+import {FAB, List, Snackbar} from 'react-native-paper';
+import {useRoute} from '@react-navigation/native';
 
 export default function MedicationScreen({navigation}) {
 
@@ -12,7 +13,25 @@ export default function MedicationScreen({navigation}) {
   const handlePress = () => setExpanded(!expanded);
   const [expandedDoctor, setExpandedDoctor] = React.useState(true);
   const handlePressDoctor = () => setExpandedDoctor(!expandedDoctor);
+  const [visible, setVisible] = React.useState(false);
+  const [snackbarText, setSnackbarText] = React.useState('');
+  const onDismissSnackBar = () => setVisible(false);
   const {open} = state;
+  const route = useRoute();
+
+
+  React.useEffect(() => {
+    if (route.params!== undefined) {
+      const {snackbar} = route.params;
+
+      if(snackbar !== ''){
+        setSnackbarText(snackbar);
+        setVisible(true);
+        console.log(snackbar)
+      }
+      
+    }
+  },[route.params, setSnackbarText]);
 
   return (
     <View style={LAYOUT.main}>
@@ -64,6 +83,15 @@ export default function MedicationScreen({navigation}) {
         ]}
         onStateChange={onStateChange}
       />
+
+      <Snackbar visible={visible} onDismiss={onDismissSnackBar} action={{
+          label: 'DISMISS',
+          onPress: () => {
+            onDismissSnackBar()
+          },
+        }}>
+        {snackbarText}
+      </Snackbar>
     </View>
   );
 }

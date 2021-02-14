@@ -505,6 +505,10 @@ export default function AddMedicationScreen({route, navigation}) {
               }
               navigation.navigate('Medication', {
                 screen: 'Index',
+                params: {
+                  snackbar: "Added the medication " + medicationName
+                }
+                
               });
             }}
           />
@@ -582,10 +586,7 @@ export default function AddMedicationScreen({route, navigation}) {
           <DataTable.Cell numeric> {medicationInstructions}</DataTable.Cell>
         </DataTable.Row>
         </DataTable>
-        
-        {/* {console.log('addMed: ', timerArray)} */}
 
-       
 
       </ScrollView>
     </AddMedDocForm>
