@@ -248,13 +248,13 @@ const setPoints = (
 
 const reward = (consPoints) => {
   if (consPoints == 50) {
-    Alert.alert('Reward', 'beginner achievement');
+    Alert.alert('Reward', 'Beginner Achievement');
   }
   if (consPoints == 100) {
-    Alert.alert('Reward', 'amateur achievement');
+    Alert.alert('Reward', 'Amateur Achievement');
   }
   if (consPoints == 200) {
-    Alert.alert('Reward', 'pro achievement');
+    Alert.alert('Reward', 'Pro Achievement');
   }
 };
 

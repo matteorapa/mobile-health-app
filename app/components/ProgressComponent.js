@@ -5,6 +5,7 @@ import {COLORS} from '../styles/theme';
 
 export default function ProgressComponent({habit}) {
   const [points, setPoints] = useState(habit.consPts);
+  const [denominator, setDeno] = useState(0);
   const [percentage, setPerc] = useState(0);
   const [title, setTitle] = useState('Beginner Achievement');
 
@@ -12,14 +13,17 @@ export default function ProgressComponent({habit}) {
   React.useEffect(() => {
     if (points <= 50) {
       setTitle('Beginner Achievement');
+      setDeno(50);
       setPerc(points / 50);
     }
     if (points > 50 && points <= 100) {
       setTitle('Amateur Achievement');
+      setDeno(100);
       setPerc((points - 50) / 50);
     }
     if (points > 100 && points <= 200) {
       setTitle('Pro Achievement');
+      setDeno(200);
       setPerc((points - 100) / 100);
     }
   }, [points]);
@@ -32,7 +36,7 @@ export default function ProgressComponent({habit}) {
         color={COLORS.primaryLight}
         style={{height: 20}}
       />
-      <Text>{points}/50 Points</Text>
+      <Text>{points}/{denominator} Points</Text>
     </View>
   );
 }
