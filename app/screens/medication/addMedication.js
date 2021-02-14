@@ -381,7 +381,7 @@ export default function AddMedicationScreen({route, navigation}) {
                   locale={'en'} // optional, default is automically detected by your system
                 />
                 <ThemeButton
-                  accessibilityLabel="Press to selet time for dose."
+                  accessibilityLabel="Press to select time for dose."
                   text="PICK TIME"
                   onPressEvent={() => setVisible(true)}
                 />
@@ -425,7 +425,7 @@ export default function AddMedicationScreen({route, navigation}) {
               />
              
               <ThemeButton
-                  accessibilityLabel="Press to selet time for dose."
+                  accessibilityLabel="Press to select date range for dose."
                   text="PICK RANGE"
                   onPressEvent={() => setVisibleDate(true)}
                 />
