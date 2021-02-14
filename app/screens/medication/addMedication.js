@@ -490,15 +490,9 @@ export default function AddMedicationScreen({route, navigation}) {
             text={'SUBMIT MEDICATION'}
             onPressEvent={() => {
             if ( medicationName == '' ||
-                medicationType == '' ||
                 medicationDosage == '' ||
-                medicationDosageMetric == '' ||
                 medicationReason == '' ||
-                medicationDaily == '' ||
                 medicationDailyDosesNumber == '' ||
-                timerArray == [] ||
-                medicationStartDate == '' ||
-                medicationEndDate == '' ||
                 medicationInstructions == '') {
               
                 Alert.alert('Submit Failed', "Edit the form and make sure you don't leave empty fields.", [
@@ -547,7 +541,7 @@ export default function AddMedicationScreen({route, navigation}) {
         </DataTable.Row>
         <DataTable.Row>
           <DataTable.Cell>Dosage amount</DataTable.Cell>
-          <DataTable.Cell numeric>{metricsOfDosage[medicationDosageMetric]}</DataTable.Cell>
+          <DataTable.Cell numeric>{medicationDosage} {metricsOfDosage[medicationDosageMetric]}</DataTable.Cell>
         </DataTable.Row>
         <DataTable.Row>
           <DataTable.Cell>Purpose of medication</DataTable.Cell>
