@@ -1,9 +1,5 @@
 import PushNotification from 'react-native-push-notification';
 
-function hoursInMilliseconds(hours) {
-    return new Date(Date.now() + hours * 60 * 60 * 1000)
-}
-
 function scheduleMedicationNotification(title, msg, date) {
   PushNotification.localNotificationSchedule({
     channelId: 'medication-channel',
@@ -76,49 +72,49 @@ function createPriorityChannel() {
   );
 }
 
-function deleteChannel(channel_id){
+function deleteChannel(channel_id) {
   PushNotification.deleteChannel(channel_id);
 }
 
-function deleteLocalNotification(notification_id){
+function deleteLocalNotification(notification_id) {
   PushNotification.cancelLocalNotifications({id: notification_id});
 }
 
-function initiateChannels(){
-  PushNotification.channelExists("habit-channel", function (exists) {
-    if(!exists){
-      createHabitChannel()
+function initiateChannels() {
+  PushNotification.channelExists('habit-channel', function (exists) {
+    if (!exists) {
+      createHabitChannel();
     }
   });
 
-  PushNotification.channelExists("medication-channel", function (exists) {
-    if(!exists){
-      createMedicationChannel()
+  PushNotification.channelExists('medication-channel', function (exists) {
+    if (!exists) {
+      createMedicationChannel();
     }
   });
 
-  PushNotification.channelExists("priority-channel", function (exists) {
-    if(!exists){
-      createPriorityChannel()
+  PushNotification.channelExists('priority-channel', function (exists) {
+    if (!exists) {
+      createPriorityChannel();
     }
   });
 }
 
-function getSheduledNotifications(){
-  PushNotification.getScheduledLocalNotifications((data)=>{
-    console.log(data)
-    return data
+function getSheduledNotifications() {
+  PushNotification.getScheduledLocalNotifications((data) => {
+    console.log(data);
+    return data;
   });
 }
 
-function getDeliveredNotifications(){
-  PushNotification.getDeliveredNotifications((data)=>{
-    console.log(data)
-    return data
+function getDeliveredNotifications() {
+  PushNotification.getDeliveredNotifications((data) => {
+    console.log(data);
+    return data;
   });
 }
 
-function clearDeliveredNotifications(){
+function clearDeliveredNotifications() {
   PushNotification.removeAllDeliveredNotifications();
 }
 
@@ -134,5 +130,5 @@ export {
   getSheduledNotifications,
   getDeliveredNotifications,
   clearDeliveredNotifications,
-  initiateChannels
+  initiateChannels,
 };

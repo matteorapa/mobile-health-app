@@ -1,9 +1,9 @@
-import {Text, View, Button, TextInput, Alert} from 'react-native';
-import React, {useState, useCallback, useEffect} from 'react';
+import {Text, View, TextInput} from 'react-native';
+import React, {useState, useCallback} from 'react';
 import {Picker} from '@react-native-picker/picker';
 import {TimePickerModal} from 'react-native-paper-dates';
 import {listHabitIds, editReminder} from '../../DBFunctions';
-import {COLORS, LAYOUT, TYPE} from '../../styles/theme';
+import {LAYOUT} from '../../styles/theme';
 import ThemeButton from '../../components/ThemeButton';
 import {Surface} from 'react-native-paper';
 import {styles} from '../../styles/globals';
@@ -51,7 +51,7 @@ export default function EditReminderScreen({navigation, route}) {
         <Text>Reminder title</Text>
         <TextInput
           placeholder="Title"
-          onChangeText={(title) => setTitle(title)}
+          onChangeText={(titleInput) => setTitle(titleInput)}
           defaultValue={title}
           style={styles.textInput}
         />
@@ -80,9 +80,7 @@ export default function EditReminderScreen({navigation, route}) {
         accessibilityLabel="Press button to save changed made to your remidner."
         text="SAVE CHANGES"
         onPressEvent={() => {
-          {
-            editReminder(state, reminder.reminderId, title, hours1, minutes1);
-          }
+          editReminder(state, reminder.reminderId, title, hours1, minutes1);
           navigation.goBack();
         }}
       />

@@ -1,30 +1,16 @@
 import database from '@react-native-firebase/database';
 import 'react-native-get-random-values';
 import {nanoid} from 'nanoid';
-import {Text, Image, View, Button, Alert} from 'react-native';
-import {styles} from './styles/globals'
-import {View, Image} from 'react-native'
-import love from './assets/images/love.png'
-import music from './assets/images/music.png'
+import {Text, Image, View, Alert} from 'react-native';
+import {styles} from './styles/globals';
+import love from './assets/images/love.png';
+import music from './assets/images/music.png';
 
 import React, {useState, useEffect} from 'react';
-import {
-  Avatar,
-  Button,
-  Card,
-  Title,
-  Text,
-  Paragraph,
-  ProgressBar,
-  Colors,
-  Chip,
-  FAB,
-  List
-} from 'react-native-paper';
+import {Card, Title, Paragraph, Chip, List, Button} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
 import {Picker} from '@react-native-picker/picker';
 import PaddedDivider from './components/PaddedDivider';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 export const addItem = (itemId, itemName) => {
@@ -115,115 +101,118 @@ export const getHabit = () => {
       habitRef.off('value', onLoadingListener);
     };
   }, []);
-  if(habits.length > 0){
-  return habits.map((element) => {
-    const currentDate = new Date();
+  if (habits.length > 0){
+    return habits.map((element) => {
+      const currentDate = new Date();
 
-    //date retrieved from db
-    const retrievedDate = new Date(element.startDate);
+      //date retrieved from db
+      const retrievedDate = new Date(element.startDate);
 
-    const diff = (currentDate - retrievedDate) / (1000 * 60 * 60 * 24);
+      const diff = (currentDate - retrievedDate) / (1000 * 60 * 60 * 24);
 
-    if (diff <= 1) {
-      boolean = true;
-    }
-    if (diff > 1) {
-      boolean = false;
-    }
+      if (diff <= 1) {
+        boolean = true;
+      }
+      if (diff > 1) {
+        boolean = false;
+      }
 
+      return (
+        <Card
+          style={styles.card}
+          key={element.habitId}
+          onPress={() => {
+            navigation.navigate('Tasks', {
+              screen: 'Details',
+              params: {
+                habit: element,
+                name: element.habitId,
+              },
+            });
+          }}>
+          <Card.Content>
+            <Title>{element.habitId}</Title>
+            <Paragraph>{element.habitDesc}</Paragraph>
+            <Text>Available on {retrievedDate.toLocaleDateString()}</Text>
+          </Card.Content>
+
+          <Card.Actions>
+            <Button
+              onPress={() => {
+                setPoints(
+                  element.habitId,
+                  element.habitDesc,
+                  element.startDate,
+                  element.numPD,
+                  element.category,
+                  element.consPts + 10,
+                  element.points + 10,
+                  currentDate,
+                  element.graphData,
+                );
+
+                counter = counter + 1;
+
+                reward(element.consPts);
+              }}
+              disabled={boolean}>
+              Done
+            </Button>
+
+            <Button
+              onPress={() => {
+                if (element.points < 0 || element.points == 0) {
+                  setPoints(
+                    element.habitId,
+                    element.habitDesc,
+                    element.startDate,
+                    element.numPD,
+                    element.category,
+                    0,
+                    0,
+                    element.date,
+                    element.graphData,
+                  );
+                } else {
+                  setPoints(
+                    element.habitId,
+                    element.habitDesc,
+                    element.startDate,
+                    element.numPD,
+                    element.category,
+                    0,
+                    element.points - 5,
+                    element.date,
+                    element.graphData,
+                  );
+                }
+              }}
+              disabled={boolean}>
+              Missed
+            </Button>
+          </Card.Actions>
+        </Card>
+      );
+    });
+  } else {
     return (
-      <Card
-        style={styles.card}
-        key={element.habitId}
-        onPress={() => {
-          navigation.navigate('Tasks', {
-            screen: 'Details',
-            params: {
-              habit: element,
-              name: element.habitId,
-            },
-          });
-        }}>
-        <Card.Content>
-          <Title>{element.habitId}</Title>
-          <Paragraph>{element.habitDesc}</Paragraph>
-          <Text>Available on {retrievedDate.toLocaleDateString()}</Text>
-        </Card.Content>
-
-        <Card.Actions>
-          <Button
-            onPress={() => {
-              setPoints(
-                element.habitId,
-                element.habitDesc,
-                element.startDate,
-                element.numPD,
-                element.category,
-                element.consPts + 10,
-                element.points + 10,
-                currentDate,
-                element.graphData,
-              );
-
-              counter = counter + 1;
-
-              reward(element.consPts);
-            }}
-            disabled={boolean}>
-            Done
-          </Button>
-
-          <Button
-            onPress={() => {
-              if (element.points < 0 || element.points == 0) {
-                setPoints(
-                  element.habitId,
-                  element.habitDesc,
-                  element.startDate,
-                  element.numPD,
-                  element.category,
-                  0,
-                  0,
-                  element.date,
-                  element.graphData,
-                );
-              } else {
-                setPoints(
-                  element.habitId,
-                  element.habitDesc,
-                  element.startDate,
-                  element.numPD,
-                  element.category,
-                  0,
-                  element.points - 5,
-                  element.date,
-                  element.graphData,
-                );
-              }
-            }}
-            disabled={boolean}>
-            Missed
-          </Button>
-        </Card.Actions>
-      </Card>
+      <View style={styles.emptyStateContainer}>
+        <PaddedDivider />
+        <PaddedDivider />
+        <PaddedDivider />
+        <PaddedDivider />
+        <Image source={music} style={styles.emptyState} />
+        <Text>
+          You do not yet have any habits. Add some habits to create meaningful
+          reminders.
+        </Text>
+        <PaddedDivider />
+        <PaddedDivider />
+      </View>
     );
-  });
-} else {
-  return(
-    <View style={styles.emptyStateContainer}>
-      <PaddedDivider />
-      <PaddedDivider />
-      <PaddedDivider />
-      <PaddedDivider />
-      <Image source={music} style={styles.emptyState}/>
-      <Text>You do not yet have any habits. Add some habits to create meaningful reminders.</Text>
-      <PaddedDivider />
-      <PaddedDivider />
-    </View>) 
-}
 
-  
-};
+  } 
+}
 
 const setPoints = (
   key,
@@ -379,17 +368,16 @@ export const getReminder = () => {
   }, []);
 
   //when there is no reminders
-  if(reminders.length > 0){
+  if (reminders.length > 0){
     return reminders.map((element) => {
       return (
         <Card key={element.reminderId} style={styles.card}>
-          
           <Card.Content>
-          <Title>{element.reminderTitle}</Title>
-          <Chip icon="information">{element.habitId}</Chip>
-          <Text>
-            {element.hours}:{element.minutes}
-          </Text>
+            <Title>{element.reminderTitle}</Title>
+            <Chip icon="information">{element.habitId}</Chip>
+            <Text>
+              {element.hours}:{element.minutes}
+            </Text>
           </Card.Content>
           <Card.Actions>
             <Button
@@ -414,21 +402,24 @@ export const getReminder = () => {
       );
     });
   } else {
-    return(
-    <View style={styles.emptyStateContainer}>
-      <PaddedDivider />
-      <PaddedDivider />
-      <PaddedDivider />
-      <PaddedDivider />
-      <Image source={love} style={styles.emptyState}/>
-      <Text>You do not yet have any reminders. Create a reminder to remember to take care of yourself.</Text>
-      <PaddedDivider />
-      <PaddedDivider />
-    </View>) 
+    return (
+      <View style={styles.emptyStateContainer}>
+        <PaddedDivider />
+        <PaddedDivider />
+        <PaddedDivider />
+        <PaddedDivider />
+        <Image source={love} style={styles.emptyState} />
+        <Text>
+          You do not yet have any reminders. Create a reminder to remember to
+          take care of yourself.
+        </Text>
+        <PaddedDivider />
+        <PaddedDivider />
+      </View>
+    );
 
   }
-  
-};
+}
 
 export const deleteReminder = (reminderId, deleteConfirm) => {
   database()
@@ -453,228 +444,287 @@ export const deleteItem = (itemId, deleteConfirm) => {
 export const editItem = (itemId, editConfirm) => {
   setItemId(itemId);
   setItemName(itemName);
-        setItemId(itemId);
-        setItemName(itemName);
-    
+  setItemId(itemId);
+  setItemName(itemName);
 };
 
+export const addDoctor = (
+  doctorName,
+  doctorSpeciality,
+  doctorPhonePrefix,
+  doctorPhone,
+  doctorEmail,
+) => {
+  return new Promise(function (resolve, reject) {
+    let key;
+    if (doctorPhone != null) {
+      key = doctorPhone;
+    } else {
+      key = database().ref().push().key; //reason for this part of code: if the key is not empty, i.e. already exist, this means that the record is being editted.
+    }
 
-export const addDoctor = (doctorName, doctorSpeciality, doctorPhonePrefix, doctorPhone, doctorEmail) => {
-    return new Promise(function(resolve,reject){
-        let key;
-        if (doctorPhone != null) {
-            key = doctorPhone;
-        } else {
-            key=database().ref().push().key //reason for this part of code: if the key is not empty, i.e. already exist, this means that the record is being editted.
-        }
-
-        let dataToSave = {
-            doctorPhone:key,
-            doctorName: doctorName,
-            doctorSpeciality: doctorSpeciality,
-            doctorPhonePrefix: doctorPhonePrefix,
-            doctorPhone: doctorPhone,
-            doctorEmail: doctorEmail,
-        };
-        database().ref('doctors/' + key).update(dataToSave).then((snapshot)=>{
-            resolve(snapshot)
-        }).catch(err => {
-            reject(err);
-        });
-
-    });
+    let dataToSave = {
+      doctorPhone: key,
+      doctorName: doctorName,
+      doctorSpeciality: doctorSpeciality,
+      doctorPhonePrefix: doctorPhonePrefix,
+      doctorPhone: doctorPhone,
+      doctorEmail: doctorEmail,
+    };
+    database()
+      .ref('doctors/' + key)
+      .update(dataToSave)
+      .then((snapshot) => {
+        resolve(snapshot);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
 };
 
 export const deleteDoctor = (doctorPhone, deleteConfirm) => {
-
-        database().ref('doctors/' + doctorPhone).remove().then(() => {
-            console.log('Deleting doctor', doctorPhone)
-        }).catch((erro) =>{
-            console.log(err)
-        });
-    
-};
-
-export const editDoctor = (doctorPhone, editConfirm) => {
-
-        setDoctorId(doctorPhone);
-        setDoctorName(doctorName);
-        setDoctorSpeciality(doctorSpeciality);
-        setDoctorPhonePrefix(doctorPhonePrefix);
-        setDoctorPhone(doctorPhone);
-        setDoctorEmail(doctorEmail);
-    
-};
-
-export const ReadDoctor = ({navigation}) => {
-    const [doctors, setDoctors] = useState([]);
-    const specialitiesOfDoctors = ['Allergy and Immunology', 'Anesthesiology', 'Dermatology', 'Diagnostic Radiology', 'Emergency Medicine', 'Family Medicine',
-                                  'Internal Medicine', 'Medical Genetics', 'Neurology', 'Nuclear Medicine', 'Obstetrics and Gynecology', 'Ophthalmology', 'Pathology',
-                                  'Pediatrics', 'Physical Medicine and Rehabilitation', 'Preventive Medicine', 'Psychiatry', 'Radiation Oncology', 'Surgery', 'Urology'];
-
-    React.useEffect(() => {
-        const doctorsRef = database().ref('/doctors');
-
-        const onLoadingListener = doctorsRef.on('value', snapshot => {
-            setDoctors([]);
-            snapshot.forEach(function(childSnapshot){
-                setDoctors(doctors => [...doctors, childSnapshot.val()]);
-            });
-        });
-
-        return () => {
-            doctorsRef.off('value', onLoadingListener);
-        }
-    
-    }, []);
-
-    const listDoctors = doctors.map((element) => 
-        <View key={element.doctorPhone}>
-            <List.Item
-                title={element.doctorName}
-                description={specialitiesOfDoctors[element.doctorSpeciality]}
-                left={() => <Icon name="face" size={30} />}
-                onPress={() => {
-                    navigation.navigate('Medication', {
-                        screen: 'ViewDoctor',
-                        params: {doctor: element}
-                    })
-                }}
-            />
-        </View>
-    );
-
-    return (
-        <List.Section>
-            <List.Subheader>Your Doctors</List.Subheader>
-                {/* <Text>{doctors.length}</Text> */}
-                {listDoctors}
-                {/* <Text>{listDoctors.length}</Text> */}
-        </List.Section>
-    );
-    
-};
-
-
-export const addMedication = (medicationName, medicationType, medicationDosage, medicationDosageMetric, medicationReason, medicationDaily, medicationDailyDosesNumber, medicationTimerArray, medicationStartDate, medicationEndDate, medicationInstructions) => {
-    return new Promise(function(resolve,reject){
-        let key;
-        if (medicationName != null) {
-            key = medicationName;
-        } else {
-            key=database().ref().push().key //reason for this part of code: if the key is not empty, i.e. already exist, this means that the record is being editted.
-        }
-
-        let dataToSave = {
-            medicationName:key,
-            medicationName: medicationName,
-            medicationType: medicationType,
-            medicationDosage: medicationDosage,
-            medicationDosageMetric: medicationDosageMetric,
-            medicationReason: medicationReason,
-            medicationDaily: medicationDaily,
-            medicationDailyDosesNumber: medicationDailyDosesNumber,
-            medicationTimerArray: medicationTimerArray,
-            medicationStartDate: medicationStartDate,
-            medicationEndDate: medicationEndDate,
-            medicationInstructions: medicationInstructions,
-        };
-        
-        database().ref('medication/' + key).update(dataToSave).then((snapshot)=>{
-            resolve(snapshot)
-        }).catch(err => {
-            reject(err);
-        });
-
-        { if(medicationDaily == 0) {
-            let dataToSaveNotifRemind = {
-                medicationName:key,
-                medicationName: medicationName,
-                medicationStartDate: medicationStartDate,
-                medicationEndDate: medicationEndDate,
-                medicationTimerArray: medicationTimerArray,
-            };
-            
-            database().ref('notificationReminders/' + key).update(dataToSaveNotifRemind).then((snapshot)=>{
-                resolve(snapshot)
-            }).catch(err => {
-                reject(err);
-            });
-        }}
+  database()
+    .ref('doctors/' + doctorPhone)
+    .remove()
+    .then(() => {
+      console.log('Deleting doctor', doctorPhone);
+    })
+    .catch((erro) => {
+      console.log(err);
     });
 };
 
-export const deleteMedication = (medicationName, navigation, deleteConfirm) => {
+export const editDoctor = (doctorPhone, editConfirm) => {
+  setDoctorId(doctorPhone);
+  setDoctorName(doctorName);
+  setDoctorSpeciality(doctorSpeciality);
+  setDoctorPhonePrefix(doctorPhonePrefix);
+  setDoctorPhone(doctorPhone);
+  setDoctorEmail(doctorEmail);
+};
 
-        database().ref('medication/' + medicationName).remove().then(() => {
-        }).catch((erro) =>{
-            console.log(err)
-        });
-    
+export const ReadDoctor = ({navigation}) => {
+  const [doctors, setDoctors] = useState([]);
+  const specialitiesOfDoctors = [
+    'Allergy and Immunology',
+    'Anesthesiology',
+    'Dermatology',
+    'Diagnostic Radiology',
+    'Emergency Medicine',
+    'Family Medicine',
+    'Internal Medicine',
+    'Medical Genetics',
+    'Neurology',
+    'Nuclear Medicine',
+    'Obstetrics and Gynecology',
+    'Ophthalmology',
+    'Pathology',
+    'Pediatrics',
+    'Physical Medicine and Rehabilitation',
+    'Preventive Medicine',
+    'Psychiatry',
+    'Radiation Oncology',
+    'Surgery',
+    'Urology',
+  ];
+
+  React.useEffect(() => {
+    const doctorsRef = database().ref('/doctors');
+
+    const onLoadingListener = doctorsRef.on('value', (snapshot) => {
+      setDoctors([]);
+      snapshot.forEach(function (childSnapshot) {
+        setDoctors((doctors) => [...doctors, childSnapshot.val()]);
+      });
+    });
+
+    return () => {
+      doctorsRef.off('value', onLoadingListener);
+    };
+  }, []);
+
+  const listDoctors = doctors.map((element) => (
+    <View key={element.doctorPhone}>
+      <List.Item
+        title={element.doctorName}
+        description={specialitiesOfDoctors[element.doctorSpeciality]}
+        left={() => <Icon name="face" size={30} />}
+        onPress={() => {
+          navigation.navigate('Medication', {
+            screen: 'ViewDoctor',
+            params: {doctor: element},
+          });
+        }}
+      />
+    </View>
+  ));
+
+  return (
+    <List.Section>
+      <List.Subheader>Your Doctors</List.Subheader>
+      {/* <Text>{doctors.length}</Text> */}
+      {listDoctors}
+      {/* <Text>{listDoctors.length}</Text> */}
+    </List.Section>
+  );
+};
+
+export const addMedication = (
+  medicationName,
+  medicationType,
+  medicationDosage,
+  medicationDosageMetric,
+  medicationReason,
+  medicationDaily,
+  medicationDailyDosesNumber,
+  medicationTimerArray,
+  medicationStartDate,
+  medicationEndDate,
+  medicationInstructions,
+) => {
+  return new Promise(function (resolve, reject) {
+    let key;
+    if (medicationName != null) {
+      key = medicationName;
+    } else {
+      key = database().ref().push().key; //reason for this part of code: if the key is not empty, i.e. already exist, this means that the record is being editted.
+    }
+
+    let dataToSave = {
+      medicationName: key,
+      medicationName: medicationName,
+      medicationType: medicationType,
+      medicationDosage: medicationDosage,
+      medicationDosageMetric: medicationDosageMetric,
+      medicationReason: medicationReason,
+      medicationDaily: medicationDaily,
+      medicationDailyDosesNumber: medicationDailyDosesNumber,
+      medicationTimerArray: medicationTimerArray,
+      medicationStartDate: medicationStartDate,
+      medicationEndDate: medicationEndDate,
+      medicationInstructions: medicationInstructions,
+    };
+
+    database()
+      .ref('medication/' + key)
+      .update(dataToSave)
+      .then((snapshot) => {
+        resolve(snapshot);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+
+    {
+      if (medicationDaily == 0) {
+        let dataToSaveNotifRemind = {
+          medicationName: key,
+          medicationName: medicationName,
+          medicationStartDate: medicationStartDate,
+          medicationEndDate: medicationEndDate,
+          medicationTimerArray: medicationTimerArray,
+        };
+
+        database()
+          .ref('notificationReminders/' + key)
+          .update(dataToSaveNotifRemind)
+          .then((snapshot) => {
+            resolve(snapshot);
+          })
+          .catch((err) => {
+            reject(err);
+          });
+      }
+    }
+  });
+};
+
+export const deleteMedication = (medicationName, navigation, deleteConfirm) => {
+  database()
+    .ref('medication/' + medicationName)
+    .remove()
+    .then(() => {})
+    .catch((erro) => {
+      console.log(err);
+    });
 };
 
 export const editMedication = (medicationName, editConfirm) => {
-
-        setMedicationId(medicationName);
-        setMedicationName(medicationName);
-        setMedicationType(medicationType);
-        setMedicationDosage(medicationDosage);
-        setMedicationDosageMetric(medicationDosageMetric);
-        setMedicationReason(medicationReason);
-        setMedicationDaily(medicationDaily);
-        setMedicationDailyDosesNumber(medicationDailyDosesNumber);
-        setMedicationTimer(medicationTimer);
-        setMedicationStartDate(medicationStartDate);
-        setMedicationEndDate(medicationEndDate);
-        setMedicationInstructions(medicationInstructions);
-    
+  setMedicationId(medicationName);
+  setMedicationName(medicationName);
+  setMedicationType(medicationType);
+  setMedicationDosage(medicationDosage);
+  setMedicationDosageMetric(medicationDosageMetric);
+  setMedicationReason(medicationReason);
+  setMedicationDaily(medicationDaily);
+  setMedicationDailyDosesNumber(medicationDailyDosesNumber);
+  setMedicationTimer(medicationTimer);
+  setMedicationStartDate(medicationStartDate);
+  setMedicationEndDate(medicationEndDate);
+  setMedicationInstructions(medicationInstructions);
 };
 
 export const ReadMedication = ({navigation}) => {
-    const [medications, setMedications] = useState([]);
-    const metricsOfDosage = ['ml', 'mg', 'g', 'Pills/Tablets', 'Capsule', 'Drops', 'Patches', 'N/A'];
+  const [medications, setMedications] = useState([]);
+  const metricsOfDosage = [
+    'ml',
+    'mg',
+    'g',
+    'Pills/Tablets',
+    'Capsule',
+    'Drops',
+    'Patches',
+    'N/A',
+  ];
 
-    React.useEffect(() => {
-        const medicationsRef = database().ref('/medication');
+  React.useEffect(() => {
+    const medicationsRef = database().ref('/medication');
 
-        const onLoadingListener = medicationsRef.on('value', snapshot => {
-            setMedications([]);
-            snapshot.forEach(function(childSnapshot){
-                setMedications(medications => [...medications, childSnapshot.val()]);
-            });
-        });
+    const onLoadingListener = medicationsRef.on('value', (snapshot) => {
+      setMedications([]);
+      snapshot.forEach(function (childSnapshot) {
+        setMedications((medications) => [...medications, childSnapshot.val()]);
+      });
+    });
 
-        return () => {
-            medicationsRef.off('value', onLoadingListener);
+    return () => {
+      medicationsRef.off('value', onLoadingListener);
+    };
+
+    }, []);
+
+  const listMedication = medications.map((element) => (
+    <View key={element.medicationName}>
+      <List.Item
+        title={element.medicationName}
+        description={
+          element.medicationDosage +
+          ' ' +
+          metricsOfDosage[element.medicationDosageMetric]
         }
-        
-    }, [])
+        left={() => (
+          <Image
+            source={require('./screens/medication/drugs.png')}
+            style={{width: 25, height: 25}}
+          />
+        )}
+        onPress={() => {
+          navigation.navigate('Medication', {
+            screen: 'ViewMedication',
+            params: {medication: element},
+          });
+        }}
+      />
+    </View>
+  ));
 
-    const listMedication = medications.map((element) =>
-        <View key={element.medicationName}>
-            <List.Item
-                title={element.medicationName}
-                description={element.medicationDosage + " " + metricsOfDosage[element.medicationDosageMetric]}
-                left={() => <Image source={require('./screens/medication/drugs.png')} style={{width: 25, height: 25}} />}
-                onPress={() => {
-                    navigation.navigate('Medication', {
-                        screen: 'ViewMedication',
-                        params: {medication: element}
-                    })
-                }}
-            />
-        </View>
-    );
-
-    return (
-        <List.Section>
-            <List.Subheader>Your Medications</List.Subheader>
-                {/* <Text>{medications.length}</Text> */}
-                {listMedication}
-                {/* <Text>{listMedication.length}</Text> */}
-        </List.Section>
-    );
-
-
-
+  return (
+    <List.Section>
+      <List.Subheader>Your Medications</List.Subheader>
+      {/* <Text>{medications.length}</Text> */}
+      {listMedication}
+      {/* <Text>{listMedication.length}</Text> */}
+    </List.Section>
+  );
 };

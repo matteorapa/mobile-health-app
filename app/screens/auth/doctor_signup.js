@@ -1,12 +1,12 @@
 import {Text, View, Button, TextInput} from 'react-native';
 import React from 'react';
 import {styles} from '../../styles/globals';
-import database from '@react-native-firebase/database'
+import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
+import ThemeButton from '../../components/ThemeButton';
 
 
 export default function SignUpScreen({navigation}) {
-
   const [Name, onChangeName] = React.useState('');
   const [Surname, onChangeSurname] = React.useState('');
   const [email, onChangeEmail] = React.useState('');
@@ -26,7 +26,7 @@ export default function SignUpScreen({navigation}) {
             onChangeText={(text) => onChangeName(text)}
             value={Name}
           />
-           <Text>Surname</Text>
+          <Text>Surname</Text>
           <TextInput
             style={styles.textInput}
             placeholder={'Your Last Name'}
@@ -55,55 +55,48 @@ export default function SignUpScreen({navigation}) {
             secureTextEntry={true}
             value={VerifyPassword}
           />
-          <Button
-            title="Sign Up"
+          <ThemeButton
+            text="SIGN UP"
             accessibilityLabel="Sign-up button with email and password as values"
-            onPress={() => {
-              if (VerifyPassword != password){
+            onPressEvent={() => {
+              if (VerifyPassword !== password) {
                 console.log('Passwords do not match');
               } else {
                 auth()
                   .createUserWithEmailAndPassword(email, password)
-                  .then(data => {
-                      addDoctor(data.user.uid,'Doctor', Name, Surname)
+                  .then((data) => {
+                    addDoctor(data.user.uid, 'Doctor', Name, Surname);
                   })
-                  .catch(error => {
-                      if (error.code === 'auth/email-already-in-use') {
+                  .catch((error) => {
+                    if (error.code === 'auth/email-already-in-use') {
                       console.log('That email address is already in use!');
-                      }
+                    }
 
-                      if (error.code === 'auth/invalid-email') {
+                    if (error.code === 'auth/invalid-email') {
                       console.log('That email address is invalid!');
-                      }
+                    }
 
-                      console.error(error);
+                    console.error(error);
                   });
-              navigation.navigate('SignIn');
+                navigation.navigate('SignIn');
               }
             }}
           />
-
-            <Text
-              style={styles.link}
-              onPress={() => navigation.navigate('SignUp')}>
-              Sign up as a Patient?
-            </Text>
-
-          <View style={styles.signup}>
+          <ThemeButton
+              type="secondary"
+              text="CREATE PATIENT ACCOUNT"
+              onPressEvent={() => navigation.navigate('SignUp')}
+            />
+          
             
-          <Button
-            title="Sign In Instead?"
-            color="#000000"
-            accessibilityLabel="Sign-in button for email and password relogin"
-            onPress={() => {
-              navigation.navigate('SignIn');
-            }}
-          />
-
-            
-
-           
-          </View>
+            <ThemeButton
+              type="muted"
+              text="or Sign In instead?"
+              onPressEvent={() => {
+                navigation.navigate('SignIn');
+              }}
+            />
+          
         </View>
       </View>
     </View>
@@ -111,25 +104,28 @@ export default function SignUpScreen({navigation}) {
 }
 
 export const addDoctor = (doctorId, role, Name, Surname) => {
-  return new Promise(function(resolve,reject){
-      let key;
-      if (doctorId != null) {
-         key = doctorId;
-      } else {
-        key = database().ref().push().key
-      }
+  return new Promise(function (resolve, reject) {
+    let key;
+    if (doctorId != null) {
+      key = doctorId;
+    } else {
+      key = database().ref().push().key;
+    }
 
-      let dataToSave = {
-          doctorId: key,
-          role: role,
-          name: Name,
-          surname: Surname,
-      };
-      database().ref('UserRoles/' + key).update(dataToSave).then((snapshot)=>{
-          resolve(snapshot)
-      }).catch(err => {
-          reject(err);
+    let dataToSave = {
+      doctorId: key,
+      role: role,
+      name: Name,
+      surname: Surname,
+    };
+    database()
+      .ref('UserRoles/' + key)
+      .update(dataToSave)
+      .then((snapshot) => {
+        resolve(snapshot);
+      })
+      .catch((err) => {
+        reject(err);
       });
-
   });
 };

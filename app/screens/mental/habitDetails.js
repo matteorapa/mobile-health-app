@@ -1,26 +1,23 @@
-import {Text, View, Dimensions, ScrollView} from 'react-native';
+import {Dimensions, ScrollView} from 'react-native';
 import * as React from 'react';
 import {Button} from 'react-native-paper';
-import {COLORS, LAYOUT, TYPE} from '../../styles/theme';
+import {COLORS, LAYOUT} from '../../styles/theme';
 
 import ProgressComponent from '../../components/ProgressComponent';
 import ThemeButton from '../../components/ThemeButton';
 import {addHabit, deleteHabit} from '../../DBFunctions';
-import {LineChart, Grid} from 'react-native-chart-kit';
-import {Divider, DataTable, Portal, Dialog, Provider, Paragraph} from 'react-native-paper';
+import {LineChart} from 'react-native-chart-kit';
+import {DataTable, Dialog, Paragraph} from 'react-native-paper';
 import PaddedDivider from '../../components/PaddedDivider';
 
 export default function DetailsScreen({navigation, route}) {
-  
-
   //obtaining data from route send from index screen
   const {habit} = route.params;
   let data = [0, 0, 0, 0, 0, 0];
   let counter = 0;
   const currentMonth = new Date().getMonth() + 1;
-  const [visible, setVisible] = React.useState(false)
+  const [visible, setVisible] = React.useState(false);
   const hideDialog = () => setVisible(false);
-  
 
   habit.graphData.map((element) => {
     data[counter] = element;
@@ -149,27 +146,31 @@ export default function DetailsScreen({navigation, route}) {
         accessibilityLabel="Delete this habit."
         text="DELETE"
         type="muted"
-        onPressEvent={()=>{
-          setVisible(true)
+        onPressEvent={() => {
+          setVisible(true);
         }}
       />
       <PaddedDivider />
-      
-        <Dialog visible={visible} onDismiss={hideDialog}>
-          <Dialog.Content>
-            <Paragraph>Do you want to permanently delete the habit {habit.habitId}?</Paragraph>
-          </Dialog.Content>
-          <Dialog.Actions>
-            <Button onPress={() => setVisible(false)}>Cancel</Button>
-            <Button onPress={() => {
+
+      <Dialog visible={visible} onDismiss={hideDialog}>
+        <Dialog.Content>
+          <Paragraph>
+            Do you want to permanently delete the habit {habit.habitId}?
+          </Paragraph>
+        </Dialog.Content>
+        <Dialog.Actions>
+          <Button onPress={() => setVisible(false)}>Cancel</Button>
+          <Button
+            onPress={() => {
               deleteHabit(habit.habitId);
               navigation.navigate('Tasks', {
                 screen: 'Index',
               });
-              }}>DELETE</Button>
-          </Dialog.Actions>
-        </Dialog>
-      
+            }}>
+            DELETE
+          </Button>
+        </Dialog.Actions>
+      </Dialog>
     </ScrollView>
   );
 }

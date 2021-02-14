@@ -1,20 +1,13 @@
-import React from 'react'
-import {Divider} from 'react-native-paper';
-import { StyleSheet, View } from 'react-native';
+import React from 'react';
+import {StyleSheet, View} from 'react-native';
 
 export default function PaddedDivider() {
-    return(
-    
-    <View style={STYLE.divider}>
-        {/* <Divider /> */}
-    </View>
-    
-    )
+  return <View style={STYLE.divider} />;
 }
 
 const STYLE = StyleSheet.create({
-    divider: {
-        marginTop: 12,
-        marginBottom: 12,
-    }
-})
+  divider: {
+    marginTop: 12,
+    marginBottom: 12,
+  },
+});

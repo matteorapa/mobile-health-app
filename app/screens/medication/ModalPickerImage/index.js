@@ -1,10 +1,15 @@
-
-
 import React from 'react';
-import { View, Modal, Text, ScrollView, TouchableOpacity, Image, ViewPropTypes } from 'react-native';
+import {
+  View,
+  Modal,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+  ViewPropTypes,
+} from 'react-native';
 
 import PropTypes from 'prop-types';
-
 import styles from './style';
 import BaseComponent from './BaseComponent';
 
@@ -58,17 +63,17 @@ export default class ModalPicker extends BaseComponent {
   }
 
   componentDidMount() {
-    this.setState({ selected: this.props.initValue });
-    this.setState({ cancelText: this.props.cancelText });
+    this.setState({selected: this.props.initValue});
+    this.setState({cancelText: this.props.cancelText});
   }
 
   componentDidUpdate() {
-    this.setState({ data: this.props.data });
+    this.setState({data: this.props.data});
   }
 
   onChange(item) {
     this.props.onChange(item);
-    this.setState({ selected: item.label });
+    this.setState({selected: item.label});
     this.close();
   }
 
@@ -86,8 +91,12 @@ export default class ModalPicker extends BaseComponent {
 
   renderSection(section) {
     return (
-      <View key={section.key} style={[styles.sectionStyle, this.props.sectionStyle]}>
-        <Text style={[styles.sectionTextStyle, this.props.sectionTextStyle]}>{section.label}</Text>
+      <View
+        key={section.key}
+        style={[styles.sectionStyle, this.props.sectionStyle]}>
+        <Text style={[styles.sectionTextStyle, this.props.sectionTextStyle]}>
+          {section.label}
+        </Text>
       </View>
     );
   }
@@ -105,30 +114,31 @@ export default class ModalPicker extends BaseComponent {
               justifyContent: 'space-between',
               alignItems: 'center',
             },
-          ]}
-        >
-          <View style={{ flex: 0.15 }}>
-            <Image source={option.image} resizeMode="stretch" style={{ width: 30, height: 16 }} />
+          ]}>
+          <View style={{flex: 0.15}}>
+            <Image
+              source={option.image}
+              resizeMode="stretch"
+              style={{width: 30, height: 16}}
+            />
           </View>
-          <View style={{ flex: 0.7, alignItems: 'center' }}>
+          <View style={{flex: 0.7, alignItems: 'center'}}>
             <Text
               style={[
                 styles.optionTextStyle,
                 this.props.optionTextStyle,
-                { color: '#434343', fontSize: 14 },
-              ]}
-            >
+                {color: '#434343', fontSize: 14},
+              ]}>
               {option.label}
             </Text>
           </View>
-          <View style={{ flex: 0.15, alignItems: 'flex-end' }}>
+          <View style={{flex: 0.15, alignItems: 'flex-end'}}>
             <Text
               style={[
                 styles.optionTextStyle,
                 this.props.optionTextStyle,
-                { color: 'grey', fontSize: 12 },
-              ]}
-            >
+                {color: 'grey', fontSize: 12},
+              ]}>
               {option.dialCode}
             </Text>
           </View>
@@ -149,17 +159,17 @@ export default class ModalPicker extends BaseComponent {
     return (
       <View
         style={[styles.overlayStyle, this.props.overlayStyle]}
-        key={`modalPicker${componentIndex++}`}
-      >
+        key={`modalPicker${componentIndex++}`}>
         <View style={styles.optionContainer}>
           <ScrollView keyboardShouldPersistTaps="always">
-            <View style={{ paddingHorizontal: 10 }}>{options}</View>
+            <View style={{paddingHorizontal: 10}}>{options}</View>
           </ScrollView>
         </View>
         <View style={styles.cancelContainer}>
           <TouchableOpacity onPress={this.close}>
             <View style={[styles.cancelStyle, this.props.cancelStyle]}>
-              <Text style={[styles.cancelTextStyle, this.props.cancelTextStyle]}>
+              <Text
+                style={[styles.cancelTextStyle, this.props.cancelTextStyle]}>
                 {this.props.cancelText}
               </Text>
             </View>
@@ -179,11 +189,12 @@ export default class ModalPicker extends BaseComponent {
     const dp = (
       <Modal
         transparent
-        ref={(ref) => { this.modal = ref; }}
+        ref={(ref) => {
+          this.modal = ref;
+        }}
         visible={this.state.modalVisible}
         onRequestClose={this.close}
-        animationType={this.state.animationType}
-      >
+        animationType={this.state.animationType}>
         {this.renderOptionList()}
       </Modal>
     );
@@ -192,7 +203,9 @@ export default class ModalPicker extends BaseComponent {
       <View style={this.props.style}>
         {dp}
 
-        <TouchableOpacity onPress={this.open}>{this.renderChildren()}</TouchableOpacity>
+        <TouchableOpacity onPress={this.open}>
+          {this.renderChildren()}
+        </TouchableOpacity>
       </View>
     );
   }

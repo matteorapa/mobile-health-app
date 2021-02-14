@@ -1,5 +1,5 @@
-import { StyleSheet } from 'react-native';
-import { COLORS } from './theme'
+import {StyleSheet} from 'react-native';
+import {COLORS} from './theme';
 
 const styles = StyleSheet.create({
   container: {
@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     padding: 32,
-    paddingTop: 64
+    paddingTop: 64,
   },
   link: {
     color: COLORS.primaryDark,
@@ -61,8 +61,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     width: 250,
     height: 250,
-    resizeMode: "cover",
-
+    resizeMode: 'cover',
   },
   emptyStateContainer: {
     display: 'flex',
@@ -70,7 +69,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignContent: 'center',
     alignItems: 'center',
-    height: '100%'
+    height: '100%',
   },
 
   navButtonsForm: {
@@ -79,24 +78,24 @@ const styles = StyleSheet.create({
   },
   phoneNumberInputs: {
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   testing: {
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   countryPickerContainer: {
     paddingTop: 15,
     paddingLeft: 25,
     paddingRight: 25,
     flex: 1,
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
   filterInputStyle: {
     flex: 1,
     paddingTop: 10,
     paddingBottom: 10,
     backgroundColor: '#fff',
-    color: '#424242'
+    color: '#424242',
   },
   countryPickerStyle: {
     flex: 1,
@@ -105,40 +104,40 @@ const styles = StyleSheet.create({
     padding: 12,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   countryPickerItemContainer: {
     flex: 1,
     paddingLeft: 5,
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   countryPickerItemName: {
     flex: 1,
-    fontSize: 16
+    fontSize: 16,
   },
   countryPickerItemDialCode: {
-    fontSize: 16
+    fontSize: 16,
   },
   filterInputContainer: {
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   closeButtonStyle: {
     padding: 12,
-    alignItems: 'center'
+    alignItems: 'center',
   },
   closeTextStyle: {
     padding: 5,
     fontSize: 20,
-    color: 'red'
+    color: 'red',
   },
   flagImage: {
     marginRight: 10,
     width: 30,
-    height: 16
-  }
+    height: 16,
+  },
 });
 
-export { styles };
+export {styles};

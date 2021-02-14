@@ -4,8 +4,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {AuthContext} from './auth';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { COLORS } from './styles/theme'
-
+import {COLORS} from './styles/theme';
 import RemindersScreen from './screens/index';
 import MindScreen from './screens/mental/index';
 import MedicationScreen from './screens/medication/index';
@@ -22,13 +21,11 @@ import EditHabitScreen from './screens/mental/editHabit';
 import AddReminderScreen from './screens/mental/addReminder';
 import EditReminderScreen from './screens/mental/editReminder';
 import DetailsScreen from './screens/mental/habitDetails';
-import { initiateChannels } from './notifications';
-import {addItem, deleteItem, editItem} from './DBFunctions';
-import { Button, Text } from 'react-native';
+import {initiateChannels} from './notifications';
+import {addItem} from './DBFunctions';
 import {DefaultTheme, Provider} from 'react-native-paper';
 import ViewMedication from './screens/medication/viewMedication';
 import ViewDoctor from './screens/medication/viewDoctor';
-import { createUser, logOut, signIn} from './screens/auth/AuthFunctionality'
 
 function MedicationStack() {
   const MedicationStack = createStackNavigator();
@@ -75,26 +72,30 @@ function MedicationStack() {
 function MentalStack() {
   const MentalStack = createStackNavigator();
 
+  const options = {
+    headerShown: false,
+  };
+
   const optionsEmbedded = {
     headerShown: true,
     title: 'Add your habit',
-  }
+  };
 
   const optionsEditHabit = {
     headerShown: true,
     title: 'Edit your habit',
-  }
+  };
 
   const optionsAddReminder = {
     headerShown: true,
     title: 'Add your reminder',
-  }
+  };
 
   const optionsEditReminder = {
     headerShown: true,
     title: 'Edit your reminder',
-  }
- 
+  };
+
   return (
     <MentalStack.Navigator>
       <MentalStack.Screen
@@ -102,7 +103,7 @@ function MentalStack() {
         component={MindScreen}
         options={options}
       />
- 
+
       <MentalStack.Screen
         name="AddHabit"
         component={AddHabitScreen}
@@ -113,29 +114,27 @@ function MentalStack() {
         name="EditHabit"
         component={EditHabitScreen}
         options={optionsEditHabit}
-      />      
+      />
 
       <MentalStack.Screen
         name="AddReminder"
         component={AddReminderScreen}
         options={optionsAddReminder}
-      />     
+      />
 
       <MentalStack.Screen
         name="Details"
         component={DetailsScreen}
-        options={({ route }) => ({ 
-          title: route.params.name
+        options={({route}) => ({
+          title: route.params.name,
         })}
-      />     
+      />
 
-      
       <MentalStack.Screen
         name="EditReminder"
         component={EditReminderScreen}
         options={optionsEditReminder}
-      />    
-      
+      />
     </MentalStack.Navigator>
   );
 }
@@ -166,37 +165,52 @@ function AppTabStack() {
   return (
     <AppTabStack.Navigator initialRouteName="Reminders">
       {/* Tab for calendar with upcoming reminders */}
-      <AppTabStack.Screen name="Reminders" component={RemindersScreen}  options={{
+      <AppTabStack.Screen
+        name="Reminders"
+        component={RemindersScreen}
+        options={{
           tabBarLabel: 'Reminders',
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({color, size}) => (
             <Icon name="today" color={color} size={size} />
           ),
-        }}/>
+        }}
+      />
 
       {/* Tab for mental health reminder */}
-      <AppTabStack.Screen name="Tasks" component={MentalStack} 
-      options={{
-        tabBarLabel: 'Tasks',
-        tabBarIcon: ({ color, size }) => (
-          <Icon name="leaderboard" color={color} size={size} />
-        ),
-      }}/>
+      <AppTabStack.Screen
+        name="Tasks"
+        component={MentalStack}
+        options={{
+          tabBarLabel: 'Tasks',
+          tabBarIcon: ({color, size}) => (
+            <Icon name="leaderboard" color={color} size={size} />
+          ),
+        }}
+      />
 
       {/* Tab for list of medications, and doctors */}
-      <AppTabStack.Screen name="Medication" component={MedicationStack} options={{
-        tabBarLabel: 'Medication',
-        tabBarIcon: ({ color, size }) => (
-          <Icon name="healing" color={color} size={size} />
-        ),
-      }}/>
+      <AppTabStack.Screen
+        name="Medication"
+        component={MedicationStack}
+        options={{
+          tabBarLabel: 'Medication',
+          tabBarIcon: ({color, size}) => (
+            <Icon name="healing" color={color} size={size} />
+          ),
+        }}
+      />
 
       {/* Tab for user account and preferences */}
-      <AppTabStack.Screen name="Account" component={AccountStack} options={{
-        tabBarLabel: 'Profile',
-        tabBarIcon: ({ color, size }) => (
-          <Icon name="face" color={color} size={size} />
-        ),
-      }}/>
+      <AppTabStack.Screen
+        name="Account"
+        component={AccountStack}
+        options={{
+          tabBarLabel: 'Profile',
+          tabBarIcon: ({color, size}) => (
+            <Icon name="face" color={color} size={size} />
+          ),
+        }}
+      />
     </AppTabStack.Navigator>
   );
 }
@@ -229,32 +243,26 @@ function AuthStack() {
 }
 
 export default function App() {
-  const [accessToken, setAccessToken] = React.useState(false);
-  const [refreshToken, setRefreshToken] = React.useState(null);
-  const [isLoading, setIsLoading] = React.useState(true);
+  const [signedIn, setSignedIn] = React.useState(true);
 
-  const [itemId, setItemId] = React.useState();
-  const [itemName, setItemName] = React.useState('');
-  const [items, setItems] = React.useState([]);
+  // const [itemId, setItemId] = React.useState();
+  // const [itemName, setItemName] = React.useState('');
+  // const [items, setItems] = React.useState([]);
 
   addItem('test2', 'test');
 
   const authContext = React.useMemo(() => {
     return {
       signIn: () => {
-        setIsLoading(false);
-        setAccessToken(true);
-        setRefreshToken('gert');
+        setSignedIn(true);
       },
       signUp: () => {
-        setIsLoading(false);
-        setAccessToken('gert');
-        setRefreshToken('gert');
+        
+        setSignedIn(false);
       },
       signOut: () => {
-        setIsLoading(false);
-        setAccessToken(false);
-        setRefreshToken(null);
+        setSignedIn(false);
+        
       },
     };
   }, []);
@@ -270,7 +278,7 @@ export default function App() {
     },
   };
 
-  initiateChannels()
+  initiateChannels();
 
   const theme = {
     ...DefaultTheme,
@@ -284,11 +292,11 @@ export default function App() {
 
   return (
     <Provider theme={theme}>
-    <AuthContext.Provider value={authContext}>
-      <NavigationContainer theme={MyTheme}>
-        {accessToken ? <AppTabStack /> : <AuthStack />}
-      </NavigationContainer>
-    </AuthContext.Provider>
+      <AuthContext.Provider value={authContext}>
+        <NavigationContainer theme={MyTheme}>
+          {signedIn ? <AppTabStack /> : <AuthStack />}
+        </NavigationContainer>
+      </AuthContext.Provider>
     </Provider>
   );
 }

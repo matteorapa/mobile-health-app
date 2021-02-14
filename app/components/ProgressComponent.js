@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
-import {StyleSheet, View, Text} from 'react-native';
+import React, {useState} from 'react';
+import {View, Text} from 'react-native';
 import {Title, ProgressBar} from 'react-native-paper';
-import {COLORS, LAYOUT, TYPE} from '../styles/theme';
+import {COLORS} from '../styles/theme';
 
-export default function ProgressComponent( {habit} ) {
-  
-  const [points, setPoints] = useState(habit.consPts)
+export default function ProgressComponent({habit}) {
+  const [points, setPoints] = useState(habit.consPts);
   const [percentage, setPerc] = useState(0);
   const [title, setTitle] = useState('Beginner Achievement');
 
@@ -23,11 +22,10 @@ export default function ProgressComponent( {habit} ) {
       setTitle('Pro Achievement');
       setPerc((points - 100) / 100);
     }
-  });
+  }, [points]);
 
   return (
     <View>
-
       <Title>{title}</Title>
       <ProgressBar
         progress={percentage}

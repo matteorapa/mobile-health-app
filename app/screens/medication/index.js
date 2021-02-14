@@ -1,21 +1,15 @@
-import React, {useState, useEffect} from 'react';
-import {Text, View, Button, Image, StyleSheet, ScrollView} from 'react-native';
-import { Header } from 'react-native/Libraries/NewAppScreen';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import {FAB, List} from 'react-native-paper';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import React, {useState} from 'react';
+import {View, ScrollView} from 'react-native';
 import ThemeButton from '../../components/ThemeButton';
-import {COLORS, LAYOUT, TYPE} from '../../styles/theme';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-
-import { ReadDoctor, ReadMedication } from '../../DBFunctions';
+import {LAYOUT} from '../../styles/theme';
+import {ReadDoctor, ReadMedication} from '../../DBFunctions';
 
 export default function MedicationScreen({navigation}) {
   const [myDoctors, setMyDoctors] = useState([]);
   // const [date, setDate] = useState(new Date());
   // const [mode, setMode] = useState('date');
   // const [show, setShow] = useState(false);
-  
+
   // const onChange = (event, selectedDate) => {
   //   const currentDate = selectedDate || date;
   //   setShow(Platform.OS === 'ios');
@@ -37,9 +31,8 @@ export default function MedicationScreen({navigation}) {
 
   return (
     <View style={LAYOUT.main}>
-
       <ScrollView style={{height: '40%'}}>
-        <ReadMedication navigation = {navigation} />
+        <ReadMedication navigation={navigation} />
       </ScrollView>
 
       <ThemeButton
@@ -49,13 +42,13 @@ export default function MedicationScreen({navigation}) {
         onPressEvent={() => {
           navigation.navigate('Medication', {
             screen: 'AddMedication',
-            params: {loadedMedication: ''}
+            params: {loadedMedication: ''},
           });
         }}
       />
 
       <ScrollView style={{height: '40%'}}>
-        <ReadDoctor navigation = {navigation} />
+        <ReadDoctor navigation={navigation} />
       </ScrollView>
 
       <ThemeButton
@@ -65,12 +58,10 @@ export default function MedicationScreen({navigation}) {
         onPressEvent={() => {
           navigation.navigate('Medication', {
             screen: 'AddDoctor',
-            params: {loadedDoctor: ''}
+            params: {loadedDoctor: ''},
           });
         }}
       />
-
     </View>
-    
   );
 }

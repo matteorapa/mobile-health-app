@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import {StyleSheet} from 'react-native';
 
 // Choice of colours
 // https://material.io/design/color/the-color-system.html
@@ -30,7 +30,7 @@ export const THEME = StyleSheet.create({
     alignSelf: 'center',
   },
   primary: {
-    borderWidth: 1
+    borderWidth: 1,
   },
   secondary_button: {},
   muted_button: {},
@@ -43,28 +43,28 @@ export const LAYOUT = StyleSheet.create({
     padding: 12,
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   main: {
     padding: 12,
-    height: "100%"
+    height: '100%',
   },
   mainCenter: {
     padding: 12,
-    height: "100%",
+    height: '100%',
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   inner: {
-    paddingLeft: 32
+    paddingLeft: 32,
   },
   flexed: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    height: 28
-  }
+    height: 28,
+  },
 });
 
 export const TYPE = StyleSheet.create({
@@ -95,23 +95,20 @@ export const TYPE = StyleSheet.create({
   subtitle1: {
     fontSize: 16,
     fontWeight: '600',
-    marginBottom: 6
+    marginBottom: 6,
   },
   subtitle2: {
     fontSize: 14,
     fontWeight: 'bold',
-    marginBottom: 6
+    marginBottom: 6,
   },
   body1: {
     fontSize: 16,
-    
   },
   body2: {
     fontSize: 14,
-    
   },
   caption: {
     fontSize: 12,
   },
 });
-

@@ -1,12 +1,12 @@
-import {Text, View, Button, TextInput} from 'react-native';
+import {Text, View, TextInput} from 'react-native';
 import React, {useState, useCallback} from 'react';
 import {Picker} from '@react-native-picker/picker';
 import {TimePickerModal} from 'react-native-paper-dates';
 import {listHabitIds, addReminder} from '../../DBFunctions';
-import {COLORS, LAYOUT, TYPE} from '../../styles/theme';
+import {LAYOUT} from '../../styles/theme';
 import ThemeButton from '../../components/ThemeButton';
 import {Surface} from 'react-native-paper';
-import { styles } from '../../styles/globals'
+import {styles} from '../../styles/globals';
 
 export default function AddReminderScreen({navigation}) {
   //array with the list of habits saved to choose a habit
@@ -25,8 +25,8 @@ export default function AddReminderScreen({navigation}) {
   const onConfirm = useCallback(
     ({hours, minutes}) => {
       setVisible(false);
-      console.log(hours)
-      console.log(minutes)
+      console.log(hours);
+      console.log(minutes);
 
       setHours(hours.toString());
       setMinutes(minutes.toString());
@@ -55,7 +55,9 @@ export default function AddReminderScreen({navigation}) {
           style={styles.textInput}
         />
 
-        <Text>Selected time: {hours1}:{minutes1}</Text>
+        <Text>
+          Selected time: {hours1}:{minutes1}
+        </Text>
 
         <TimePickerModal
           visible={visible}
@@ -77,9 +79,7 @@ export default function AddReminderScreen({navigation}) {
         accessibilityLabel="Press button to create your remidner."
         text="ADD REMINDER"
         onPressEvent={() => {
-          {
-            addReminder(state, title, hours1, minutes1);
-          }
+          addReminder(state, title, hours1, minutes1);
           navigation.goBack();
         }}
       />

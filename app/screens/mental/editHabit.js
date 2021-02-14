@@ -1,10 +1,10 @@
-import {Text, View, Button, TextInput} from 'react-native';
+import {Text, View, TextInput} from 'react-native';
 import React, {useState} from 'react';
 import {addHabit} from '../../DBFunctions';
 import {DatePickerModal} from 'react-native-paper-dates';
 import {Picker} from '@react-native-picker/picker';
 import {styles} from '../../styles/globals';
-import {COLORS, LAYOUT, TYPE} from '../../styles/theme';
+import {LAYOUT} from '../../styles/theme';
 import {Surface, DataTable} from 'react-native-paper';
 import ThemeButton from '../../components/ThemeButton';
 
@@ -74,9 +74,7 @@ export default function EditHabitScreen({navigation, route}) {
         <DataTable>
           <DataTable.Row>
             <DataTable.Cell>Start date</DataTable.Cell>
-            <DataTable.Cell numeric>
-              {date.toLocaleDateString()}
-            </DataTable.Cell>
+            <DataTable.Cell numeric>{date.toLocaleDateString()}</DataTable.Cell>
           </DataTable.Row>
         </DataTable>
         <DatePickerModal

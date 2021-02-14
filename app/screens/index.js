@@ -1,19 +1,20 @@
-import {Text, View, Card, Title} from 'react-native';
+import {View} from 'react-native';
 import React from 'react';
-import {COLORS, LAYOUT, TYPE} from '../styles/theme';
 import database from '@react-native-firebase/database';
-import {styles} from '../styles/globals'
 
 export default function WelcomeScreen() {
   const [notificationReminders, setNotificationReminders] = React.useState([]);
-  
+
   React.useEffect(() => {
     const medicationRef = database().ref('/notificationReminders');
     const onLoadingListener = medicationRef.on('value', (snapshot) => {
       setNotificationReminders([]);
       snapshot.forEach(function (childSnapshot) {
-        console.log(childSnapshot.val())
-        setNotificationReminders((notificationReminders) => [...notificationReminders, childSnapshot.val()]);
+        console.log(childSnapshot.val());
+        setNotificationReminders((notificationReminders) => [
+          ...notificationReminders,
+          childSnapshot.val(),
+        ]);
       });
     });
     return () => {
@@ -21,8 +22,7 @@ export default function WelcomeScreen() {
     };
   }, []);
 
-  return(
-    <View></View>)
+  return <View />;
 
   // return notificationReminders.map((element) => {
   //   return (
@@ -32,5 +32,4 @@ export default function WelcomeScreen() {
   //     </Card>
   //   );
   // })
-
 }

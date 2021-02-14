@@ -2,14 +2,11 @@ import {Text, View, Button, TextInput, Alert} from 'react-native';
 import React from 'react';
 import {AuthContext} from '../../auth';
 import {styles} from '../../styles/globals';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { createUser } from './AuthFunctionality'
-import database from '@react-native-firebase/database'
+import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
-
+import ThemeButton from '../../components/ThemeButton';
 
 export default function SignUpScreen({navigation}) {
-
   const [name, onChangeName] = React.useState('');
   const [Surname, onChangeSurname] = React.useState('');
   const [email, onChangeEmail] = React.useState('');
@@ -28,7 +25,7 @@ export default function SignUpScreen({navigation}) {
             onChangeText={(text) => onChangeName(text)}
             value={name}
           />
-           <Text>Surname</Text>
+          <Text>Surname</Text>
           <TextInput
             style={styles.textInput}
             placeholder={'Your Last Name'}
@@ -57,62 +54,76 @@ export default function SignUpScreen({navigation}) {
             secureTextEntry={true}
             value={VerifyPassword}
           />
-          <Button
-            title="Sign Up"
-            accessibilityLabel="Sign-up button with email and password as values"
-            onPress={() => {
-              
-              if( name == '' || Surname == '' || email == '' || password == '' || VerifyPassword == ''){
-                Alert.alert('Sign Up Failed','Do not leave empty fields', [{text: 'Try Again', onPress: () => navigation.navigate('SignUp')}]);
+
+          <ThemeButton
+            text="SIGN UP"
+            accessibilityLabel="Create your account by pressing the button."
+            onPressEvent={() => {
+              if (name == '' || Surname == '' || email == '' || password == '' || VerifyPassword == ''){
+                Alert.alert('Sign Up Failed', 'Do not leave empty fields', [
+                  {
+                    text: 'Try Again',
+                    onPress: () => navigation.navigate('SignUp'),
+                  },
+                ]);
               } else {
-              if (VerifyPassword != password){
-                Alert.alert('Sign Up Failed','Passwords do not match', [{text: 'Try Again', onPress: () => navigation.navigate('SignUp')}]);
-              } else {
-                auth()
-                  .createUserWithEmailAndPassword(email, password)
-                  .then(data => {
-                      addUser(data.user.uid,'Patient', name, Surname)
+                if (VerifyPassword != password) {
+                  Alert.alert('Sign Up Failed', 'Passwords do not match', [
+                    {
+                      text: 'Try Again',
+                      onPress: () => navigation.navigate('SignUp'),
+                    },
+                  ]);
+                } else {
+                  auth()
+                    .createUserWithEmailAndPassword(email, password)
+                    .then((data) => {
+                      addUser(data.user.uid, 'Patient', name, Surname);
                       navigation.navigate('SignIn');
-                  })
-                  .catch(error => {
+                    })
+                    .catch((error) => {
                       if (error.code === 'auth/email-already-in-use') {
-                      Alert.alert('Sign up Failed','Email already in use', [{text: 'Try Again', onPress: () => console.log('alert closed')}]);
-                      navigation.navigate('SignIn');
+                        Alert.alert('Sign up Failed', 'Email already in use', [
+                          {
+                            text: 'Try Again',
+                            onPress: () => console.log('alert closed'),
+                          },
+                        ]);
+                        navigation.navigate('SignIn');
                       }
 
                       if (error.code === 'auth/invalid-email') {
-                      Alert.alert('Sign up Failed','Invalid Email format', [{text: 'Try Again', onPress: () => console.log('alert closed')}]);
-                      console.log('That email address is invalid!');
+                        Alert.alert('Sign up Failed', 'Invalid Email format', [
+                          {
+                            text: 'Try Again',
+                            onPress: () => console.log('alert closed'),
+                          },
+                        ]);
+                        console.log('That email address is invalid!');
                       }
 
                       console.error(error);
-                  });
+                    });
+                }
               }
-            }
-              
             }}
           />
-          <Text
-              style={styles.link}
-              onPress={() => navigation.navigate('DoctorSignUp')}>
-              Sign up as a doctor?
-            </Text>
 
-          <View style={styles.signup}>
-            
-          <Button
-            title="Sign In Instead?"
-            color="#000000"
+          <ThemeButton
+            type="secondary"
+            text="Sign-up as a doctor?"
+            accessibilityLabel="Create a new account intended for doctors."
+            onPressEvent={() => navigation.navigate('DoctorSignUp')}
+          />
+
+          <ThemeButton
+            type="muted"
+            text="Sign In Instead?"
             accessibilityLabel="Sign-in button for email and password relogin"
-            onPress={() => {
+            onPressEvent={() => {
               navigation.navigate('SignIn');
             }}
           />
-
-            
-
-           
-          </View>
         </View>
       </View>
     </View>
@@ -120,25 +131,28 @@ export default function SignUpScreen({navigation}) {
 }
 
 export const addUser = (userId, role, Name, Surname) => {
-  return new Promise(function(resolve,reject){
-      let key;
-      if (userId != null) {
-         key = userId;
-      } else {
-        key = database().ref().push().key
-      }
+  return new Promise(function (resolve, reject) {
+    let key;
+    if (userId != null) {
+      key = userId;
+    } else {
+      key = database().ref().push().key;
+    }
 
-      let dataToSave = {
-          userId: key,
-          role: role,
-          name: Name,
-          surname: Surname
-      };
-      database().ref('UserRoles/' + key).update(dataToSave).then((snapshot)=>{
-          resolve(snapshot)
-      }).catch(err => {
-          reject(err);
+    let dataToSave = {
+      userId: key,
+      role: role,
+      name: Name,
+      surname: Surname,
+    };
+    database()
+      .ref('UserRoles/' + key)
+      .update(dataToSave)
+      .then((snapshot) => {
+        resolve(snapshot);
+      })
+      .catch((err) => {
+        reject(err);
       });
-
   });
 };
