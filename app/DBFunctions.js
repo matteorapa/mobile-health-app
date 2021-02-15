@@ -665,8 +665,17 @@ export const addMedication = (
 };
 
 export const deleteMedication = (medicationName, navigation, deleteConfirm) => {
+  let key = medicationName + ',' + uid;
   database()
-    .ref('medication/' + medicationName + ',' + uid)
+    .ref('medication/' + key)
+    .remove()
+    .then(() => {})
+    .catch((erro) => {
+      console.log(err);
+    });
+
+  database()
+    .ref('notificationReminders/' + key)
     .remove()
     .then(() => {})
     .catch((erro) => {
@@ -700,6 +709,7 @@ export const ReadMedication = ({navigation}) => {
     'Capsule',
     'Drops',
     'Patches',
+    'Sachet',
     'N/A',
   ];
 
@@ -708,9 +718,11 @@ export const ReadMedication = ({navigation}) => {
 
     const onLoadingListener = medicationsRef.on('value', (snapshot) => {
       setMedications([]);
+      setPastMedications([]);
       snapshot.forEach(function (childSnapshot) {
         if(childSnapshot.val().medicationUserId == uid){
-          if (new Date(childSnapshot.val().medicationEndDate) > new Date()) {
+          const endingDate = new Date(childSnapshot.val().medicationEndDate);
+          if (endingDate.setDate(endingDate.getDate() + 1) > (new Date)) {
             setMedications((medications) => [...medications, childSnapshot.val()]);
           } else {
             setPastMedications((pastMedications) => [...pastMedications, childSnapshot.val()]);
@@ -723,7 +735,8 @@ export const ReadMedication = ({navigation}) => {
       medicationsRef.off('value', onLoadingListener);
     };
 
-    }, []);
+    },
+  []);
 
   const listMedication = medications.map((element) => (
     <List.Item

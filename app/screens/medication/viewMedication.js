@@ -18,6 +18,7 @@ export default function ViewMedication({route, navigation}) {
     'Inhaler',
     'Injection',
     'Patches',
+    'Sachet',
     'Other',
   ];
   const metricsOfDosage = [
@@ -28,6 +29,7 @@ export default function ViewMedication({route, navigation}) {
     'Capsule',
     'Drops',
     'Patches',
+    'Sachet',
     'N/A',
   ];
   const dailyDosageOptions = ['Yes', 'No'];
