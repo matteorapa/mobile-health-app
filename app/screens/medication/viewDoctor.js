@@ -81,17 +81,17 @@ export default function ViewDoctor({route, navigation}) {
             .catch(err => console.log(err));
           }}
         />
-        {/* <ThemeButton
+        <ThemeButton
           type={'secondary'}
           icon={'edit'}
           text={'Edit'}
           onPressEvent={() => {
             navigation.navigate('Medication', {
-              screen: 'EditDoctor',
+              screen: 'AddDoctor',
               params: {loadedDoctor: doctor},
             });
           }}
-        /> */}
+        />
         <ThemeButton
           type={'muted'}
           text={'DELETE'}
