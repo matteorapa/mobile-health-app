@@ -56,11 +56,12 @@ export function ViewReminders(){
       return (
         <Card style={styles.card}>
           <Card.Content>
-            <Title key="1">{element.medicationName}</Title>
-            <Text key="2">Medication Start Date : {element.medicationStartDate}</Text>
+            <Title>{element.medicationName}</Title>
+            <Text>Medication Start Date : {element.medicationStartDate}</Text>
+            <Text>Medication End Date : {element.medicationEndDate}</Text>
             {element.medicationTimerArray.map((element, index) => {
             return (
-              <Text key="3">Dose {index + 1} - {element.hour}:{element.minute}</Text>
+              <Text>Dose {index + 1} - {element.hour}:{element.minute}</Text>
         )
       })}
           </Card.Content>
