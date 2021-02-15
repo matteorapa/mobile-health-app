@@ -73,7 +73,7 @@ export default function AddHabitScreen({navigation}) {
           <Picker.Item label="Pet" value="Pet" />
         </Picker>
 
-        <Text>Selected date: {date.toLocaleDateString()}</Text>
+        <Text>Selected date: {date.toDateString()}</Text>
         <ThemeButton
           accessibilityLabel="Pick the date of your habit."
           text="Pick Date"

@@ -137,7 +137,7 @@ export const getHabit = () => {
           <Card.Content>
             <Title>{element.habitId}</Title>
             <Paragraph>{element.habitDesc}</Paragraph>
-            <Text>Available on {retrievedDate.toLocaleDateString()}</Text>
+            <Text>Available on {retrievedDate.toDateString()}</Text>
           </Card.Content>
 
           <Card.Actions>

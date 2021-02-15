@@ -106,7 +106,7 @@ export default function DetailsScreen({navigation, route}) {
         <DataTable.Row>
           <DataTable.Cell>Start date</DataTable.Cell>
           <DataTable.Cell numeric>
-            {new Date(habit.startDate).toLocaleString()}
+            {new Date(habit.startDate).toDateString()}
           </DataTable.Cell>
         </DataTable.Row>
 
