@@ -49,7 +49,7 @@ export default function AccountScreen({navigation}) {
       <PaddedDivider />
       
       <View style={LAYOUT.flexed}>
-        <Text style={TYPE.body1}>Water Reminder</Text>
+        <Text style={TYPE.body1}>Water Reminders</Text>
         <Switch value={isSwitchOn} onValueChange={onToggleSwitch} />
       </View>
       <View style={LAYOUT.flexed}>
@@ -57,7 +57,7 @@ export default function AccountScreen({navigation}) {
         <Switch value={isSwitchOn1} onValueChange={onToggleSwitch1} />
       </View>
       <View style={LAYOUT.flexed}>
-        <Text style={TYPE.body1}>Water Reminder</Text>
+        <Text style={TYPE.body1}>Sleep Reminders</Text>
         <Switch value={isSwitchOn2} onValueChange={onToggleSwitch2} />
       </View>
 
