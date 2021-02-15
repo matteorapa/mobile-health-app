@@ -1,6 +1,5 @@
 import {Text, View, Button, TextInput, Alert} from 'react-native';
 import React from 'react';
-import {AuthContext} from '../../auth';
 import {styles} from '../../styles/globals';
 import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
@@ -36,8 +35,6 @@ export default function SignUpScreen({navigation}) {
           <TextInput
             style={styles.textInput}
             placeholder={'Email address'}
-            keyboardType={'email-address'}
-            autoCapitalize={'none'}
             onChangeText={(text) => onChangeEmail(text)}
             value={email}
           />
@@ -81,6 +78,7 @@ export default function SignUpScreen({navigation}) {
                     .createUserWithEmailAndPassword(email, password)
                     .then((data) => {
                       addUser(data.user.uid, 'Patient', name, Surname);
+                      global.firstTime = true;
                       navigation.navigate('SignIn');
                     })
                     .catch((error) => {
@@ -91,6 +89,7 @@ export default function SignUpScreen({navigation}) {
                             onPress: () => console.log('alert closed'),
                           },
                         ]);
+                        
                         navigation.navigate('SignIn');
                       }
 

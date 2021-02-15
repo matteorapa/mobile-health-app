@@ -33,14 +33,14 @@ function submitForm(
   //check auth of form
 
   //submit to firebase table
-  console.log(
-    'submit',
-    docName,
-    docSpeciality,
-    docPhonePrefix,
-    docPhone,
-    docEmail,
-  );
+  // console.log(
+  //   'submit',
+  //   docName,
+  //   docSpeciality,
+  //   docPhonePrefix,
+  //   docPhone,
+  //   docEmail,
+  // );
 
   addDoctor(docName, docSpeciality, docPhonePrefix, docPhone, docEmail);
 
@@ -95,9 +95,7 @@ export default function AddDoctorScreen({route, navigation}) {
   const [dataCountries, setDataCountries] = useState(Countries);
   const [countryCode, setCountryCode] = useState(doctorPhonePrefix);
   const [countryPlaceholder, setCountryPlaceholder] = useState('9999 9999');
-  const [countryFlagCode, setCountryFlagCode] = useState(
-    require('./images/mt.png'),
-  );
+  const [countryFlagCode, setCountryFlagCode] = useState(require('./images/mt.png'));
 
   const onShowHideCountryPicker = () => {
     setCountryPickerVisible(!countryPickerVisible);

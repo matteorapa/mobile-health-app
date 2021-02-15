@@ -1,4 +1,4 @@
-import {Text, View, Button, TextInput} from 'react-native';
+import {Text, View, Button, TextInput, Alert} from 'react-native';
 import React from 'react';
 import {styles} from '../../styles/globals';
 import database from '@react-native-firebase/database';
@@ -18,7 +18,6 @@ export default function SignUpScreen({navigation}) {
       <View style={styles.container}>
         <View style={styles.box}>
           <Text style={styles.heading}>Doctor Sign Up</Text>
-          <Text style={styles.heading}>Sign Up</Text>
           <Text>Name</Text>
           <TextInput
             style={styles.textInput}
@@ -61,8 +60,22 @@ export default function SignUpScreen({navigation}) {
             text="SIGN UP"
             accessibilityLabel="Sign-up button with email and password as values"
             onPressEvent={() => {
+              if (Name == '' || Surname == '' || email == '' || password == '' || VerifyPassword == ''){
+                Alert.alert('Sign Up Failed', 'Do not leave empty fields', [
+                  {
+                    text: 'Try Again',
+                    onPress: () => navigation.navigate('DoctorSignUp'),
+                  },
+                ]);
+              } else {
+
               if (VerifyPassword !== password) {
-                console.log('Passwords do not match');
+                Alert.alert('Sign Un Failed', "Make sure the passwords match", [
+                  {
+                    text: 'OK',
+                    onPress: () => navigation.navigate('DoctorSignUp'),
+                  },
+                ]);
               } else {
                 auth()
                   .createUserWithEmailAndPassword(email, password)
@@ -82,7 +95,8 @@ export default function SignUpScreen({navigation}) {
                   });
                 navigation.navigate('SignIn');
               }
-            }}
+            }
+          }}
           />
           <ThemeButton
               type="secondary"

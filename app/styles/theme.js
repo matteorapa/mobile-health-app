@@ -1,18 +1,29 @@
 import {StyleSheet} from 'react-native';
 
-// Choice of colours
+// Application's color theme
 // https://material.io/design/color/the-color-system.html
 
+// export const COLORS = {
+//   primary: '#0d47a1',
+//   primaryLight: '#5472d3',
+//   primaryDark: '#002171',
+//   secondary: '#ffc107',
+//   secondaryLight: '#fff350',
+//   secondaryDark: '#c79100',
+//   lightText: '#fff',
+//   darkText: '#000000',
+// };
+
 export const COLORS = {
-  primary: '#0d47a1',
-  primaryLight: '#5472d3',
-  primaryDark: '#002171',
-  secondary: '#ffc107',
-  secondaryLight: '#fff350',
-  secondaryDark: '#c79100',
+  primary: '#6002ee',
+  primaryLight: '#9c47ff',
+  primaryDark: '#0000b9',
+  secondary: '#ff6f00',
+  secondaryLight: '#ffa040',
+  secondaryDark: '#c43e00',
   lightText: '#fff',
-  darkText: '#fff',
-};
+  darkText: '#000000',
+}
 
 // Spacing guideline for Accessibility
 // https://material.io/design/usability/accessibility.html
@@ -51,6 +62,12 @@ export const LAYOUT = StyleSheet.create({
   },
   mainCenter: {
     padding: 12,
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center'
+  },
+  mainOnboarding: {
     height: '100%',
     display: 'flex',
     flexDirection: 'column',

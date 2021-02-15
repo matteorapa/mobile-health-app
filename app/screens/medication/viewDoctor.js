@@ -39,6 +39,28 @@ export default function ViewDoctor({route, navigation}) {
 
   return (
     <View style={LAYOUT.main}>
+      <View style={styles.navButtonsForm}>
+        <ThemeButton
+          type={'secondary'}
+          icon={'delete'}
+          text={'DELETE'}
+          onPressEvent={() => {
+            setVisible(true)
+          }}
+        />
+        <ThemeButton
+          type={'secondary'}
+          icon={'edit'}
+          text={'Edit'}
+          onPressEvent={() => {
+            navigation.navigate('Medication', {
+              screen: 'AddDoctor',
+              params: {loadedDoctor: doctor},
+            });
+          }}
+        />
+      </View>
+
       <DataTable>
           <DataTable.Row>
             <DataTable.Cell>Doctor's name</DataTable.Cell>
@@ -79,24 +101,6 @@ export default function ViewDoctor({route, navigation}) {
               }
             })
             .catch(err => console.log(err));
-          }}
-        />
-        {/* <ThemeButton
-          type={'secondary'}
-          icon={'edit'}
-          text={'Edit'}
-          onPressEvent={() => {
-            navigation.navigate('Medication', {
-              screen: 'EditDoctor',
-              params: {loadedDoctor: doctor},
-            });
-          }}
-        /> */}
-        <ThemeButton
-          type={'muted'}
-          text={'DELETE'}
-          onPressEvent={() => {
-            setVisible(true)
           }}
         />
 

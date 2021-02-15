@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   tabbar: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: COLORS.primaryLight,
   },
   indicator: {
     backgroundColor: COLORS.secondary,

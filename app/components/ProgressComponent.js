@@ -33,7 +33,7 @@ export default function ProgressComponent({habit}) {
       <Title>{title}</Title>
       <ProgressBar
         progress={percentage}
-        color={COLORS.primaryLight}
+        color={COLORS.secondaryLight}
         style={{height: 20}}
       />
       <Text>{points}/{denominator} Points</Text>

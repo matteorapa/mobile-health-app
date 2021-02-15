@@ -10,8 +10,8 @@ export default function SignInScreen({navigation}) {
   const [email, onChangeEmail] = React.useState('');
   const [password, onChangePassword] = React.useState('');
   const [userId, setUserId] = React.useState('');
-
   const {signIn} = React.useContext(AuthContext);
+  
 
   const PromiseReader = (emailInput, passwordInput) => {
     var testChecker = logIn(emailInput, passwordInput);
@@ -43,7 +43,7 @@ export default function SignInScreen({navigation}) {
   return (
     <View style={styles.container}>
       <View style={styles.box}>
-        <Image style={styles.tinyLogo} source={require('../../assets/images/mascot.png')} />
+        <Image style={styles.LargeLogo} source={require('../../assets/images/mascot.png')} />
         <Text style={styles.heading}>Sign In</Text>
         <Text>Email Address</Text>
         <TextInput

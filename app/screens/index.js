@@ -50,22 +50,24 @@ export function ViewReminders(){
   }, []);
   if (notificationReminders.length > 0){
     return notificationReminders.map((element) => {
-
-      if(element.medicationUserId == global.uid){
-
-      return (
-        <Card style={styles.card}>
-          <Card.Content>
-            <Title key="1">{element.medicationName}</Title>
-            <Text key="2">Medication Start Date : {element.medicationStartDate}</Text>
-            {element.medicationTimerArray.map((element, index) => {
-            return (
-              <Text key="3">Dose {index + 1} - {element.hour}:{element.minute}</Text>
-        )
-      })}
-          </Card.Content>
-        </Card>
-      );
+      const endingDate = new Date(element.medicationEndDate);
+      if(element.medicationUserId == uid){
+        if (endingDate.setDate(endingDate.getDate() + 1) > (new Date)) {
+          return (
+            <Card style={styles.card}>
+              <Card.Content>
+                <Title>{element.medicationName}</Title>
+                <Text>Medication Start Date : {element.medicationStartDate}</Text>
+                <Text>Medication End Date : {element.medicationEndDate}</Text>
+                {element.medicationTimerArray.map((element, index) => {
+                return (
+                  <Text>Dose {index + 1} - {element.hour}:{element.minute}</Text>
+            )
+          })}
+              </Card.Content>
+            </Card>
+          );
+        }
     } else {
       return ( //This return will take effect when there are no entries in the database that relates to the userId of the currently logged in user
         <View style={styles.emptyStateContainer}>
