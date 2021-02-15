@@ -299,7 +299,7 @@ export default function App() {
       console.log()
         setShowOnboarding(true)
     }
-  },[global.firstTime])
+  },[])
 
   const authContext = React.useMemo(() => {
     return {

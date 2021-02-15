@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, Platform, Linking} from 'react-native';
+import {Text, View, Platform, Linking, Alert} from 'react-native';
 import {styles} from '../../styles/globals';
 import ThemeButton from '../../components/ThemeButton';
 import {deleteDoctor} from '../../DBFunctions';
@@ -7,8 +7,6 @@ import { LAYOUT } from '../../styles/theme';
 import {DataTable, Paragraph, Dialog, Button} from 'react-native-paper';
 
 export default function ViewDoctor({route, navigation}) {
-  // {console.log("Route ", route.params)}
-  // {console.log("Nav ", navigation)}
 
   const {doctor} = route.params;
   const specialitiesOfDoctors = [

@@ -7,6 +7,7 @@ import {LAYOUT} from '../../styles/theme';
 import ThemeButton from '../../components/ThemeButton';
 import {Surface} from 'react-native-paper';
 import {styles} from '../../styles/globals';
+import { scheduleHabitNotification } from '../../notifications';
 
 export default function AddReminderScreen({navigation}) {
   //array with the list of habits saved to choose a habit
@@ -88,6 +89,7 @@ export default function AddReminderScreen({navigation}) {
             ]);
           }else{
           addReminder(state, title, hours1, minutes1);
+          scheduleHabitNotification(title, "Habit reminder for " + state, new Date())
           navigation.navigate('Tasks', {
             screen: 'Index',
             params: {

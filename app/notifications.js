@@ -1,14 +1,28 @@
 import PushNotification from 'react-native-push-notification';
+import React from 'react';
+import {List} from 'react-native-paper';
 
 function scheduleMedicationNotification(title, msg, date) {
   PushNotification.localNotificationSchedule({
     channelId: 'medication-channel',
     title: title,
-    message: msg, // (required)
+    message: msg, 
     date: date,
     allowWhileIdle: true,
     repeatType: 'day',
     actions: ['Taken', 'Remind Me Later'],
+  });
+}
+
+function scheduleHabitNotification(title, msg, date) {
+  PushNotification.localNotificationSchedule({
+    channelId: 'habit-channel',
+    title: title,
+    message: msg, 
+    date: date,
+    allowWhileIdle: true,
+    repeatType: 'day',
+    actions: ['Done', 'Missed'],
   });
 }
 
@@ -17,8 +31,9 @@ function sendLocalHabitNotification(title, message) {
     channelId: 'habit-channel',
     message: message,
     title: title,
-    actions: ['Accept', 'Reject'],
+    actions: ['Done', 'Missed'],
     invokeApp: false,
+    allowWhileIdle: true,
   });
 }
 
@@ -64,7 +79,7 @@ function createPriorityChannel() {
       channelName: 'Priority Notifications',
       channelDescription:
         'A channel to categorise your important notifications',
-      soundName: 'default', // (optional) See `soundName` parameter of `localNotification` function
+      soundName: 'default',
       importance: 5,
       vibrate: true,
     },
@@ -100,22 +115,26 @@ function initiateChannels() {
   });
 }
 
-function getSheduledNotifications() {
-  PushNotification.getScheduledLocalNotifications((data) => {
-    console.log(data);
-    return data;
-  });
+function getScheduledNotifications(cb){
+  
+    PushNotification.getScheduledLocalNotifications((data) => {
+      cb(data)
+    });
+
 }
 
-function getDeliveredNotifications() {
+function getDeliveredNotifications(cb){
+  
   PushNotification.getDeliveredNotifications((data) => {
-    console.log(data);
-    return data;
+    cb(data)
+   
   });
+
 }
 
 function clearDeliveredNotifications() {
   PushNotification.removeAllDeliveredNotifications();
+  console.log("Cleared delievered notifications")
 }
 
 export {
@@ -127,8 +146,9 @@ export {
   createPriorityChannel,
   deleteChannel,
   deleteLocalNotification,
-  getSheduledNotifications,
-  getDeliveredNotifications,
   clearDeliveredNotifications,
   initiateChannels,
+  scheduleHabitNotification,
+  getDeliveredNotifications,
+  getScheduledNotifications
 };

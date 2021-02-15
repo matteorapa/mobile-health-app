@@ -83,10 +83,9 @@ export const addHabit = (
 };
 
 export const getHabit = () => {
+  
   const [habits, setHabits] = React.useState([]);
-
   const navigation = useNavigation();
-
   var boolean = false;
   var counter = 1;
 
@@ -105,6 +104,7 @@ export const getHabit = () => {
       habitRef.off('value', onLoadingListener);
     };
   }, []);
+
   if (habits.length > 0){
     return habits.map((element) => {
       const currentDate = new Date();

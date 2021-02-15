@@ -108,7 +108,7 @@ export default function AddHabitScreen({navigation}) {
           }else{
           {
             addHabit(
-              title,
+              "Habit Reminder: " + title,
               description,
               date.toDateString(),
               numPerD,
