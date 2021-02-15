@@ -403,9 +403,9 @@ export default function AddMedicationScreen({route, navigation}) {
               style={styles.textInput}
               placeholder={'Start Date - End Date'}
               value={
-                medicationStartDate.toDateString() +
+                Moment(medicationStartDate).format('DD/MM/YYYY') +
                 ' - ' +
-                medicationEndDate.toDateString()
+                Moment(medicationEndDate).format('DD/MM/YYYY')
               }
             />
               <DatePickerModal
