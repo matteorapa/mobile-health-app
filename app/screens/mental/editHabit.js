@@ -74,7 +74,7 @@ export default function EditHabitScreen({navigation, route}) {
         <DataTable>
           <DataTable.Row>
             <DataTable.Cell>Start date</DataTable.Cell>
-            <DataTable.Cell numeric>{date.toLocaleDateString()}</DataTable.Cell>
+            <DataTable.Cell numeric>{date.toDateString()}</DataTable.Cell>
           </DataTable.Row>
         </DataTable>
         <DatePickerModal
