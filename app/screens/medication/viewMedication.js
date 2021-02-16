@@ -8,7 +8,8 @@ import {LAYOUT} from '../../styles/theme';
 import PaddedDivider from '../../components/PaddedDivider';
 
 export default function ViewMedication({route, navigation}) {
-  const {medication} = route.params;
+  const {medication} = route.params; //getting data from database when Editing to preload in fields
+  //setting array to get pickers data
   const typeOfMedication = [
     'Liquid Solution',
     'Pill/Tablet',
@@ -37,6 +38,7 @@ export default function ViewMedication({route, navigation}) {
   const [visible, setVisible] = React.useState(false);
   const hideDialog = () => setVisible(false);
 
+  //show details of medication item choosen with Edit and Delete buttons
   return (
     <ScrollView style={LAYOUT.main}>
       <View style={styles.navButtonsForm}>

@@ -13,9 +13,9 @@ import React, {useState} from 'react';
 import {Picker} from '@react-native-picker/picker';
 import {styles} from '../../styles/globals';
 import AddMedDocForm from './AddMedDocForm';
-import {Countries} from './Countries';
+import {Countries} from './Countries'; //importing data regarding the country prefix codes, masks, etc...
 import {TextInputMask} from 'react-native-masked-text';
-import {countryFlags} from './countryFlags';
+import {countryFlags} from './countryFlags'; //importing class with flag image source
 import {addDoctor} from '../../DBFunctions';
 import ThemeButton from '../../components/ThemeButton';
 import { LAYOUT, COLORS } from '../../styles/theme';
@@ -30,26 +30,16 @@ function submitForm(
   docEmail,
   cb,
 ) {
-  //check auth of form
-
-  //submit to firebase table
-  // console.log(
-  //   'submit',
-  //   docName,
-  //   docSpeciality,
-  //   docPhonePrefix,
-  //   docPhone,
-  //   docEmail,
-  // );
-
+  //submiting values to firebase table
   addDoctor(docName, docSpeciality, docPhonePrefix, docPhone, docEmail);
 
   //cb();
 }
 
 export default function AddDoctorScreen({route, navigation}) {
-  console.log('Route ', route.params);
-  const {loadedDoctor} = route.params;
+  //console.log('Route ', route.params);
+  const {loadedDoctor} = route.params; //getting data from database when Editing to preload in fields
+  //setting array for picker
   const specialitiesOfDoctors = [
     'Allergy and Immunology',
     'Anesthesiology',
@@ -73,6 +63,7 @@ export default function AddDoctorScreen({route, navigation}) {
     'Urology',
   ];
 
+  //setting up using hooks with empty or the saved values
   const [doctorName, onChangeDoctorName] = useState(
     loadedDoctor === '' ? '' : loadedDoctor.doctorName,
   );
@@ -97,11 +88,13 @@ export default function AddDoctorScreen({route, navigation}) {
   const [countryPlaceholder, setCountryPlaceholder] = useState('9999 9999');
   const [countryFlagCode, setCountryFlagCode] = useState(require('./images/mt.png'));
 
+  //show/hide the country picker for phone prefix
   const onShowHideCountryPicker = () => {
     setCountryPickerVisible(!countryPickerVisible);
     filterCountries();
   };
 
+  //filtering countries with search
   const filterCountries = (value) => {
     if (value) {
       const countryData = dataCountries.filter(
@@ -113,6 +106,7 @@ export default function AddDoctorScreen({route, navigation}) {
     }
   };
 
+  //setting of multiple values when changing country including prefix and mask
   const onCountryChange = (item) => {
     setCountryCode(item.dialCode);
     setCountryPlaceholder(item.mask);
@@ -121,6 +115,7 @@ export default function AddDoctorScreen({route, navigation}) {
     setCountryFlagCode(countryFlags.flags[item.code.toLowerCase()]);
   };
 
+  //rendering the country picker upon pressed
   let renderCountryPicker = () => {
     return (
       <Modal
@@ -184,6 +179,7 @@ export default function AddDoctorScreen({route, navigation}) {
         doctPhone: doctorPhone,
         doctEmail: doctorEmail,
       }}>
+        {/* start to return the form step by step */}
       <AddMedDocForm.Step>
         {({onChangeValue, values}) => (
           <View>
@@ -198,8 +194,8 @@ export default function AddDoctorScreen({route, navigation}) {
                 onChangeDoctorName(text);
               }}
               value={values.doctName}
-              autoFocus={loadedDoctor === '' ? true : false}
-              autoCapitalize={'words'}
+              autoFocus={loadedDoctor === '' ? true : false} //load keyboard if empty field
+              autoCapitalize={'words'} //auto capitalising each word since its a name/surname
             />
           </View>
         )}
@@ -285,6 +281,7 @@ export default function AddDoctorScreen({route, navigation}) {
         )}
       </AddMedDocForm.Step>
 
+      {/* Load the values entered for confirmation and present Edit and Submit buttons */}
       <View>
       <Text style={{ color: COLORS.primaryLight }}>Step 5 of 5</Text>
             <PaddedDivider />
@@ -293,6 +290,7 @@ export default function AddDoctorScreen({route, navigation}) {
             type={'secondary'}
             text={'Edit'}
             onPressEvent={() => {
+              //go to start of class and insert the inputted data in the corresponding fields
               navigation.goBack(
                 navigation.navigate('Medication', {
                   screen: 'AddDoctor',

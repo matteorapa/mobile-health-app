@@ -4,6 +4,7 @@ import {styles} from '../../styles/globals';
 import ThemeButton from '../../components/ThemeButton';
 import PaddedDivider from '../../components/PaddedDivider';
 
+// components to include in each step (input field and buttons)
 class Step extends Component {
   state = {};
   render() {
@@ -38,6 +39,7 @@ class Step extends Component {
   }
 }
 
+// adding functionality to the above buttons
 class AddMedDocForm extends Component {
   static Step = Step;
 

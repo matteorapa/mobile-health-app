@@ -8,7 +8,8 @@ import {DataTable, Paragraph, Dialog, Button} from 'react-native-paper';
 
 export default function ViewDoctor({route, navigation}) {
 
-  const {doctor} = route.params;
+  const {doctor} = route.params; //getting data from database when Editing to preload in fields
+  //setting array to get picker data
   const specialitiesOfDoctors = [
     'Allergy and Immunology',
     'Anesthesiology',
@@ -35,6 +36,7 @@ export default function ViewDoctor({route, navigation}) {
   const [visible, setVisible] = React.useState(false);
   const hideDialog = () => setVisible(false);
 
+  //show details of doctor item choosen with Edit, Delete and Call buttons
   return (
     <View style={LAYOUT.main}>
       <View style={styles.navButtonsForm}>

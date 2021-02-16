@@ -13,6 +13,7 @@ import {DataTable} from 'react-native-paper';
 import {scheduleMedicationNotification} from '../../notifications';
 
 function submitForm(
+  
   medName,
   medType,
   medDosage,
@@ -25,24 +26,7 @@ function submitForm(
   medEndDate,
   medInstructions,
 ) {
-  //check auth of form
-
-  //submit to firebase table
-  // console.log(
-  //   'submit ',
-  //   medName,
-  //   medType,
-  //   medDosage,
-  //   medDosageMetric,
-  //   medReason,
-  //   medDaily,
-  //   medDailyDosesNumber,
-  //   medTimersArray,
-  //   medStartDate,
-  //   medEndDate,
-  //   medInstructions,
-  // );
-
+  //submiting values to firebase table
   addMedication(
     medName,
     medType,
@@ -59,9 +43,10 @@ function submitForm(
 }
 
 export default function AddMedicationScreen({route, navigation}) {
-  //{console.log("Route ", route.params)}
+  //getting data from database when Editing to preload in fields
   const {loadedMedication} = route.params;
 
+  //setting arrays for pickers
   const typeOfMedication = [
     'Liquid Solution',
     'Pill/Tablet',
@@ -87,7 +72,7 @@ export default function AddMedicationScreen({route, navigation}) {
   ];
   const dailyDosageOptions = ['Yes', 'No'];
 
-  //const timerArrayEditShow = (loadedMedication != '') ? medicationDaily.medicationTimerArray : null;
+  //setting up using hooks with empty or the saved values
   const [medicationName, onChangeMedicationName] = useState(
     loadedMedication === '' ? '' : loadedMedication.medicationName,
   );
@@ -149,6 +134,7 @@ export default function AddMedicationScreen({route, navigation}) {
   //var tempTimerNumber = 0;
   //const [tempTimerNumber, setTempTimerNumber] = useState(1);
 
+  //inserting timer values in a timer array
   const insertTimer = (hours, minutes) => {
     // {console.log('insertTimer method', hours, ':', minutes)}
     // {(loadedMedication == '') ? setTimerArray([...timerArray, {hour: hours, minute: minutes}]) : setTimerArrayEdit([...timerArrayEdit, {hour: hours, minute: minutes}])};
@@ -166,6 +152,7 @@ export default function AddMedicationScreen({route, navigation}) {
     setTimerArray([]);
   }
 
+  //show/hide and set values of TimerPicker
   const [visible, setVisible] = React.useState(false);
   const onDismiss = React.useCallback(() => {
     setVisible(false);
@@ -178,6 +165,7 @@ export default function AddMedicationScreen({route, navigation}) {
     [setVisible, insertTimer],
   );
 
+  //show/hide values of DatePicker
   const [visibleDate, setVisibleDate] = React.useState(false);
   const onDismissDate = React.useCallback(() => {
     setVisibleDate(false);
@@ -210,6 +198,7 @@ export default function AddMedicationScreen({route, navigation}) {
           medicEndDate: medicationEndDate,
           medicInstructions: medicationInstructions,
         }}>
+        {/* start to return the form step by step */}
         <AddMedDocForm.Step>
           {({onChangeValue, values}) => (
             <View>
@@ -456,6 +445,7 @@ export default function AddMedicationScreen({route, navigation}) {
           )}
         </AddMedDocForm.Step>
 
+        {/* Load the values entered for confirmation and present Edit and Submit buttons */}
         <ScrollView>
           <Text style={{color: COLORS.primaryLight}}>Step 10 of 10</Text>
           <PaddedDivider />
@@ -465,6 +455,7 @@ export default function AddMedicationScreen({route, navigation}) {
               type={'secondary'}
               text={'Edit'}
               onPressEvent={() => {
+                //go to start of class and insert the inputted data in the corresponding fields
                 navigation.goBack(
                   navigation.navigate('Medication', {
                     screen: 'AddMedication',

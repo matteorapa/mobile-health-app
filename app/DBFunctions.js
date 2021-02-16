@@ -474,6 +474,7 @@ export const addDoctor = (
   doctorEmail,
 ) => {
   return new Promise(function (resolve, reject) {
+    //setting up unique key for data
     let key;
     if (doctorPhone != null) {
       key = doctorPhone + ',' + uid;
@@ -481,6 +482,7 @@ export const addDoctor = (
       key = database().ref().push().key; //reason for this part of code: if the key is not empty, i.e. already exist, this means that the record is being editted.
     }
 
+    //initialising data to insert in database
     let dataToSave = {
       doctorStoreId: key,
       doctorUserId: uid,
@@ -490,6 +492,7 @@ export const addDoctor = (
       doctorPhone: doctorPhone,
       doctorEmail: doctorEmail,
     };
+    //inserting data in database table doctors
     database()
       .ref('doctors/' + key)
       .update(dataToSave)
@@ -503,6 +506,7 @@ export const addDoctor = (
 };
 
 export const deleteDoctor = (doctorPhone, deleteConfirm) => {
+  //deleting specific data using the key from the database table doctors
   database()
     .ref('doctors/' + doctorPhone + ',' + uid)
     .remove()
@@ -525,6 +529,7 @@ export const editDoctor = (doctorPhone, editConfirm) => {
 
 export const ReadDoctor = ({navigation}) => {
   const [doctors, setDoctors] = useState([]);
+  //set array of picker data to print
   const specialitiesOfDoctors = [
     'Allergy and Immunology',
     'Anesthesiology',
@@ -548,13 +553,14 @@ export const ReadDoctor = ({navigation}) => {
     'Urology',
   ];
 
+  //retrieve data from database from table doctors
   React.useEffect(() => {
     const doctorsRef = database().ref('/doctors');
 
     const onLoadingListener = doctorsRef.on('value', (snapshot) => {
       setDoctors([]);
       snapshot.forEach(function (childSnapshot) {
-        if(childSnapshot.val().doctorUserId == uid){
+        if(childSnapshot.val().doctorUserId == uid){ //retrieve the doctors of the current logged in user
           setDoctors((doctors) => [...doctors, childSnapshot.val()]);
         }
       });
@@ -565,6 +571,7 @@ export const ReadDoctor = ({navigation}) => {
     };
   }, []);
 
+  //show item of each doctor
   const listDoctors = doctors.map((element) => (
     <List.Item
       key={element.doctorStoreId}
@@ -605,6 +612,7 @@ export const addMedication = (
   medicationEndDate,
   medicationInstructions,
 ) => {
+  //setting up unique key for data
   return new Promise(function (resolve, reject) {
     let key;
     if (medicationName != null) {
@@ -613,6 +621,7 @@ export const addMedication = (
       key = database().ref().push().key; //reason for this part of code: if the key is not empty, i.e. already exist, this means that the record is being editted.
     }
 
+    //initialising data to insert in database
     let dataToSave = {
       medicationStoreId: key,
       medicationUserId: uid,
@@ -628,7 +637,8 @@ export const addMedication = (
       medicationEndDate: medicationEndDate,
       medicationInstructions: medicationInstructions,
     };
-
+    
+    //inserting data in database table medications
     database()
       .ref('medication/' + key)
       .update(dataToSave)
@@ -641,6 +651,7 @@ export const addMedication = (
 
     {
       if (medicationDaily == 0) {
+        //initialising data to insert in database for notifications
         let dataToSaveNotifRemind = {
           medicationStoreId: key,
           medicationUserId: uid,
@@ -650,6 +661,7 @@ export const addMedication = (
           medicationTimerArray: medicationTimerArray,
         };
 
+        //inserting data in database table notificationReminders
         database()
           .ref('notificationReminders/' + key)
           .update(dataToSaveNotifRemind)
@@ -665,6 +677,7 @@ export const addMedication = (
 };
 
 export const deleteMedication = (medicationName, navigation, deleteConfirm) => {
+  //deleting specific data using the key from the database table medication
   let key = medicationName + ',' + uid;
   database()
     .ref('medication/' + key)
@@ -674,6 +687,7 @@ export const deleteMedication = (medicationName, navigation, deleteConfirm) => {
       console.log(err);
     });
 
+  //deleting the respective data using the key from the database table notificationReminder
   database()
     .ref('notificationReminders/' + key)
     .remove()
@@ -701,6 +715,7 @@ export const editMedication = (medicationName, editConfirm) => {
 export const ReadMedication = ({navigation}) => {
   const [medications, setMedications] = useState([]);
   const [pastMedications, setPastMedications] = useState([]);
+  //set array of picker data to print
   const metricsOfDosage = [
     'ml',
     'mg',
@@ -713,6 +728,7 @@ export const ReadMedication = ({navigation}) => {
     'N/A',
   ];
 
+  //retrieve data from database from table medication
   React.useEffect(() => {
     const medicationsRef = database().ref('/medication');
 
@@ -720,9 +736,9 @@ export const ReadMedication = ({navigation}) => {
       setMedications([]);
       setPastMedications([]);
       snapshot.forEach(function (childSnapshot) {
-        if(childSnapshot.val().medicationUserId == uid){
+        if(childSnapshot.val().medicationUserId == uid){ //retrieve the medications of the current logged in user
           const endingDate = new Date(childSnapshot.val().medicationEndDate);
-          if (endingDate.setDate(endingDate.getDate() + 1) > (new Date)) {
+          if (endingDate.setDate(endingDate.getDate() + 1) > (new Date)) { //retrieve current medications separate from the past medications
             setMedications((medications) => [...medications, childSnapshot.val()]);
           } else {
             setPastMedications((pastMedications) => [...pastMedications, childSnapshot.val()]);
@@ -738,6 +754,7 @@ export const ReadMedication = ({navigation}) => {
     },
   []);
 
+  //show item of each current medication
   const listMedication = medications.map((element) => (
     <List.Item
       key={element.medicationStoreId}
@@ -759,6 +776,7 @@ export const ReadMedication = ({navigation}) => {
     />
   ));
 
+  //show item of each past medication
   const listPastMedication = pastMedications.map((element) => (
     <List.Item
       key={element.medicationStoreId}

@@ -19,7 +19,7 @@ export default function MedicationScreen({navigation}) {
   const {open} = state;
   const route = useRoute();
 
-
+  //show snack bar upon any change such as adding or deleting
   React.useEffect(() => {
     if (route.params!== undefined) {
       const {snackbar} = route.params;
@@ -33,6 +33,7 @@ export default function MedicationScreen({navigation}) {
     }
   },[route.params, setSnackbarText]);
 
+  //print the main screen showing the two drop down lists and FAB button
   return (
     <View style={LAYOUT.main}>
       <ScrollView>
