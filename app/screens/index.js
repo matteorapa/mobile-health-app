@@ -51,6 +51,7 @@ export default function WelcomeScreen() {
             expanded={expandedScheduled}
             onPress={handlePressScheduled}>
               {scheduledNotifications.map((notification) => <List.Item key={notification.id} title={notification.title} />)}
+              {ViewReminders()}
           </List.Accordion>
 
           <List.Accordion
