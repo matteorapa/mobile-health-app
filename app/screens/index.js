@@ -136,12 +136,6 @@ export function ViewReminders(){
       </View>
     );
   }
-    // return ( //This return will take effect when there are no entries in the database
-    //   <View>
-    //     <Image source={music} style={styles.emptyState} />
-       
-    //   </View>
-    // );
 
    
 }

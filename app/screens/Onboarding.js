@@ -17,25 +17,25 @@ export default function OnboardingScreen(props) {
         pages={[
           {
             backgroundColor: COLORS.primaryLight,
-            image: <Image source={fitness} style={styles.LargeLogo}/>,
+            image: <Image source={fitness} style={styles.LargeLogo} accessibilityLabel="Image of a people performing different physical exercises."/>,
             title: 'Reminders for you daily routine',
             subtitle: 'We will remind you about habits you want to start, to never miss a run.',
           },
           {
             backgroundColor: COLORS.secondaryDark,
-            image: <Image source={doctor} style={styles.LargeLogo} />,
+            image: <Image source={doctor} style={styles.LargeLogo} accessibilityLabel="Image of a person at the doctor's office."/>,
             title: 'Keep track of your medicine',
             subtitle: 'Manage your medicine, and add/remove during your next doctor visit.',
           },
           {
             backgroundColor: COLORS.primaryLight,
-            image: <Image source={reminder} style={styles.LargeLogo} />,
+            image: <Image source={reminder} style={styles.LargeLogo} accessibilityLabel="Image of a bathroom cabinet filled with medicine."/>,
             title: 'Reminders for your medication',
             subtitle: 'Get notifications to remind you about the medication you need to take.',
           },
           {
             backgroundColor: COLORS.primaryDark,
-            image: <Image source={achieve} style={styles.LargeLogo} />,
+            image: <Image source={achieve} style={styles.LargeLogo} accessibilityLabel="Image showing an achievement trophy."/>,
             title: 'Earn achievements for keeping the routine',
             subtitle: 'When you complete a habit, your earn points which unlock achievements.',
           },

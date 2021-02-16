@@ -238,7 +238,7 @@ export default function AddDoctorScreen({route, navigation}) {
                 onPress={onShowHideCountryPicker}
                 autoFocus={true}>
                 <View style={styles.testing}>
-                  <Image source={countryFlagCode} style={styles.flagImage} />
+                  <Image source={countryFlagCode} style={styles.flagImage} accessibilityLabel="Icon of a country flag"/>
                   <Text>{countryCode}</Text>
                 </View>
               </TouchableOpacity>
