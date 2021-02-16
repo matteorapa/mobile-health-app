@@ -205,7 +205,7 @@ export const getHabit = () => {
         <PaddedDivider />
         <PaddedDivider />
         <PaddedDivider />
-        <Image source={music} style={styles.emptyState} />
+        <Image source={music} style={styles.emptyState} accessibilityLabel="Image of a sitting girl listening to music."/>
         <Text>
           You do not yet have any habits. Add some habits to create meaningful
           reminders.
@@ -426,7 +426,7 @@ export const getReminder = () => {
         <PaddedDivider />
         <PaddedDivider />
         <PaddedDivider />
-        <Image source={love} style={styles.emptyState} />
+        <Image source={love} style={styles.emptyState} accessibilityLabel="Image of a girl hugging herself."/>
         <Text>
           You do not yet have any reminders. Create a reminder to remember to
           take care of yourself.

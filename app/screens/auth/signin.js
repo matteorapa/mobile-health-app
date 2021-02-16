@@ -43,7 +43,7 @@ export default function SignInScreen({navigation}) {
   return (
     <View style={styles.container}>
       <View style={styles.box}>
-        <Image style={styles.LargeLogo} source={require('../../assets/images/mascot.png')} />
+        <Image style={styles.LargeLogo} source={require('../../assets/images/mascot.png')} accessibilityLabel="Image of a cartoon medicine."/>
         <Text style={styles.heading}>Sign In</Text>
         <Text>Email Address</Text>
         <TextInput
