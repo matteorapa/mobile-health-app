@@ -88,7 +88,6 @@ export default function EditHabitScreen({navigation, route}) {
           animationType="slide" // optional, default is 'slide' on ios/android and 'none' on web
           locale={'en'} // optional, default is automically detected by your system
         />
-        {/* <Button onPress={()=> setVisible(true) } title="Pick date"/> */}
         <ThemeButton
           accessibilityLabel="Pick the date of your habit."
           text="Pick Date"
