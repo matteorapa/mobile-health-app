@@ -4,6 +4,7 @@ import {styles} from '../../styles/globals';
 import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
 import ThemeButton from '../../components/ThemeButton';
+import {AuthContext} from '../../auth';
 
 export default function SignUpScreen({navigation}) {
   const [name, onChangeName] = React.useState('');
@@ -11,6 +12,7 @@ export default function SignUpScreen({navigation}) {
   const [email, onChangeEmail] = React.useState('');
   const [password, onChangePassword] = React.useState('');
   const [VerifyPassword, onChangeVerifyPassword] = React.useState('');
+  const {signUp} = React.useContext(AuthContext);
 
   return (
     <View>
@@ -37,6 +39,8 @@ export default function SignUpScreen({navigation}) {
             placeholder={'Email address'}
             onChangeText={(text) => onChangeEmail(text)}
             value={email}
+            keyboardType={'email-address'}
+            autoCapitalize={'none'}
           />
           <Text>Password</Text>
           <TextInput
@@ -79,6 +83,7 @@ export default function SignUpScreen({navigation}) {
                     .then((data) => {
                       addUser(data.user.uid, 'Patient', name, Surname);
                       global.firstTime = true;
+                      signUp();
                       navigation.navigate('SignIn');
                     })
                     .catch((error) => {

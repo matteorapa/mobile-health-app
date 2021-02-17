@@ -50,7 +50,7 @@ export default function WelcomeScreen() {
           
             expanded={expandedScheduled}
             onPress={handlePressScheduled}>
-              {scheduledNotifications.map((notification) => <List.Item key={notification.id} title={notification.title} />)}
+              {/* {scheduledNotifications.map((notification) => <List.Item key={notification.id} title={notification.title} />)} */}
               {ViewReminders()}
           </List.Accordion>
 
@@ -76,7 +76,7 @@ export default function WelcomeScreen() {
             accessibilityLabel="Press button to clear your remidners in the notification tray."
             text="Send Notification (demo)"
             onPressEvent={()=>{
-              sendLocalHabitNotification("title", "msg here", new Date() + 5000)
+              sendLocalHabitNotification("Medication Reminder", "Actifed 10ml", new Date() + 5000)
               getDeliveredNotifications((data)=>{
                 setDeliveredNotifications(data)
               })

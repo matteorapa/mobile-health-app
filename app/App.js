@@ -25,6 +25,7 @@ import {DefaultTheme, Provider} from 'react-native-paper';
 import ViewMedication from './screens/medication/viewMedication';
 import ViewDoctor from './screens/medication/viewDoctor';
 import OnboardingScreen from './screens/Onboarding';
+import { LogBox } from 'react-native';
 
 function MedicationStack() {
   const MedicationStack = createStackNavigator();
@@ -289,6 +290,8 @@ function AuthStack() {
 }
 
 export default function App() {
+  // {() => LogBox.ignoreLogs(['Warning: ...'])} // Ignore log notification by message
+  LogBox.ignoreAllLogs() //Ignore all log notifications
   const [isSignedIn, setIsSignedIn] = React.useState(false);
   const [showOnboarding, setShowOnboarding] = React.useState(false)
 
@@ -309,7 +312,7 @@ export default function App() {
         
       },
       signUp: () => {
-        
+        setShowOnboarding(true)
       },
       signOut: () => {
        

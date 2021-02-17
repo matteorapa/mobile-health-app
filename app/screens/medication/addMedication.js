@@ -578,6 +578,7 @@ export default function AddMedicationScreen({route, navigation}) {
 
             {timerArray.map((element, index) => {
               return (
+                
                 <DataTable.Row key={index}>
                   <DataTable.Cell>Dose {index + 1}</DataTable.Cell>
                   <DataTable.Cell numeric>
